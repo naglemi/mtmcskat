@@ -46,7 +46,7 @@ opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 
 
-setwd("/scratch2/NSF_GWAS/Results/SKAT/")
+setwd(output_dir)
 #phenodata_path <- "/scratch2/NSF_GWAS/phenodata/final_training/shoot_5w.header.pheno"
 covariates <- fread(opt$covariates)
 
@@ -81,7 +81,7 @@ null_model_100kresample <- SKAT_Null_Model(this_phenotype ~ 1 + covariates$V1 + 
 null_model_1Mresample <- SKAT_Null_Model(this_phenotype ~ 1 + covariates$V1 + covariates$V2 + covariates$V3 + covariates$V4 + covariates$V5 + covariates$V6 + covariates$V7 + covariates$V8 + covariates$V9 + covariates$V10 + covariates$V11, out_type="C",
                                          n.Resampling=1000000, type.Resampling="bootstrap")  
 
-runSKAToneChr <- function(raw_file_path, window_size, window_shift){
+runSKAToneChr <- function(raw_file_path, window_size, window_shift, output_dir = "/scratch2/NSF_GWAS/Results/SKAT/"){
 
     master_output <- data.frame(matrix(NA, ncol=6))
     colnames(master_output) <- c("Chr", "position", "SKAT_p-val", "SKAT_p-val_resampled", "SKAT_O_p-val", "SKAT_O_p-val_resampled")
@@ -237,7 +237,7 @@ runSKAToneChr <- function(raw_file_path, window_size, window_shift){
         cat("\n")
         this_position <- this_position + window_shift
       }
-      outputname <- paste0("/scratch2/NSF_GWAS/Results/SKAT/SKAT_finaltraining_Chr", basename(raw_file_path), "_Pheno", basename(opt$phenodata_path), ".csv")
+      outputname <- paste0(output_dir, "SKAT_finaltraining_Chr", basename(raw_file_path), "_Pheno", basename(opt$phenodata_path), ".csv")
       print(paste0("Writing ", outputname))
       fwrite(master_output, outputname)
     
