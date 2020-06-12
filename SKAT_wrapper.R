@@ -256,7 +256,7 @@ runSKAToneChr <- function(raw_file_path, window_size, window_shift, output_dir =
 runSKAToneChr(raw_file_path = opt$raw_file_path,
               window_size = opt$window_size,
               window_shift = opt$window_shift,
-              output_dir = output_dir)
+              output_dir = opt$output_dir)
 
 
 
