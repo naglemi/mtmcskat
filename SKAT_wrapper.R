@@ -39,7 +39,12 @@ option_list = list(
               type="numeric",
               default=1000,
               #help="Number of pixels passing intensity threshold for binary classifications of transgenic or not",
-              metavar="numeric")
+              metavar="numeric"),
+  make_option(c("-o", "--output_dir"),
+              type="character",
+              default="/scratch2/NSF_GWAS/Results/SKAT/",
+              help="Path to directory where results will be saved",
+              metavar="character")
 );
 
 opt_parser = OptionParser(option_list=option_list);
@@ -250,7 +255,8 @@ runSKAToneChr <- function(raw_file_path, window_size, window_shift, output_dir =
 
 runSKAToneChr(raw_file_path = opt$raw_file_path,
               window_size = opt$window_size,
-              window_shift = opt$window_shift)
+              window_shift = opt$window_shift,
+              output_dir = output_dir)
 
 
 
