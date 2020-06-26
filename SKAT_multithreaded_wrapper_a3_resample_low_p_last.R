@@ -185,7 +185,7 @@ calculate_SKAT_empirical_p <- function(n_permutations, null_model, return_all_p)
 }
 
 runSKAToneChr <- function(phenodata, covariates, raw_file_path, window_size, window_shift, output_dir = "/scratch2/NSF_GWAS/Results/SKAT/", ncore=24, SKAT_O = "OFF",
-                          job_id){
+                          job_id, desired_sig_figs = 2){
 
 # Prepare SKAT inputs other than null model -------------------------------
 
@@ -270,7 +270,7 @@ runSKAToneChr <- function(phenodata, covariates, raw_file_path, window_size, win
                                                                     window_size,
                                                                     Z = pos_and_SNPs[[2]],
                                                                     raw_file_path = raw_file_path,
-                                                                    resampling = FALSE,
+                                                                    resampling = resampling,
                                                                     null_model = null_model_noresample)
                                    print("Out of SKAT_one_window")
                                  } else {
@@ -285,6 +285,8 @@ runSKAToneChr <- function(phenodata, covariates, raw_file_path, window_size, win
                                }
       master_output
     }
+    
+    null_model_noresample <- SKAT_Null_Model(this_phenotype ~ 1 + covariates$V1 + covariates$V2 + covariates$V3 + covariates$V4 + covariates$V5 + covariates$V6 + covariates$V7 + covariates$V8 + covariates$V9 + covariates$V10 + covariates$V11, out_type="C")  
     
     master_output <- loopSKAT(grab_window = grab_window,
                               window_size = window_size,
@@ -329,10 +331,10 @@ runSKAToneChr <- function(phenodata, covariates, raw_file_path, window_size, win
     
     for(leading_0s in 2:5){
       upper_bound_p_val_for_MC_subset <- 0.1^leading_0s
-      lower_bound_p_val_for_MC_subset <- 0.1^(leading_0s+1)
-      n_permutations <- 10^(leading_0s+1)
+      lower_bound_p_val_for_MC_subset <- 0.1^(leading_0s+(desired_sig_figs-1))
+      n_permutations <- 10^(leading_0s+(desired_sig_figs-1))
       
-      window_list <- master_output[which(master_output$`SKAT_p-val` <= upper_bound_p_val_for_MC_subset & master_output$`SKAT_p-val` > lower_bound_p_val_for_MC_subset),]
+      window_list <- master_output[which(master_output$`SKAT_p-val` <= upper_bound_p_val_for_MC_subset & master_output$`SKAT_p-val` > lower_bound_p_val_for_MC_subset),]$position
       null_model <- SKAT_Null_Model(this_phenotype ~ 1 + covariates$V1 + covariates$V2 + covariates$V3 + covariates$V4 + covariates$V5 + covariates$V6 + covariates$V7 + covariates$V8 + covariates$V9 + covariates$V10 + covariates$V11, out_type="C",
                                     n.Resampling=n_permutations, type.Resampling="bootstrap")  
       grab_window <- iter(obj = function(i) extract_window(window_list[i], window_size = window_size, this_scaff_subset = this_scaff_subset),
@@ -344,6 +346,7 @@ runSKAToneChr <- function(phenodata, covariates, raw_file_path, window_size, win
                                    resampling = TRUE,
                                    null_model = null_model,
                                    n_permutations = n_permutations)
+      
       
       output_resampled <- post_process_master_output(master_output = output_resampled)
       master_output <- rbind(master_output, output_resampled)
