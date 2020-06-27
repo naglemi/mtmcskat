@@ -1,41 +1,127 @@
-loopSKAT <- function(grab_window, window_size, raw_file_path, resampling, null_model, ...){
-  master_output <- foreach(pos_and_SNPs=grab_window,
-                           .combine="rbind",
-                           .export=c("window_size"),
-                           .errorhandling="pass") %do% {
-                             print("Now inside foreach loop. Z is: ")
-                             #print(Z)
-                             #stop()
-                             #print("Got Z")
+loopSKAT <- function(grab_window, window_size, raw_file_path, resampling, null_model, n_permutations, parallelize_over = "windows", n_small_null_models = NA,
+                     this_scaff_subset, window_list){
+  if(parallelize_over=="windows"){
+    master_output <- foreach(pos_and_SNPs=grab_window,
+                             .combine="rbind",
+                             .export=c("window_size"),
+                             .errorhandling="pass") %do% {
+                               print("Now inside foreach loop. Z is: ")
+                               #print(Z)
+                               #stop()
+                               #print("Got Z")
 
-                             if(is.list(pos_and_SNPs) == FALSE){
-                               print("No SNPs in this window")
-                               return(NA)
+                               if(is.list(pos_and_SNPs) == FALSE){
+                                 print("No SNPs in this window")
+                                 return(NA)
+                               }
+
+                               print(pos_and_SNPs[[1]])
+
+                               # The above function returns None if there are no SNPs within the window. Because of this,
+                               # we only run the below if a matrix is returned to avoid "Z is not a matrix" error.
+                               if(is.matrix(pos_and_SNPs[[2]])==TRUE){
+                                 print("About to go into SKAT_one_window")
+                                 this_SKAT_out <- SKAT_one_window(this_position = pos_and_SNPs[[1]],
+                                                                  window_size,
+                                                                  Z = pos_and_SNPs[[2]],
+                                                                  raw_file_path = raw_file_path,
+                                                                  resampling = resampling,
+                                                                  null_model = null_model,
+                                                                  n_permutations = n_permutations)
+                                 print("Out of SKAT_one_window")
+                               } else {
+                                 print("Not matrix!")
+                                 return(NA)
+                               }
+                               print("length of SKAT out:")
+                               print(length(this_SKAT_out))
+                               print("This SKAT out about to be returned:")
+                               print(this_SKAT_out)
+                               return(this_SKAT_out)
                              }
+  }
 
-                             print(pos_and_SNPs[[1]])
+  if(parallelize_over=="null_models"){
+    master_output <- foreach(null_model_index = 1:n_small_null_models,
+                             .combine="rbind",
+                             .export=c("window_size"),
+                             .errorhandling="pass") %do% {
+                               print(paste0("Now inside foreach loop for parallelizing over null models. This # null model is: ", null_model_index))
+                               #print(Z)
+                               #stop()
+                               #print("Got Z")
 
-                             # The above function returns None if there are no SNPs within the window. Because of this,
-                             # we only run the below if a matrix is returned to avoid "Z is not a matrix" error.
-                             if(is.matrix(pos_and_SNPs[[2]])==TRUE){
-                               print("About to go into SKAT_one_window")
-                               this_SKAT_out <- SKAT_one_window(this_position = pos_and_SNPs[[1]],
-                                                                window_size,
-                                                                Z = pos_and_SNPs[[2]],
-                                                                raw_file_path = raw_file_path,
-                                                                resampling = resampling,
-                                                                null_model = null_model_noresample,
-                                                                n_permutations = n_permutations)
-                               print("Out of SKAT_one_window")
-                             } else {
-                               print("Not matrix!")
-                               return(NA)
+                               null_model <- SKAT_Null_Model(this_phenotype ~ 1 + covariates$V1 + covariates$V2 + covariates$V3 + covariates$V4 + covariates$V5 + covariates$V6 + covariates$V7 + covariates$V8 + covariates$V9 + covariates$V10 + covariates$V11, out_type="C",
+                                                             n.Resampling=n_permutations, type.Resampling="bootstrap")
+                               print("Made null model")
+                               #browser()
+                               master_output <- data.table(matrix(NA, nrow=1, ncol=(n_permutations+3)))
+                               #brow
+                               grab_window <- ihasNext(iter(obj = function(i) extract_window(window_list[i], window_size = window_size, this_scaff_subset = this_scaff_subset),
+                                                   checkFunc = function(i) !is.na(i)))
+                               print("Defined master_output and grab_window on this (to-be) node")
+                               while(TRUE){
+                                 browser()
+                                 if(hasNext(grab_window) == FALSE){
+                                   break
+                                 }
+                                 pos_and_SNPs <- nextElem(grab_window)
+                                 #browser()
+
+                                 if(is.list(pos_and_SNPs) == FALSE){
+                                   print("No SNPs in this window")
+                                   return(NA)
+                                 }
+
+                                 print(pos_and_SNPs[[1]])
+
+                                 # The above function returns None if there are no SNPs within the window. Because of this,
+                                 # we only run the below if a matrix is returned to avoid "Z is not a matrix" error.
+                                 if(is.matrix(pos_and_SNPs[[2]])==TRUE){
+                                   print("About to go into SKAT_one_window")
+                                   this_SKAT_out <- SKAT_one_window(this_position = pos_and_SNPs[[1]],
+                                                                    window_size,
+                                                                    Z = pos_and_SNPs[[2]],
+                                                                    raw_file_path = raw_file_path,
+                                                                    resampling = resampling,
+                                                                    null_model = null_model,
+                                                                    n_permutations = n_permutations,
+                                                                    return_all_p_vals = TRUE)
+                                   print("Out of SKAT_one_window")
+
+                                 } else {
+                                   print("Not matrix!")
+                                   return(NA)
+                                 }
+                                 print("length of SKAT out:")
+                                 print(length(this_SKAT_out))
+                                 #print("This SKAT out about to be returned:")
+                                 #print(this_SKAT_out)
+                                 master_output <- rbind(master_output, this_SKAT_out)
+
+                               }
+
+                               #browser()
+                               master_output
+                               master_output <- t(master_output)
+                               master_output <- as.data.frame(master_output)
+                               rownames(master_output)[1:2] <- c("Position", "p_no_resampling")
+
+                               abbreviated_master_output <- as.data.frame(t(master_output[1:2,]))
+                               abbreviated_master_output$n_perm_p_below <- rep(NA, nrow(abbreviated_master_output))
+                               abbreviated_master_output$n_perm_p_above <- rep(NA, nrow(abbreviated_master_output))
+
+                               for(k in ncol(master_output)){
+                                 print(paste0("For SNP in ", colnames(master_output)[k]))
+                                 n_perm_p_below <- length(which(master_output[ 3:nrow(master_output) , k] <= master_output[ 2 , k ]))
+                                 n_perm_p_above <- length(which(master_output[ 3:nrow(master_output) , k] > master_output[ 2 , k ]))
+                                 abbreviated_master_output$n_perm_p_below[k] <- n_perm_p_below
+                                 abbreviated_master_output$n_perm_p_above[k] <- n_perm_p_above
+                               }
+
+                               return(abbreviated_master_output)
                              }
-                             print("length of SKAT out:")
-                             print(length(this_SKAT_out))
-                             print("This SKAT out about to be returned:")
-                             print(this_SKAT_out)
-                             return(this_SKAT_out)
-                           }
+    browser()
+  }
   master_output
 }

@@ -4,6 +4,7 @@ extract_window <- function(this_position, window_size, this_scaff_subset){
 
   if(is.na(this_position)){
     print("NA position. Reached end of scaffold?")
+    print("Passing StopIteration")
     stop("StopIteration")
   }
 

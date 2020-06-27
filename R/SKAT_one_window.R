@@ -11,10 +11,12 @@ SKAT_one_window <- function(this_position, window_size, Z, SKAT_O = "OFF", raw_f
       to_append <- as.numeric(c(basename(raw_file_path), this_position, as.numeric(as.character(this_SKAT_out$p.value)), p_empirical, NA, NA))
     }
     if(return_all_p_vals == TRUE){
-      p_list <- calculate_SKAT_empirical_p(n_permutations = n_permutations,
+      p_list <- calculate_SKAT_empirical_p(Z = Z,
+                                           n_permutations = n_permutations,
                                            null_model = null_model,
                                            return_all_p = TRUE)
-      to_append <- as.numeric(this_position, p_list)
+      #browser()
+      to_append <- as.numeric(c(this_position, as.numeric(as.character(this_SKAT_out$p.value)), p_list))
     }
 
   }
@@ -25,7 +27,7 @@ SKAT_one_window <- function(this_position, window_size, Z, SKAT_O = "OFF", raw_f
   }
 
   print(length(to_append))
-  print(to_append)
+  #print(to_append)
 
   to_append
 }

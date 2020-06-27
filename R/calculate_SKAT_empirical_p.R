@@ -6,6 +6,7 @@ calculate_SKAT_empirical_p <- function(Z, n_permutations, null_model, return_all
     return(p_resampled_SKAT)
   }
   if(return_all_p == TRUE){
+    #browser()
     return(this_SKAT_out$p.value.resampling)
   }
 }

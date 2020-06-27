@@ -1,5 +1,5 @@
 # SKAT_mydata.R
-rm(list=ls())
+#rm(list=ls())
 
 #install.packages("SKAT")
 #install.packages("tari")
@@ -8,12 +8,15 @@ library(data.table)
 library(tools)
 library(foreach)
 library(doParallel)
-library(dplyr)
+library(plyr)
 
 library(optparse)
 library(iterators)
+library(itertools)
 
 library(SKATMCMT)
+
+#library(SKATMCMT)
 
 # Read arguments from command line  ---------------------------------------
 
@@ -55,7 +58,7 @@ library(SKATMCMT)
 #               help="User-provided job identifier, to be used as subfolder in which results are placed",
 #               metavar="character")
 # );
-# 
+#
 # opt_parser = OptionParser(option_list=option_list);
 # opt = parse_args(opt_parser);
 
@@ -67,34 +70,18 @@ opt <- list(phenodata_path = "/scratch2/NSF_GWAS/phenodata/third_training/PCs_ra
             window_size = 3000,
             window_shift = 1000,
             output_dir = "/scratch2/NSF_GWAS/Results/SKAT/",
-            job_id = "fixing_iter_a3")
+            job_id = "fixing_iter_a4")
 
 setwd(opt$output_dir)
-#phenodata_path <- "/scratch2/NSF_GWAS/phenodata/final_training/shoot_5w.header.pheno"
-covariates <- fread(opt$covariates)
 
-# Adding new phase data 3/29/20 ------------------------------------------------
 phenodata <- fread(opt$phenodata_path)
 this_phenotype <- as.numeric(unlist(phenodata[,3]))
 
-# Count SNP windows -------------------------------------------------------
-
-#total_n_test <- 390000
-
-so_far_n_test <- 0
-
-# for (that_scaff in levels(factor(trawA_in$CHR))[1:19]){
-#   #print(that_scaff)
-#   that_scaff_subset <- subset(trawA_in, trawA_in$CHR == that_scaff)
-#   if(nrow(that_scaff_subset) != 0){
-#     total_n_test <- total_n_test + ((round(max(that_scaff_subset$POS)/window_size))*3)
-#   }
-#   #print(total_n_test)
-# }
+covariates <- fread(opt$covariates)
 
 whole_genome_start <- proc.time()
 
-runSKAToneChr(phenodata = phenodata,
+runSKATtraw(phenodata = phenodata,
               covariates = covariates,
               raw_file_path = opt$raw_file_path,
               window_size = opt$window_size,

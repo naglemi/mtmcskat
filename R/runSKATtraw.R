@@ -1,4 +1,4 @@
-runSKAToneChr <- function(phenodata, covariates, raw_file_path, window_size, window_shift, output_dir = "/scratch2/NSF_GWAS/Results/SKAT/", ncore=24, SKAT_O = "OFF",
+runSKATtraw <- function(phenodata, covariates, raw_file_path, window_size, window_shift, output_dir = "/scratch2/NSF_GWAS/Results/SKAT/", ncore=24, SKAT_O = "OFF",
                           job_id, desired_sig_figs = 2){
 
   # Prepare SKAT inputs other than null model -------------------------------
@@ -43,17 +43,6 @@ runSKAToneChr <- function(phenodata, covariates, raw_file_path, window_size, win
                      maxwindow,
                      by=window_shift)
 
-  # Make an iterator function so cores pull windows without copying  --------
-  ## without copying whole traw file
-  #grab_window <- iter(function() this_scaff_subset[which(with(this_scaff_subset, this_scaff_subset$POS >= (this_position - (window_size/2)) & (this_position +(window_size/2)), arr.ind = TRUE)])
-
-  # grab_window <- iter(window_list,
-  #                     checkFunc = function(i) extract_window(i, window_size = window_size, this_scaff_subset = this_scaff_subset)) # https://datawookie.netlify.app/blog/2013/11/iterators-in-r/
-
-  # grab_window <- iter(function(window_list) extract_window(window_list, window_size = window_size, this_scaff_subset = this_scaff_subset))
-
-  # grab_window <- iter(obj = function(i) extract_window(window_list[i], window_size = window_size, this_scaff_subset = this_scaff_subset),
-  #                     checkFunc = function(i) !is.na(i))
 
   grab_window <- iter(obj = function(i) extract_window(window_list[i], window_size = window_size, this_scaff_subset = this_scaff_subset),
                       checkFunc = function(i) !is.na(i))
@@ -75,39 +64,6 @@ runSKAToneChr <- function(phenodata, covariates, raw_file_path, window_size, win
                             resampling = FALSE,
                             null_model = null_model_noresample)
 
-  #browser()
-  # print("Begin NONparallel action")
-  # master_output <- foreach(i=window_list, .combine="rbind", .export=c("window_size")) %do% {
-  #   print("Getting Z frmo nextElem")
-  #   Z <- nextElem(grab_window)
-  #   # FOR SOME REASON WE BREAK OUT OF THE LOOP HERE!!! FIX THIS
-  #   print(Z)
-  #   stop()
-  #   print("Got Z")
-  #
-  #   # The above function returns None if there are no SNPs within the window. Because of this,
-  #   # we only run the below if a matrix is returned to avoid "Z is not a matrix" error.
-  #   if(is.matrix(Z)==TRUE){
-  #     print("About to go into SKAT_one_window")
-  #     this_SKAT_out <- SKAT_one_window(this_position = i,
-  #                                      window_size,
-  #                                      Z = Z,
-  #                                      raw_file_path = raw_file_path,
-  #                                      resampling = FALSE)
-  #     print("Out of SKAT_one_window")
-  #   } else {
-  #     print("Not matrix!")
-  #   }
-  #   print("Dimensions of SKAT out:")
-  #   return(this_SKAT_out)
-  # }
-  post_process_master_output <- function(master_output){
-    master_output <- data.frame(master_output)
-    colnames(master_output) <- c("Chr", "position", "SKAT_p-val", "SKAT_p-val_resampled", "SKAT_O_p-val", "SKAT_O_p-val_resampled")
-    master_output$`SKAT_p-val_resampled` <- as.numeric(as.character(master_output$`SKAT_p-val_resampled`))
-    master_output
-  }
-
   master_output <- post_process_master_output(master_output = master_output)
 
   max_leading_0s <- attr(regexpr("(?<=\\.)0+",
@@ -120,6 +76,7 @@ runSKAToneChr <- function(phenodata, covariates, raw_file_path, window_size, win
     upper_bound_p_val_for_MC_subset <- 0.1^leading_0s
     lower_bound_p_val_for_MC_subset <- 0.1^(leading_0s+(desired_sig_figs-1))
     n_permutations <- 10^(leading_0s+(desired_sig_figs-1))
+    print(paste0("n_permutations: ", n_permutations))
 
     window_list <- master_output[which(master_output$`SKAT_p-val` <= upper_bound_p_val_for_MC_subset & master_output$`SKAT_p-val` > lower_bound_p_val_for_MC_subset),]$position
     print("Making null model")
@@ -143,46 +100,33 @@ runSKAToneChr <- function(phenodata, covariates, raw_file_path, window_size, win
   }
 
   # NOW FOR THE 10M
-  browser()
-  grab_window <- iter(window_list_10M_resample,
-                      checkFunc = function(i) extract_window(i, window_size = window_size, this_scaff_subset = this_scaff_subset)) # https://datawookie.netlify.app/blog/2013/11/iterators-in-r/
+  #browser()
 
-  output_10M_resample <- foreach(i=1:10, .combine="cbind") %do% {
-    set.seed(i*10)
-    null_model_1Mresample <- SKAT_Null_Model(this_phenotype ~ 1 + covariates$V1 + covariates$V2 + covariates$V3 + covariates$V4 + covariates$V5 + covariates$V6 + covariates$V7 + covariates$V8 + covariates$V9 + covariates$V10 + covariates$V11, out_type="C",
-                                             n.Resampling=1000000, type.Resampling="bootstrap")
+  large_n_tests <- 10000000
+  n_permutations_per_small_null_model = 100000
+  n_small_null_models <- large_n_tests/n_permutations_per_small_null_model
 
-    foreach(i=window_list_1M_resample, .combine="rbind", .export=c("window_size")) %dopar% {
-      Z <- nextElem(grab_window)
-      # The above function returns None if there are no SNPs within the window. Because of this,
-      # we only run the below if a matrix is returned to avoid "Z is not a matrix" error.
+  leading_0s <- 6
+  upper_bound_p_val_for_MC_subset <- 0.1^leading_0s
+  lower_bound_p_val_for_MC_subset <- 0.1^(leading_0s+(desired_sig_figs-1))
+  n_permutations <- 10^(leading_0s+(desired_sig_figs-1))
+  print(paste0("n_permutations: ", n_permutations))
 
-      # I need to massively rework this so we only generate 10 1M resample null models in total, and use the same ones for all windows.
-      # This is a very special case because we have no machine with ~1TB RAM that would be needed for a 10M resample null model
+  window_list <- master_output[which(master_output$`SKAT_p-val` <= upper_bound_p_val_for_MC_subset & master_output$`SKAT_p-val` > lower_bound_p_val_for_MC_subset),]$position
 
-      if(is.matrix(Z)==TRUE){
-        SKAT_one_window(this_position = window,
-                        window_size,
-                        Z = Z,
-                        raw_file_path = raw_file_path,
-                        resampling = TRUE,
-                        null_model = null_model_1Mresample,
-                        n_permutations = 1000000,
-                        return_all_p_vals = TRUE)
-      }
+  # Note that when parallelizing over null models, we define iterator inside loopSKAT.
+  # unlike when parallelizing over windows where it is defined outside of the function.
 
-      # THE BELOW LINE IS WRONG. THIS SHOULD BE A LINE THAT ADDS EACH SET OF 1M p-vals TO THE TOTAL
-      # p.resample.all <- c(p.resample.all, this_SKAT_out$p.value.resampling)
-
-      ## SECOND THOUGHTS:
-      ## THINK I SHOULD PARALLELIZE OVER WINDOWS STILL, AND USE A SIMPLE FOR-LOOP for EACH 1M NULL MODEL GENERATED
-      ## SINCE THEY ONLY TAKE A MINUTE OR SO EACH
-      ## ... AND IT's EASIER TO CODE
-
-    }
-
-  }
-
+  output_resampled <- loopSKAT(#grab_window = grab_window,
+                               window_size = window_size,
+                               this_scaff_subset = this_scaff_subset,
+                               window_list = window_list,
+                               raw_file_path = raw_file_path,
+                               resampling = TRUE,
+                               #null_model = null_model,
+                               n_permutations = n_permutations_per_small_null_model,
+                               n_small_null_models = n_small_null_models,
+                               parallelize_over = "null_models")
 
   output_no_resample_subset <- master_output[which(master_output$SKAT_p-val > 0.01),]
 
