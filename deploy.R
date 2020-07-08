@@ -13,6 +13,9 @@ library(plyr)
 library(optparse)
 library(iterators)
 library(itertools)
+library(furrr)
+library(purrr)
+library(dplyr)
 
 library(SKATMCMT)
 
@@ -70,7 +73,7 @@ opt <- list(phenodata_path = "/scratch2/NSF_GWAS/phenodata/third_training/PCs_ra
             window_size = 3000,
             window_shift = 1000,
             output_dir = "/scratch2/NSF_GWAS/Results/SKAT/",
-            job_id = "fixing_iter_a4")
+            job_id = "fixing_iter_a15")
 
 setwd(opt$output_dir)
 
@@ -81,13 +84,23 @@ covariates <- fread(opt$covariates)
 
 whole_genome_start <- proc.time()
 
+
+# cl <- makeCluster(availableCores(),
+#                   type = "FORK",
+#                   outfile="cluster.outfile")
+# registerDoParallel(cl)
+# on.exit(stopCluster(cl))
+#plan(cl)
+plan('multicore')
+
 runSKATtraw(phenodata = phenodata,
               covariates = covariates,
               raw_file_path = opt$raw_file_path,
               window_size = opt$window_size,
               window_shift = opt$window_shift,
               output_dir = opt$output_dir,
-              job_id = opt$job_id)
+              job_id = opt$job_id,
+              chunk_size = 500)
 
 
 

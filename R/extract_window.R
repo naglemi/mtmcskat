@@ -5,16 +5,17 @@ extract_window <- function(this_position, window_size, this_scaff_subset){
   if(is.na(this_position)){
     #print("NA position. Reached end of scaffold?")
     #print("Passing StopIteration")
-    stop("StopIteration")
+    #stop("StopIteration")
+    return(list(this_position, NA))
   }
 
   locus_of_interest <- this_position
-  window_start <- locus_of_interest - (window_size/2)
+  window_start <- as.numeric(as.character(locus_of_interest)) - (window_size/2)
 
   if (window_start < 0){
     window_start <- 0
   }
-  window_end <- locus_of_interest + (window_size/2)
+  window_end <- as.numeric(as.character(locus_of_interest)) + (window_size/2)
 
   #print(paste0("SNP window: ", window_start, "-", window_end))
 
@@ -25,7 +26,7 @@ extract_window <- function(this_position, window_size, this_scaff_subset){
     #next
     #return()
     # I think we need return(NA) instead of return() to stop is.matrix(Z) from giving a "missing value where TRUE/FALSE needed" error
-    return(NA)
+    return(list(this_position, NA))
   }
   #print("Determined whether there are any indices")
   genodata_thiswindow <- this_scaff_subset[indices_to_pull[1]:indices_to_pull[length(indices_to_pull)],]
@@ -44,5 +45,6 @@ extract_window <- function(this_position, window_size, this_scaff_subset){
   #print(dim(Z))
   #print(head(Z)[,1:min(10, ncol(Z))])
   #print("Now about to return Z")
+  #browser()
   return(list(this_position, Z))
 }
