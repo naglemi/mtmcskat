@@ -24,56 +24,57 @@ library(SKATMCMT)
 # Read arguments from command line  ---------------------------------------
 
 
-# option_list = list(
-#   make_option(c("-p", "--phenodata_path"),
-#               type="character",
-#               default=NULL,
-#               help="path to phenotype file",
-#               metavar="character"),
-#   make_option(c("-c", "--covariates"),
-#               type="character",
-#               default=NULL,
-#               help="path to covariates file",
-#               metavar="character"),
-#   make_option(c("-r", "--raw_file_path"),
-#               type="character",
-#               default=NULL,
-#               help="path to genodata in raw format (see PLINK manual)",
-#               metavar="character"),
-#   make_option(c("-S", "--window_size"),
-#               type="numeric",
-#               default=3000,
-#               #help="Number of pixels passing intensity threshold for binary classifications of transgenic or not",
-#               metavar="numeric"),
-#   make_option(c("-s", "--window_shift"),
-#               type="numeric",
-#               default=1000,
-#               #help="Number of pixels passing intensity threshold for binary classifications of transgenic or not",
-#               metavar="numeric"),
-#   make_option(c("-o", "--output_dir"),
-#               type="character",
-#               default="/scratch2/NSF_GWAS/Results/SKAT/",
-#               help="Path to directory where results will be saved",
-#               metavar="character"),
-#   make_option(c("-j", "--job_id"),
-#               type="character",
-#               default="no_job_id",
-#               help="User-provided job identifier, to be used as subfolder in which results are placed",
-#               metavar="character")
-# );
-#
-# opt_parser = OptionParser(option_list=option_list);
-# opt = parse_args(opt_parser);
+option_list = list(
+  make_option(c("-p", "--phenodata_path"),
+              type="character",
+              default=NULL,
+              help="path to phenotype file",
+              metavar="character"),
+  make_option(c("-c", "--covariates"),
+              type="character",
+              default=NULL,
+              help="path to covariates file",
+              metavar="character"),
+  make_option(c("-r", "--raw_file_path"),
+              type="character",
+              default=NULL,
+              help="path to genodata in raw format (see PLINK manual)",
+              metavar="character"),
+  make_option(c("-S", "--window_size"),
+              type="numeric",
+              default=3000,
+              #help="Number of pixels passing intensity threshold for binary classifications of transgenic or not",
+              metavar="numeric"),
+  make_option(c("-s", "--window_shift"),
+              type="numeric",
+              default=1000,
+              #help="Number of pixels passing intensity threshold for binary classifications of transgenic or not",
+              metavar="numeric"),
+  make_option(c("-o", "--output_dir"),
+              type="character",
+              default="/scratch2/NSF_GWAS/Results/SKAT/",
+              help="Path to directory where results will be saved",
+              metavar="character"),
+  make_option(c("-j", "--job_id"),
+              type="character",
+              default="no_job_id",
+              help="User-provided job identifier, to be used as subfolder in which results are placed",
+              metavar="character")
+);
 
-opt <- list(phenodata_path = "/scratch2/NSF_GWAS/phenodata/third_training/PCs_ratios_binarized_4class/TDZ_shoot_area.emmax.pheno",
-            #phenodata_path = "/scratch2/NSF_GWAS/phenodata/epicormic/EpicormicBudBreak_South_March_2014.header.pheno",
-            covariates = "/scratch2/NSF_GWAS/phenodata/Covariates_DiamFinal_PhaseFinal_PCs.txt",
-            #raw_file_path = "/scratch2/NSF_GWAS/genodata/MAF0.0_geno882_Chr10.traw",
-            raw_file_path = "/scratch2/NSF_GWAS/genodata/MAF0.0_geno882_Chr10_portion.traw",
-            window_size = 3000,
-            window_shift = 1000,
-            output_dir = "/scratch2/NSF_GWAS/Results/SKAT/",
-            job_id = "fixing_iter_a15")
+opt_parser = OptionParser(option_list=option_list);
+opt = parse_args(opt_parser);
+#
+# opt <- list(phenodata_path = "/scratch2/NSF_GWAS/phenodata/third_training/PCs_ratios_binarized_4class/TDZ_shoot_area.emmax.pheno",
+#             #phenodata_path = "/scratch2/NSF_GWAS/phenodata/epicormic/EpicormicBudBreak_South_March_2014.header.pheno",
+#             covariates = "/scratch2/NSF_GWAS/phenodata/Covariates_DiamFinal_PhaseFinal_PCs.txt",
+#             #raw_file_path = "/scratch2/NSF_GWAS/genodata/MAF0.0_geno882_Chr10.traw",
+#             #raw_file_path = "/scratch2/NSF_GWAS/genodata/MAF0.0_geno882_Chr10_portion.traw",
+#             raw_file_path = "/scratch2/NSF_GWAS/genodata/MAF0.0_geno882_Chr10_1000kb.traw",
+#             window_size = 3000,
+#             window_shift = 1000,
+#             output_dir = "/scratch2/NSF_GWAS/Results/SKAT/",
+#             job_id = "fixing_iter_a15")
 
 setwd(opt$output_dir)
 
@@ -92,6 +93,9 @@ whole_genome_start <- proc.time()
 # on.exit(stopCluster(cl))
 #plan(cl)
 plan('multicore')
+
+RAM_GB <- 5
+options(future.globals.maxSize= RAM_GB*1000*(1024^2)) # https://stackoverflow.com/questions/40536067/how-to-adjust-future-global-maxsize-in-r
 
 runSKATtraw(phenodata = phenodata,
               covariates = covariates,

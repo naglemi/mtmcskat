@@ -1,21 +1,14 @@
-loopSKAT <- function(grab_window, window_size = NA, window_shift = NA, window_list = NA,
+loopSKAT <- function(pre_allocated_SNP_windows, grab_window, window_size = NA, window_shift = NA, window_list = NA,
                      raw_file_path = NA, resampling = FALSE, null_model, n_permutations, parallelize_over = "windows", n_small_null_models = NA,
                      this_scaff_subset, ncore=24, chunk_size=500, backend="foreach", RAM_GB = 4, chunk = TRUE){
   #print("Will use foreach now")
 
 
 
-  options(future.globals.maxSize= RAM_GB*1000*(1024^2)) # https://stackoverflow.com/questions/40536067/how-to-adjust-future-global-maxsize-in-r
 
   #iter_object <- icount(length(window_list))
 
   if(parallelize_over=="windows" & backend=="furrr"){
-    pre_allocated_SNP_windows <- pre_allocate(raw_file_path = raw_file_path,
-                                              #this_scaff_subset = this_scaff_subset,
-                                              window_list = window_list,
-                                              window_size = window_size,
-                                              window_shift = window_shift,
-                                              pre_allocated_dir = "/scratch2/NSF_GWAS/SKAT_SLURMS/SKAT_MC_parallel/pre_allocated")
     #chunk_size <- 1000
 
     #plan(multiprocess)
@@ -38,18 +31,18 @@ loopSKAT <- function(grab_window, window_size = NA, window_shift = NA, window_li
     #                                 .f = mappable_SKAT,
     master_output <- future.apply::future_lapply(X = pre_allocated_SNP_windows,
                                                  FUN = mappable_SKAT,
-                                    #.options = future_options(packages = "SKAT"),
-                                    #.progress = TRUE,
-                                    #.cleanup = TRUE,
-                                    #this_position = .x,
-                                    #window_size = window_size,
-                                    #this_scaff_subset = this_scaff_subset,
-                                    raw_file_path = raw_file_path,
-                                    null_model = null_model,
-                                    resampling = resampling,
-                                    n_permutations = n_permutations,
-                                    chunk = TRUE)
-    print(paste0("Finished parallel run (w/o resampling) in ",
+                                                 #.options = future_options(packages = "SKAT"),
+                                                 #.progress = TRUE,
+                                                 #.cleanup = TRUE,
+                                                 #this_position = .x,
+                                                 #window_size = window_size,
+                                                 #this_scaff_subset = this_scaff_subset,
+                                                 raw_file_path = raw_file_path,
+                                                 null_model = null_model,
+                                                 resampling = resampling,
+                                                 n_permutations = n_permutations,
+                                                 chunk = chunk)
+    message(paste0("Finished parallel run in ",
                  (proc.time() - time_to_run_mapping)[3],
                  "s"))
 

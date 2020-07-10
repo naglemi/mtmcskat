@@ -1,5 +1,6 @@
 runSKATtraw <- function(phenodata, covariates, raw_file_path, window_size, window_shift, output_dir = "/scratch2/NSF_GWAS/Results/SKAT/", ncore=24, SKAT_O = "OFF",
-                        job_id, desired_sig_figs = 2, min_leading_0s = 2, upper_bound_leading_0s_null_model_par = 5, chunk_size){
+                        job_id, desired_sig_figs = 2, min_leading_0s = 2, upper_bound_leading_0s_null_model_par = 5, chunk_size,
+                        switch_point = 4){ # get rid of switchpoint parameter once making function determine_switch_point?
 
   # Prepare SKAT inputs other than null model -------------------------------
 
@@ -39,18 +40,26 @@ runSKATtraw <- function(phenodata, covariates, raw_file_path, window_size, windo
   # grab_window <- iter(obj = function(i) extract_window(window_list[i], window_size = window_size, this_scaff_subset = this_scaff_subset),
   #                     checkFunc = function(i) !is.na(i))
 
-  times <- 0
-
-  grab_window <- iter_window(this_scaff_subset = this_scaff_subset,
-                             times = times,
-                             window_list = window_list,
-                             window_size = window_size)
+  # times <- 0
+  #
+  # grab_window <- iter_window(this_scaff_subset = this_scaff_subset,
+  #                            times = times,
+  #                            window_list = window_list,
+  #                            window_size = window_size)
 
   #print("Begin NONparallel action")
 
   null_model_noresample <- SKAT_Null_Model(this_phenotype ~ 1 + covariates$V1 + covariates$V2 + covariates$V3 + covariates$V4 + covariates$V5 + covariates$V6 + covariates$V7 + covariates$V8 + covariates$V9 + covariates$V10 + covariates$V11, out_type="C")
 
-  master_output <- loopSKAT(#grab_window = grab_window,
+  pre_allocated_SNP_windows <- pre_allocate(raw_file_path = raw_file_path,
+                                            this_scaff_subset = this_scaff_subset,
+                                            #window_list = window_list,
+                                            window_size = window_size,
+                                            window_shift = window_shift,
+                                            pre_allocated_dir = "/scratch2/NSF_GWAS/SKAT_SLURMS/SKAT_MC_parallel/pre_allocated")
+
+  master_output <- loopSKAT(pre_allocated_SNP_windows = pre_allocated_SNP_windows,
+                            #grab_window = grab_window,
                             window_size = window_size,
                             window_shift = window_shift,
                             #window_list = window_list,
@@ -71,25 +80,32 @@ runSKATtraw <- function(phenodata, covariates, raw_file_path, window_size, windo
   # Make sure this is right
   #browser()
 
-  for(leading_0s in min_leading_0s:min(4, max_leading_0s)){
-    print(paste0("Running for", leading_0s, " leading zeroes"))
+  #leadings_0s <- min_leading_0s
+
+  for(leading_0s in min_leading_0s:min(switch_point, max_leading_0s)){
+
     upper_bound_p_val_for_MC_subset <- 0.1^leading_0s
     lower_bound_p_val_for_MC_subset <- 0.1^(leading_0s+(desired_sig_figs-1))
-    print(paste0("Bounds from ", lower_bound_p_val_for_MC_subset, upper_bound_p_val_for_MC_subset))
     n_permutations <- 10^( leading_0s + desired_sig_figs )
-    print(paste0("n_permutations: ", n_permutations))
 
     window_list <- master_output[which(master_output$`SKAT_p-val` <= upper_bound_p_val_for_MC_subset & master_output$`SKAT_p-val` > lower_bound_p_val_for_MC_subset),]$position
-    print(paste0("Number of windows is: ", length(window_list)))
+
+    message(paste0("Running resampling for ", length(window_list),
+                   "SNP windows with p-values from ",
+                   lower_bound_p_val_for_MC_subset, " to ",
+                   upper_bound_p_val_for_MC_subset,
+                   "(", leading_0s, " leading zeroes) with ",
+                   n_permutations, " permutations."))
+
     if(length(window_list) == 0){
-      print(paste0("No SNPs with p-vals within the range bounded from ", lower_bound_p_val_for_MC_subset, " to ", upper_bound_p_val_for_MC_subset))
+      message(paste0("No SNPs with p-vals within the range bounded from ", lower_bound_p_val_for_MC_subset, " to ", upper_bound_p_val_for_MC_subset))
       next
     }
 
     if(length(window_list) < ncore){
       # SWITCH MODE TO PARALLELIZE OVER NULL MODELS INTEAD OF WINDOWS
-      lower_bound_leading_0s_null_model_par <- leading_0s
-      print(paste0("Automatically switching modes for windows with p-vals <= 10^-",
+      # lower_bound_leading_0s_null_model_par <- leading_0s # Moved outside of this loop
+      message(paste0("Automatically switching modes for windows with p-vals <= 10^-",
                    leading_0s,
                    " because there are fewer windows (",
                    length(window_list),
@@ -99,7 +115,7 @@ runSKATtraw <- function(phenodata, covariates, raw_file_path, window_size, windo
       break
     }
 
-    print("Making null model")
+    message("Making null model")
     null_model <- SKAT_Null_Model(this_phenotype ~ 1 + covariates$V1 + covariates$V2 + covariates$V3 + covariates$V4 + covariates$V5 + covariates$V6 + covariates$V7 + covariates$V8 + covariates$V9 + covariates$V10 + covariates$V11, out_type="C",
                                   n.Resampling=n_permutations, type.Resampling="bootstrap")
     print("Done making null model")
@@ -127,18 +143,35 @@ runSKATtraw <- function(phenodata, covariates, raw_file_path, window_size, windo
     # print(dim(output_resampled))
     # output_resampled <- post_process_master_output(master_output = output_resampled)
 
-    add_to_master_output <- loopSKAT(#grab_window = grab_window,
-      window_list = window_list,
-      window_size = window_size,
-      #window_list = window_list,
-      raw_file_path = raw_file_path,
-      resampling = TRUE,
-      null_model = null_model,
-      n_permutations = n_permutations,
-      chunk = FALSE,
-      #chunk_size = chunk_size,
-      #this_scaff_subset = this_scaff_subset,
-      backend = "furrr")
+    # pre_allocated_SNP_windows <- pre_allocate(#raw_file_path = raw_file_path,
+    #                                           this_scaff_subset = this_scaff_subset,
+    #                                           window_list = window_list,
+    #                                           window_size = window_size,
+    #                                           #window_shift = window_shift,
+    #                                           pre_allocated_dir = "/scratch2/NSF_GWAS/SKAT_SLURMS/SKAT_MC_parallel/pre_allocated")
+
+    # write a function to subset the old pre_allocated_SNP_windows
+    #browser()
+
+
+
+    new_pre_allocated_SNP_windows <- subset_list_of_lists(list_of_lists = pre_allocated_SNP_windows, desired_list = window_list, subindex = 1)
+    print(paste0("Numer of SNP windows outside of subset_list_of_lists is ", length(new_pre_allocated_SNP_windows)))
+    if(length(new_pre_allocated_SNP_windows) == 0){
+      print("Debug here")
+      browser()
+    }
+
+    add_to_master_output <- loopSKAT(pre_allocated_SNP_windows = new_pre_allocated_SNP_windows,
+                                     window_size = window_size,
+                                     #window_shift = window_shift,
+                                     raw_file_path = raw_file_path,
+                                     resampling = TRUE,
+                                     null_model = null_model,
+                                     n_permutations = n_permutations,
+                                     chunk = FALSE,
+                                     #this_scaff_subset = this_scaff_subset,
+                                     backend = "furrr")
     #browser()
     add_to_master_output <- dplyr::bind_rows(add_to_master_output)
     add_to_master_output <- post_process_master_output(master_output = add_to_master_output[-1,])
@@ -146,11 +179,13 @@ runSKATtraw <- function(phenodata, covariates, raw_file_path, window_size, windo
 
     #browser()
     master_output <- rbind(master_output,
-                           to_master_output)
+                           add_to_master_output)
   }
 
   # NOW FOR THE 10M
   #browser()
+
+  lower_bound_leading_0s_null_model_par <- leading_0s
 
   for(leading_0s in lower_bound_leading_0s_null_model_par:upper_bound_leading_0s_null_model_par){
 
@@ -188,24 +223,27 @@ runSKATtraw <- function(phenodata, covariates, raw_file_path, window_size, windo
     # Note that when parallelizing over null models, we define iterator inside loopSKAT.
     # unlike when parallelizing over windows where it is defined outside of the function.
     # Not anymore ?
-    browser()
-    times <- 0
-
-    grab_window <- iter_window(this_scaff_subset = this_scaff_subset,
-                               times = times,
-                               window_list = window_list,
-                               window_size = window_size)
-
-    output_resampled <- loopSKAT(grab_window = grab_window,
-                                 window_size = window_size,
-                                 this_scaff_subset = this_scaff_subset,
-                                 window_list = window_list,
-                                 raw_file_path = raw_file_path,
-                                 resampling = TRUE,
-                                 null_model = NA,
-                                 n_permutations = n_permutations_per_small_null_model,
-                                 n_small_null_models = n_small_null_models,
-                                 parallelize_over = "null_models")
+    #ıbrowser()
+    # times <- 0
+    #
+    # grab_window <- iter_window(this_scaff_subset = this_scaff_subset,
+    #                            times = times,
+    #                            window_list = window_list,
+    #                            window_size = window_size)
+    #browser()
+    new_pre_allocated_SNP_windows <- subset_list_of_lists(list_of_lists = pre_allocated_SNP_windows, desired_list = window_list, subindex = 1)
+    #browser()
+    timer <- proc.time()
+    output_resampled <- future.apply::future_lapply(X = 1:large_n_tests,
+                                                 FUN = map_SKAT_nm,
+                                                 pos_and_SNP_list = new_pre_allocated_SNP_windows,
+                                                 window_size = window_size,
+                                                 raw_file_path = raw_file_path,
+                                                 n_permutations = n_permutations_per_small_null_model,
+                                                 resampling=TRUE)
+    print(paste0("Finished resampling up to ", large_n_tests, " permutations in",
+                 (proc.time() - timer)[3], "s"))
+    #browser()
 
     # master_output <- loopSKAT(#grab_window = grab_window,
     #   window_size = window_size,
