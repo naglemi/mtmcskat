@@ -1,11 +1,13 @@
 Package: SKATMCMT
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Multi-Threaded Monte Carlo Sequence Kernel Association Test (MTMC-SKAT)
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Michael Nagle
+Maintainer: Michael Nagle <michael.nagle@oregonstate.edu>
+Description: 
+    This package is an extension of SKAT, with the purpose of enabling and automating efficient parallelization of SKAT with resampling to calculate empirical p-values. This package provides high-level interfaces for efficient parallelization both across CPUs in a high-performance cluster (parallelized over scaffolds) as well as across cores (parallelized over SNP windows and/or null models).
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/naglemi/SKAT_MC_parallel
+BugReports: https://github.com/naglemi/SKAT_MC_parallel/issues

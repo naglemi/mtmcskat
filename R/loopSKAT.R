@@ -1,6 +1,6 @@
 loopSKAT <- function(pre_allocated_SNP_windows, grab_window, window_size = NA, window_shift = NA, window_list = NA,
                      raw_file_path = NA, resampling = FALSE, null_model, n_permutations, parallelize_over = "windows", n_small_null_models = NA,
-                     this_scaff_subset, ncore=24, chunk_size=500, backend="foreach", RAM_GB = 4, chunk = TRUE){
+                     this_scaff_subset, ncore, backend="foreach", RAM_GB = 4, chunk = TRUE){
   #print("Will use foreach now")
 
 
@@ -14,13 +14,14 @@ loopSKAT <- function(pre_allocated_SNP_windows, grab_window, window_size = NA, w
     #plan(multiprocess)
     #browser()
     if ( chunk == TRUE ){
-      print(paste0("Chunking list of length ",
+      chunk_size <- length(pre_allocated_SNP_windows) / ncore
+      message(paste0(Sys.time(), " - Chunking list of length ",
                    length(pre_allocated_SNP_windows),
                    " into blocks each with no more than",
                    chunk_size,
                    " SNP windows each"))
       pre_allocated_SNP_windows <- split(pre_allocated_SNP_windows, (seq_along(pre_allocated_SNP_windows) - 1) %/% chunk_size)
-      print(paste0("...resulting in ", length(pre_allocated_SNP_windows), " blocks"))
+      message(paste0("...resulting in ", length(pre_allocated_SNP_windows), " blocks"))
 
     }
     #browser()

@@ -15,7 +15,10 @@ library(iterators)
 library(itertools)
 library(furrr)
 library(purrr)
+
 library(dplyr)
+library(qqman)
+library(ggplot2)
 
 library(SKATMCMT)
 
@@ -59,22 +62,28 @@ option_list = list(
               type="character",
               default="no_job_id",
               help="User-provided job identifier, to be used as subfolder in which results are placed",
+              metavar="character"),
+  make_option(c("-n", "--ncore"),
+              type="character",
+              default="AllCores",
+              help="A numeric value representing the number of cores to be used, or a string AllCores to automatically detect and use all cores",
               metavar="character")
 );
 
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
-#
+
 # opt <- list(phenodata_path = "/scratch2/NSF_GWAS/phenodata/third_training/PCs_ratios_binarized_4class/TDZ_shoot_area.emmax.pheno",
 #             #phenodata_path = "/scratch2/NSF_GWAS/phenodata/epicormic/EpicormicBudBreak_South_March_2014.header.pheno",
 #             covariates = "/scratch2/NSF_GWAS/phenodata/Covariates_DiamFinal_PhaseFinal_PCs.txt",
 #             #raw_file_path = "/scratch2/NSF_GWAS/genodata/MAF0.0_geno882_Chr10.traw",
-#             #raw_file_path = "/scratch2/NSF_GWAS/genodata/MAF0.0_geno882_Chr10_portion.traw",
-#             raw_file_path = "/scratch2/NSF_GWAS/genodata/MAF0.0_geno882_Chr10_1000kb.traw",
+#             raw_file_path = "/scratch2/NSF_GWAS/genodata/MAF0.0_geno882_Chr10_portion.traw",
+#             #raw_file_path = "/scratch2/NSF_GWAS/genodata/MAF0.0_geno882_Chr10_10kb.traw",
 #             window_size = 3000,
 #             window_shift = 1000,
 #             output_dir = "/scratch2/NSF_GWAS/Results/SKAT/",
-#             job_id = "fixing_iter_a15")
+#             job_id = "fixing_iter_a42",
+#             ncore = 48)
 
 setwd(opt$output_dir)
 
@@ -104,7 +113,8 @@ runSKATtraw(phenodata = phenodata,
               window_shift = opt$window_shift,
               output_dir = opt$output_dir,
               job_id = opt$job_id,
-              chunk_size = 500)
+              chunk_size = 500,
+            ncore = opt$ncore)
 
 
 
