@@ -50,7 +50,7 @@ Inputs include file paths to phenotype, covariate and genotype file
 paths (in standard PLINK formats for phenotypes and covariates and
 `.traw` for genotypes data), the sizes of overlapping SNP windows to be
 tested and the shift in position between windows, and the limit for
-accuracy (recommended to be set beyond FDR or Bonferroni correction
+accuracy (recommended to be set beyond the FDR or Bonferroni correction
 threshold) given as 10^-x.
 
 This function is also accesible from the command line, thus providing a
