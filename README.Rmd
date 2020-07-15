@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-MTMC-SKAT provides high-level R and command line interfaces for [SKAT](https://github.com/leeshawn/SKAT) (Wu et al., 2011; Lee et al., 2016), most notably with support for multi-threaded adaptive resampling to rapidly calculate empirical p-values, and with capabilities for efficient parallelization both over cores and CPUs. These features can facilitate high-powered and accurate GWAS for traits that do not satisfy linear model assumptions. 
+MTMC-SKAT provides high-level R and command line interfaces for [SKAT](https://github.com/leeshawn/SKAT) (Wu et al., 2011; Lee et al., 2016), most notably with support for adaptive resampling with multi-threading using the [future](https://github.com/HenrikBengtsson/future) parallel framework to rapidly calculate empirical p-values. These features can facilitate high-powered and accurate GWAS for traits that do not satisfy linear model assumptions. 
 
 Resampling is performed using an algorithm that allows calculation of empirical p-values to a user-specified number of significant figures. The efficiency of parallelization over SNP windows or permutations depends on a given dataset and resources of a given computer. In the automated workflow, permutations are continually generated and batches of SNP windows are tested to calculate empirical p-values as sufficient permutations become available for each batch. The appropriate mode (multithreading over windows or permutations) is automatically detected for each batch of SNP windows. See the MTMC-SKAT Workflows vignette for details on this automatic workflow and information for designing custom workflows.
 

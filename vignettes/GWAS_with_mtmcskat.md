@@ -55,14 +55,14 @@ standard automated workflow, the appropriate function is used for each
 batch of SNPs based on these criteria.
 
     batch_results_with_resampling_over_SNPs <- mtmcskat(pre_allocated_SNP_windows = new_pre_allocated_SNP_windows,
-                                                        phenotype = this_phenotype,
-                                                        covariates = covariates,
+                                                        phenotype = read.csv("poplar_shoot_sample.csv"),
+                                                        covariates = read.csv("poplar_PC_covariates.csv"),
                                                         ncore = "AllCores",
                                                         multithreading = "snp")
 
     batch_results_with_resampling_over_NMs <- mtmcskat(pre_allocated_SNP_windows = new_pre_allocated_SNP_windows,
-                                                        phenotype = this_phenotype,
-                                                        covariates = covariates,
+                                                        phenotype = read.csv("poplar_shoot_sample.csv"),
+                                                        covariates = read.csv("poplar_PC_covariates.csv"),
                                                         ncore = "AllCores",
                                                         multithreading = "nm")
 
