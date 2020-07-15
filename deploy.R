@@ -21,6 +21,8 @@ library(qqman)
 library(ggplot2)
 
 library(SKATMCMT)
+library(grid)
+library(gridGraphics)
 
 #library(SKATMCMT)
 
@@ -107,13 +109,13 @@ RAM_GB <- 5
 options(future.globals.maxSize= RAM_GB*1000*(1024^2)) # https://stackoverflow.com/questions/40536067/how-to-adjust-future-global-maxsize-in-r
 
 runSKATtraw(phenodata = phenodata,
-              covariates = covariates,
-              raw_file_path = opt$raw_file_path,
-              window_size = opt$window_size,
-              window_shift = opt$window_shift,
-              output_dir = opt$output_dir,
-              job_id = opt$job_id,
-              chunk_size = 500,
+            covariates = covariates,
+            raw_file_path = opt$raw_file_path,
+            window_size = opt$window_size,
+            window_shift = opt$window_shift,
+            output_dir = opt$output_dir,
+            job_id = opt$job_id,
+            chunk_size = 500,
             ncore = opt$ncore)
 
 

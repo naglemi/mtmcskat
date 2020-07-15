@@ -11,3 +11,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/naglemi/SKAT_MC_parallel
 BugReports: https://github.com/naglemi/SKAT_MC_parallel/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
