@@ -1,8 +1,15 @@
+GWAS workflows with MTMC-SKAT
+=============================
+
 In this vignette, we describe key mid-level functions provided by the
 `MTMC-SKAT` package, their usage in the standard automated workflow and
 how they can be used to produce a custom workflow.
 
-    #library(SKATMCMT)
+    # library(SKATMCMT)
+
+### Initial analysis prior to resampling
+
+#### Preparation of SNP data for analysis
 
 The function `pre_allocate` is used to load SNP data from the `.traw`
 format and convert it to a list of SNP windows. The resulting list is
@@ -14,6 +21,8 @@ in the corresponding list for a genotype file if one exists.
                                               window_size = 3000,
                                               window_shift = 1000,
                                               pre_allocated_dir = "pre_allocated/")
+
+#### Multi-threaded SKAT
 
 Upon pre-allocating SNP window data, we can begin the initial round of
 SKAT, without resampling, to produce inital p-values for each SNP window
@@ -29,8 +38,12 @@ distributed among cores.
                                       covariates = read.csv("poplar_PC_covariates.csv"),
                                       ncore = "AllCores")
 
-Based on these initial results, batches of SNP windows producing
-p-values over a given range of interest can be selected using
+### Calculation of empirical p-values for selected SNP windows
+
+#### Selection of SNP windows
+
+Based on initial results, batches of SNP windows producing p-values over
+a given range of interest can be selected using
 `extract_windows_range_p`. As in the standard automated workflow, we
 recommend the range of p-values for each batch of SNPs vary by no more
 than an order of magnitude, to allow calculation of empirical p-values
@@ -41,6 +54,8 @@ to a desired accuracy without an unnecesary number of permutations.
                                            lower_bound = 10^-3)
     new_pre_allocated_SNP_windows <- subset_list_of_lists(list_of_lists = pre_allocated_SNP_windows,
                                                           desired_list = window_list)
+
+#### Multi-threaded Monte Carlo SKAT
 
 Once this subset of SNP windows has been pre-allocated into a new list,
 empirical p-values can be calculated using `mtmcskat` with the
@@ -65,6 +80,8 @@ batch of SNPs based on these criteria.
                                                         covariates = read.csv("poplar_PC_covariates.csv"),
                                                         ncore = "AllCores",
                                                         multithreading = "nm")
+
+#### Re-testing of selected SNP windows
 
 In rare cases, empirical p-values may be significantly lower than
 initial p-values, leading to fewer significant figures for an empirical
