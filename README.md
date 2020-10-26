@@ -1,12 +1,16 @@
+Overview of MTMC-SKAT
+================
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-Multi-Threaded Monte Carlo Sequence Kernel Association Test (MTMC-SKAT)
-=======================================================================
+# Introduction to MTMC-SKAT
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
-MTMC-SKAT provides high-level R and command line interfaces for
+Multi-Threaded Monte Carlo Sequence Kernel Association Test (MTMC-SKAT)
+provides high-level R and command line interfaces for
 [SKAT](https://github.com/leeshawn/SKAT) (Wu et al., 2011; Lee et al.,
 2016), most notably with support for adaptive resampling with
 multi-threading using the
@@ -27,22 +31,26 @@ for each batch of SNP windows. See the MTMC-SKAT Workflows vignette for
 details on this automatic workflow and information for designing custom
 workflows.
 
+# Running over a single scaffold
+
 Workflows are applied over scaffolds independently, with parallelization
 over scaffolds or sub-scaffolds on high-performance clusters as
 described later. Each scaffold is submitted as a .traw file, which can
 be prepared from more common SNP data formats using PLINK. The standard
 workflow can be run over a given scaffold using the following command.
 
-    MTMCSKAT_workflow(phenodata = "poplar_shoot_sample.csv",
-                      covariates = "poplar_PCs_covariates.csv",
-                      raw_file_path = "poplar_Chr10_portion.traw",
-                      window_size = 3000,
-                      window_shift = 1000,
-                      output_dir = "Results/",
-                      job_id = "my_sample_analysis",
-                      ncore = "AllCores",
-                      max_accuracy = 5,
-                      sig_figs = 2)
+``` r
+MTMCSKAT_workflow(phenodata = "poplar_shoot_sample.csv",
+                  covariates = "poplar_PCs_covariates.csv",
+                  raw_file_path = "poplar_Chr10_portion.traw",
+                  window_size = 3000,
+                  window_shift = 1000,
+                  output_dir = "Results/",
+                  job_id = "my_sample_analysis",
+                  ncore = "AllCores",
+                  max_accuracy = 5,
+                  sig_figs = 2)
+```
 
 Inputs include file paths to phenotype, covariate and genotype file
 paths (in standard PLINK formats for phenotypes and covariates and
@@ -56,20 +64,39 @@ one-liner that can be easily submitted as a job to any batch query
 system. Jobs are submitted for each scaffold or sub-scaffold to be
 analyzed.
 
-    Rscript MTMCSKAT_workflow.R --phenodata="poplar_shoot_sample.csv" \
-    --covariates="poplar_PCs_covariates.csv" \
-    --raw_file_path="poplar_Chr10_portion.traw" \
-    --window_size=3000 \
-    --window_shift=1000 \
-    --output_dir="Results/" \
-    --job_id="my_sample_analysis" \
-    --ncore="AllCores" \
-    --max_accuracy=5 \
-    --sig_figs=2
+``` r
+Rscript MTMCSKAT_workflow.R --phenodata="poplar_shoot_sample.csv" \
+--covariates="poplar_PCs_covariates.csv" \
+--raw_file_path="poplar_Chr10_portion.traw" \
+--window_size=3000 \
+--window_shift=1000 \
+--output_dir="Results/" \
+--job_id="my_sample_analysis" \
+--ncore="AllCores" \
+--max_accuracy=5 \
+--sig_figs=2
+```
 
-Finally, the following function can be used to generate a bash script to
+# Running over an array of scaffolds using SLURMS
+
+The following bash command can be used to generate a bash script to
 submit an array of jobs (each for a given scaffold or sub-scaffold) to
 be submitted to to the SGE or SLURMS batch query system…
+
+``` r
+prepare_SLURMS_batch.sh \
+-d inputs/wholeChr \ # Folder containing scaffolds in `.traw` format
+-p poplar_shoot_sample.csv \ # Phenotype file
+-c poplar_PCs_covariates.csv \ # Covariate file
+-i 3000 \ # Window size
+-h 1000 \ # Window shift
+-o Results/ \ # Directory to save results in
+-j my_sample_analysis \ # Prefix to name jobs with
+-n AllCores \ # Maximum number of threads (use string `AllCores` for maximum threads)
+-m 5 \ # Maximum accuracy for empirical p-values
+-s 2 \ # Desired number of significant figures
+-t 01:00:00 # Maximum runtime after which a job will terminate
+```
 
 …
 
