@@ -52,6 +52,7 @@ echo "#SBATCH --output=$job_name_%A_%a.out" >> $job_list_name
 echo "#SBATCH --error=$job_name%A_%a.err" >> $job_list_name
 echo "#SBATCH --array=1-$max_chr" >> $job_list_name
 echo "#SBATCH --time=$max_time" >> $job_list_name
+echo "module load R"
 
 for file in $data_folder/*
 do
