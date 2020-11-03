@@ -16,6 +16,8 @@
 #' @examples
 #' callSKAT(pos_and_SNPs = pos_and_SNPs[[i]], scaffold_ID = scaffold_ID, resampling = TRUE, null_model = null_model, n_permutations = n_permutations)
 #'
+# DEPRECATED
+
 callSKAT <- function(pos_and_SNPs,
                      scaffold_ID,
                      resampling,

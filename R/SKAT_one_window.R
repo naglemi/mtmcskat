@@ -18,41 +18,52 @@
 #'
 #' @examples
 SKAT_one_window <- function(pos_and_SNPs, this_position, window_size, Z, raw_file_path, null_model, n_permutations, SKAT_O = "OFF", resampling=FALSE, return_all_p_vals=FALSE){
-  ##print("Inside SKAT_one_window")
-  # if(hasArg(pos_and_SNPs)){
-  #   this_position <- pos_and_SNPs[[1]]
-  #   Z <- pos_and_SNPs[[2]]
-  # }
-  #browser()
-  this_SKAT_out <- SKAT::SKAT(Z, null_model, kernel = "linear.weighted")
-  ##print("Done running SKAT")
-  if(resampling==TRUE){
-    if(return_all_p_vals == FALSE){
-      p_empirical <- calculate_SKAT_empirical_p(Z = Z,
-                                                n_permutations = n_permutations,
-                                                null_model = null_model)
+
+  # Only run SKAT over a SNP window if the window actually contains SNPs
+  if(is.matrix(Z)==TRUE){
+
+    this_SKAT_out <- SKAT::SKAT(Z, null_model, kernel = "linear.weighted")
+
+    # resampling is performed for mtmcskat but not mtskat
+    if(resampling==TRUE){
+      # For mtmcskat parallelized over SNPs, we calculate the
+      # empirical p-value here and return it, since this can be done on one
+      # thread for each empirical p-value
+      if(return_all_p_vals == FALSE){
+        p_empirical <- calculate_SKAT_empirical_p(Z = Z,
+                                                  n_permutations = n_permutations,
+                                                  null_model = null_model)
+        to_append <- c(raw_file_path, this_position, as.numeric(as.character(this_SKAT_out$p.value)), p_empirical, NA, NA)
+      }
+
+      # for mtmcskat parallelized over null models, we do not have a single
+      # thread containing all permuted p-values, thus we cannot calculate
+      # the empirical p-value without first returning all p-values into
+      # one place
+      if(return_all_p_vals == TRUE){
+
+        p_list <- calculate_SKAT_empirical_p(Z = Z,
+                                             n_permutations = n_permutations,
+                                             null_model = null_model,
+                                             return_all_p = TRUE)
+
+        to_append <- as.numeric(c(this_position, as.numeric(as.character(this_SKAT_out$p.value)), p_list))
+      }
+
+    }
+
+    # no resampling for mtskat... we only need to generate initial p-values
+    if(resampling==FALSE){
+
+      p_empirical <- -9
       to_append <- c(raw_file_path, this_position, as.numeric(as.character(this_SKAT_out$p.value)), p_empirical, NA, NA)
     }
-    if(return_all_p_vals == TRUE){
-      #print("Running SKAT to generate p-list")
-      p_list <- calculate_SKAT_empirical_p(Z = Z,
-                                           n_permutations = n_permutations,
-                                           null_model = null_model,
-                                           return_all_p = TRUE)
-      #browser()
-      #print("Generating output to append")
-      to_append <- as.numeric(c(this_position, as.numeric(as.character(this_SKAT_out$p.value)), p_list))
-    }
+
+  } else {
+    message(paste0("This chunk's window at ", pos_and_SNPs[[1]], " is not matrix!"))
+    to_append <- as.data.frame(t(c(scaffold_ID, pos_and_SNPs[[1]], NA, NA, NA, NA)))
 
   }
-  if(resampling==FALSE){
-    ##print("Not resampling (yet)")
-    p_empirical <- -9
-    to_append <- c(raw_file_path, this_position, as.numeric(as.character(this_SKAT_out$p.value)), p_empirical, NA, NA)
-  }
-
-  #print(length(to_append))
-  ##print(to_append)
 
   to_append
 }
