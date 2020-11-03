@@ -1,4 +1,6 @@
-map_SKAT_nm <- function(null_model_index,
+map_SKAT_nm <- function(this_phenotype,
+                        covariates,
+                        null_model_index,
                         pos_and_SNP_list,
                         window_size,
                         raw_file_path,
@@ -6,8 +8,12 @@ map_SKAT_nm <- function(null_model_index,
                         resampling=TRUE){
 
   set.seed(null_model_index)
-  null_model <- SKAT_Null_Model(this_phenotype ~ 1 + covariates$V1 + covariates$V2 + covariates$V3 + covariates$V4 + covariates$V5 + covariates$V6 + covariates$V7 + covariates$V8 + covariates$V9 + covariates$V10 + covariates$V11, out_type="C",
-                                n.Resampling=n_permutations, type.Resampling="bootstrap")
+
+  null_model <- SKAT::SKAT_Null_Model(
+    this_phenotype ~ 1 + as.matrix(covariates), out_type="C",
+    n.Resampling=n_permutations,
+    type.Resampling="bootstrap")
+
   ##print("Made null model")
   ##browser()
   chunked_output <- data.table(matrix(NA, nrow=1, ncol=(n_permutations+2)))

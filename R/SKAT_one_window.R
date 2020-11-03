@@ -24,7 +24,7 @@ SKAT_one_window <- function(pos_and_SNPs, this_position, window_size, Z, raw_fil
   #   Z <- pos_and_SNPs[[2]]
   # }
   #browser()
-  this_SKAT_out <- SKAT(Z, null_model, kernel = "linear.weighted")
+  this_SKAT_out <- SKAT::SKAT(Z, null_model, kernel = "linear.weighted")
   ##print("Done running SKAT")
   if(resampling==TRUE){
     if(return_all_p_vals == FALSE){

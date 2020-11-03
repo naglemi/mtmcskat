@@ -14,8 +14,11 @@ calculate_max_perm_per_core <- function(nm_RAM_per_perm,
 
 benchmark_nm <- function(phenotype, covariates, benchmark_size = 1000){
   # benchmark_nm(phenotype = this_phenotype, covariates = covariates)
-  null_model <- SKAT_Null_Model(phenotype ~ 1 + as.matrix(covariates), out_type="C",
-                                n.Resampling = benchmark_size, type.Resampling="bootstrap")
+  null_model <- SKAT::SKAT_Null_Model(phenotype ~ 1 + as.matrix(covariates),
+                                      out_type="C",
+                                      n.Resampling = benchmark_size,
+                                      type.Resampling="bootstrap")
+
   nm_RAM_per_perm <- object.size(null_model) / benchmark_size
   nm_RAM_per_perm
 }
