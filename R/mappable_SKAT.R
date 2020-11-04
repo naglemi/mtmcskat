@@ -19,7 +19,7 @@ mappable_SKAT <- function(#this_position,
       to_append <- SKAT_one_window(this_position = pos_and_SNPs[[i]][[1]],
                                    #window_size,
                                    Z = pos_and_SNPs[[i]][[2]],
-                                   raw_file_path = scaffold_ID,
+                                   raw_file_path = raw_file_path,
                                    resampling = resampling,
                                    null_model = null_model,
                                    n_permutations = n_permutations)
@@ -32,16 +32,6 @@ mappable_SKAT <- function(#this_position,
 
   if ( chunk == FALSE ) {
 
-    to_append <- SKAT_one_window(this_position = pos_and_SNPs[[i]][[1]],
-                                 #window_size,
-                                 Z = pos_and_SNPs[[i]][[2]],
-                                 raw_file_path = scaffold_ID,
-                                 resampling = resampling,
-                                 null_model = null_model,
-                                 n_permutations = n_permutations)
 
-    pos_and_SNPs <-NULL
-    gc()
-    as.data.frame(t(to_append))
   }
 }
