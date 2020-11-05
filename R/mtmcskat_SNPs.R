@@ -11,6 +11,8 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
 
   time_to_run_mapping <- proc.time()
 
+  browser()
+
   add_to_master_output <- future.apply::future_lapply(
     X = pre_allocated_SNP_windows,
     FUN = mappable_SKAT,

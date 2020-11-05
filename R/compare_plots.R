@@ -46,16 +46,3 @@ compare_plots <- function(master_output, plot_out_name, scaffold_ID){
                   ,g, bg = "transparent")
 
 }
-
-qqman::manhattan(
-  master_output[!is.na(master_output$`SKAT_p-val_resampled`), ],
-  chr = "Chr",
-  bp = "position",
-  p = "SKAT_p-val_resampled",
-  xlim = c(14460000, 14550000),
-  ylim = c(0,
-           ceiling(max(
-             na.omit((-log(master_output$`SKAT_p-val`,
-                           base = 10)))))),
-  suggestiveline = FALSE,
-  genomewideline = FALSE)
