@@ -18,7 +18,6 @@
 #'
 #' @examples
 SKAT_one_window <- function(this_position,
-                            window_size,
                             Z,
                             raw_file_path,
                             null_model,
@@ -90,6 +89,8 @@ SKAT_one_window <- function(this_position,
       c(raw_file_path, this_position, NA, NA, NA, NA)))
 
   }
+
+  browser()
 
   to_append
 }
