@@ -1,28 +1,41 @@
-#' Title
+#' Run SKAT, optionally obtaining permuted p-values or empirical p-value, and
+#' organize results into a vector to be added to dataframe of results
 #'
-#' @param pos_and_SNPs
-#' @param this_position
-#' @param window_size
-#' @param Z
-#' @param raw_file_path
-#' @param null_model
-#' @param n_permutations
-#' @param SKAT_O
-#' @param resampling
-#' @param return_all_p_vals
+#' @param this_position Integer indicating the center of a given SNP window (in
+#'   base pairs)
+#' @param scaffold_ID Integer indicating the chromosome or scaffold of interest
+#' @param resampling If TRUE, will call \code{\link{calculate_SKAT_empirical_p}}
+#'   to calculate an empirical p-value or obtain a vector of permuted p-values.
+#'   If FALSE, will pass NA in place of an empirical p-value
+#' @inheritParams calculate_SKAT_empirical_p
 #'
-#' @return
+#' @return If not returning all permuted p-values (as indicated by
+#'   `return_all_p_vals`, the output will be a vector of length 4, containing
+#'   `scaffold_ID`, `this_position`, the model p-value, and finally the
+#'   empirical p-value (if applicable; otherwise NA). If returning all p-values,
+#'   the length of the output vector will be two (for SNP scaffold and window
+#'   center position) plus the number of permutations. NA)
 #' @export
 #'
-#' @importFrom SKAT SKAT
-#'
 #' @examples
+#' data("sample_null_model")
+#' data("sample_pre_allocated_SNP_windows")
+#'
+#' SKAT_one_window(
+#'   this_position = sample_pre_allocated_SNP_windows[[1]][[1]],
+#'   Z = sample_pre_allocated_SNP_windows[[1]][[2]],
+#'   scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]],
+#'   n_permutations = 1000,
+#'   null_model = sample_null_model,
+#'   resampling = TRUE,
+#'   return_all_p = FALSE)
+
+
 SKAT_one_window <- function(this_position,
                             Z,
-                            raw_file_path,
+                            scaffold_ID,
                             null_model,
                             n_permutations,
-                            SKAT_O = "OFF",
                             resampling=FALSE,
                             return_all_p_vals=FALSE){
 
@@ -46,10 +59,10 @@ SKAT_one_window <- function(this_position,
           n_permutations = n_permutations,
           null_model = null_model)
 
-        to_append <- c(raw_file_path,
+        to_append <- c(scaffold_ID,
                        this_position,
                        as.numeric(as.character(this_SKAT_out$p.value)),
-                       p_empirical, NA, NA)
+                       p_empirical)
       }
 
       # for mtmcskat parallelized over null models, we do not have a single
@@ -75,22 +88,22 @@ SKAT_one_window <- function(this_position,
     if(resampling==FALSE){
 
       p_empirical <- NA
-      to_append <- c(raw_file_path,
+      to_append <- c(scaffold_ID,
                      this_position,
                      as.numeric(as.character(this_SKAT_out$p.value)),
-                     p_empirical, NA, NA)
+                     p_empirical)
     }
 
   } else {
-    message(paste0("This chunk's window at ",
-                   this_position, " is not matrix!"))
+    #message(paste0("This chunk's window at ",
+    #this_position, " is not matrix!"))
 
     to_append <- as.data.frame(t(
-      c(raw_file_path, this_position, NA, NA, NA, NA)))
+      c(scaffold_ID, this_position, NA, NA)))
 
   }
 
-  browser()
+  #browser()
 
   to_append
 }

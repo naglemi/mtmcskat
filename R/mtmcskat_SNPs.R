@@ -2,7 +2,7 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
                           n_permutations,
                           this_phenotype,
                           covariates,
-                          raw_file_path){
+                          scaffold_ID){
 
   null_model <- SKAT::SKAT_Null_Model(
     this_phenotype ~ 1 + as.matrix(covariates),
@@ -11,18 +11,10 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
 
   time_to_run_mapping <- proc.time()
 
-  browser()
-
   add_to_master_output <- future.apply::future_lapply(
     X = pre_allocated_SNP_windows,
     FUN = mappable_SKAT,
-    #.options = future_options(packages = "SKAT"),
-    #.progress = TRUE,
-    #.cleanup = TRUE,
-    #this_position = .x,
-    #window_size = window_size,
-    #this_scaff_subset = this_scaff_subset,
-    raw_file_path = raw_file_path,
+    scaffold_ID = scaffold_ID,
     null_model = null_model,
     resampling = TRUE,
     n_permutations = n_permutations,
@@ -45,20 +37,20 @@ mtmcskat_NullModels <- function(n_core,
                                 this_phenotype,
                                 covariates,
                                 pre_allocated_SNP_windows,
-                                raw_file_path){
+                                scaffold_ID){
 
   arrange_jobs_NullModel_multithreading <-
     function(n_core,
              n_permutations,
              max_permutations_per_job){
       # How many jobs do we want to break this down into?
-      # Makes sense to have one for each core to minimize communication
+      #   Makes sense to have one for each core to minimize communication
       n_jobs <- n_core
 
       # The number of permutations per null model should be such that
-      # there is only one round of communication... unless we don't have
-      # enough RAM for that, in which case we can divide jobs to give
-      # each core twice as many (or more if needed)
+      #   there is only one round of communication... unless we don't have
+      #   enough RAM for that, in which case we can divide jobs to give
+      #   each core twice as many (or more if needed)
 
       n_total_permutations_per_thread <- ceiling(n_permutations / n_core)
 
@@ -110,7 +102,7 @@ mtmcskat_NullModels <- function(n_core,
     this_phenotype = this_phenotype,
     covariates = covariates,
     pos_and_SNP_list = pre_allocated_SNP_windows,
-    raw_file_path = pre_allocated_SNP_windows[[1]][[3]],
+    scaffold_ID = pre_allocated_SNP_windows[[1]][[3]],
     n_permutations = job_details$n_permutations_per_job,
     resampling=TRUE)
 
@@ -122,7 +114,7 @@ mtmcskat_NullModels <- function(n_core,
 
   p_empirical_table <- p_empirical_from_tally(
     p_null_tallies = p_null_tallies,
-    scaffold_ID = raw_file_path)
+    scaffold_ID = scaffold_ID)
 
   p_empirical_table
 

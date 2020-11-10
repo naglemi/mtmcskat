@@ -1,13 +1,26 @@
-extract_window <- function(this_position, window_size, this_scaff_subset){
-  #print("Just entered extract_window")
-  #print(paste0("This position (within extract_window) is: ", this_position, " with SNPs: "))
-
-  if(is.na(this_position)){
-    #print("NA position. Reached end of scaffold?")
-    #print("Passing StopIteration")
-    #stop("StopIteration")
-    return(this_position, NA)
-  }
+#' Extract and format a window of SNPs to be tested in a SKAT kernel
+#'
+#' @param this_position An integer, indicating the center of a SNP window for
+#'   which the user wishes to extract SNPs (in base pairs)
+#' @param window_size An integer, indicating the size of each SNP window (in
+#'   base pairs)
+#' @param genodata A matrix obtained by reading data from `.traw` format (see
+#'   (see \url{https://www.cog-genomics.org/plink2/formats}{PLINK
+#'   documentation})) into R
+#'
+#' @return A list containing three objects: an integer of chromosome of origin,
+#'   an integer of SNP window center position, and a matrix of alternative
+#'   allele counts for each genotype and SNP within the given window
+#' @export
+#'
+#' @examples
+#' data("sample_genodata")
+#'
+#' extract_window(this_position = 14460000,
+#'   window_size = 3000,
+#'   genodata = sample_genodata)
+#'
+extract_window <- function(this_position, window_size, genodata){
 
   locus_of_interest <- this_position
   window_start <- as.numeric(as.character(locus_of_interest)) - (window_size/2)
@@ -17,45 +30,39 @@ extract_window <- function(this_position, window_size, this_scaff_subset){
   }
   window_end <- as.numeric(as.character(locus_of_interest)) + (window_size/2)
 
-  #print(paste0("SNP window: ", window_start, "-", window_end))
+  indices_to_pull <-
+    which(
+      with(genodata,
+           genodata$POS >= window_start & genodata$POS <= window_end),
+      arr.ind = TRUE)
 
-  indices_to_pull <- which(with(this_scaff_subset, this_scaff_subset$POS >= window_start & this_scaff_subset$POS <= window_end), arr.ind = TRUE)
-  #print("Got indices if they exist")
-  if (length(indices_to_pull) == 0){
-    #this_position <- this_position + window_shift
-    #next
-    #return()
-    # I think we need return(NA) instead of return() to stop is.matrix(Z) from giving a "missing value where TRUE/FALSE needed" error
-    return(list(this_position, NA))
+  if(length(indices_to_pull) >= 1){
+    genodata_thiswindow <-
+      genodata[indices_to_pull[1]:indices_to_pull[length(indices_to_pull)],]
+
+    Chr <- unique(genodata_thiswindow[,1])
+    if(length(Chr) < 1) {
+      stop("Where is chromosome data?")
+    }
+    if(length(Chr) > 1) {
+      stop(paste(Sys.time(),
+                 " - extract_window should be provided with no more than a",
+                 "single scaffold, but appears to have multiple."))
+    }
+
+    Z <- convert_to_Z(genodata_thiswindow = genodata_thiswindow)
+
+    out_list <- list(this_position, Z, Chr)
   }
-  #print("Determined whether there are any indices")
-  genodata_thiswindow <- this_scaff_subset[indices_to_pull[1]:indices_to_pull[length(indices_to_pull)],]
-  #return(genodata_thiswindow)
-  #print("Obtained subseted genodata")
-  #browser()
 
-  Chr <- unique(genodata_thiswindow[,1])
-  if(length(Chr) < 1) {
-    stop("Where is chromosome data?")
-  }
-  if(length(Chr) > 1) {
-    stop(paste0(Sys.time(),
-                " - extract_window should be provided with no more than a single scaffold, but appears to have multiple."))
+  if(length(indices_to_pull) == 0) {
+    message(paste0("No SNPs within ",window_size/1000,"kb window with center",
+                   " of ", this_position))
+    out_list <- list(NA, NA, NA)
   }
 
-  # genodata_thiswindow[,1:6] <- NULL
-  # genodata_thiswindow <- data.frame(genodata_thiswindow)
-  # Z <- t(as.matrix(genodata_thiswindow))
-  # colnames(Z) <- NULL
-  Z <- convert_to_Z(genodata_thiswindow = genodata_thiswindow)
 
-  #print("Z extracted dimensions and first 10 col, row:")
-  #print(dim(Z))
-  #print(head(Z)[,1:min(10, ncol(Z))])
-  #print("Now about to return Z")
-  #browser()
-  #browser()
+  names(out_list) <- c("Position", "Z", "Chr")
 
-
-  return(list(this_position, Z, Chr))
+  return(out_list)
 }

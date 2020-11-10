@@ -45,10 +45,10 @@ p_empirical_from_tally <- function(p_null_tallies, scaffold_ID){
 
   total_perm_p_ltoreq$empirical_p <- total_perm_p_ltoreq$x / ( total_perm_p_ltoreq$x + total_perm_p_above$x )
 
-  output <- cbind(scaffold_ID, total_perm_p_ltoreq$Group.1, total_perm_p_ltoreq$Group.2, total_perm_p_ltoreq$empirical_p, NA, NA)
+  output <- cbind(scaffold_ID, total_perm_p_ltoreq$Group.1, total_perm_p_ltoreq$Group.2, total_perm_p_ltoreq$empirical_p)
   output <- as.data.frame(output)
 
-  colnames(output) <- c("Chr", "position", "SKAT_p-val", "SKAT_p-val_resampled", "SKAT_O_p-val", "SKAT_O_p-val_resampled")
+  colnames(output) <- c("Chr", "position", "SKAT_p-val", "SKAT_p-val_resampled")
 
   output$`SKAT_p-val` <- as.numeric(as.character(output$`SKAT_p-val`))
   output$`SKAT_p-val_resampled` <- as.numeric(as.character(output$`SKAT_p-val_resampled`))

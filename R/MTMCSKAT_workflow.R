@@ -13,7 +13,7 @@
 #' @param n_core numeric, maximum number of cores over which parallelization is allowed
 #' @param job_id string, identifier to label the job; this identifier will go into output filename
 #' @param desired_sig_figs number of significant figures desired for
-#' @param min_leading_0s numeric, threshold x to begin resampling for SNP windows with p-values below 10^-x; default value is 2
+#' @param min_accuracy numeric, threshold x to begin resampling for SNP windows with p-values below 10^-x; default value is 2
 #' @param max_accuracy numeric, limit x to end resampling for SNP windows with p-values below 10^-x, usually due to computational cost
 #' @param chunk_size DEPRECATED?
 #' @param switch_point numeric, limit x at which SNP windows with p-values below 10^-x must be testing by parallelizing over null models rather than SNP windows (may be set by user due to limitations on RAM preventing production of large null models)
@@ -26,7 +26,7 @@
 MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
                               window_shift, output_dir, pre_allocated_dir,
                               n_core="AllCores", job_id, desired_sig_figs = 2,
-                              min_leading_0s = 2,
+                              min_accuracy = 2,
                               max_accuracy = 5,
                               chunk_size, switch_point = 4, plot = TRUE){ # get rid of switchpoint parameter once making function determine_switch_point?
 
@@ -108,7 +108,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
                                   pre_allocated_SNP_windows,
                                   window_list){
 
-    window_list <- extract_windows_range_p(
+    window_list <- select_windows_range_p(
       data = master_output,
       upper_bound = upper_bound_p_val_for_MC_subset,
       lower_bound = lower_bound_p_val_for_MC_subset)
@@ -128,8 +128,8 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
       desired_list = window_list,
       subindex = 1)
 
-    print(paste0("Number of SNP windows outside of subset_list_of_lists is ",
-                 length(new_pre_allocated_SNP_windows)))
+    message(paste0("Number of SNP windows is ",
+                   length(new_pre_allocated_SNP_windows)))
 
     if(length(new_pre_allocated_SNP_windows) == 0){
       stop("Error: There is no SNP data for windows in the list provided.")
@@ -198,8 +198,8 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
                                                    "numeric"))[, 3])
 
   covariates <- read.csv(covariates,
-                         sep = "\t",
-                         header = FALSE)
+                         sep = ",",
+                         header = TRUE)
 
   if(n_core=="AllCores") {
     n_core <- future::availableCores()
@@ -214,7 +214,6 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   pre_allocated_SNP_windows <-
     pre_allocate(
       raw_file_path = raw_file_path,
-      this_scaff_subset = this_scaff_subset,
       window_size = window_size,
       window_shift = window_shift,
       pre_allocated_dir = pre_allocated_dir)
@@ -224,7 +223,6 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
       this_phenotype = this_phenotype,
       covariates = covariates,
       raw_file_path = pre_allocated_SNP_windows[[1]][[3]],
-      this_scaff_subset = this_scaff_subset,
       window_size = window_size,
       window_shift = window_shift,
       pre_allocated_SNP_windows = pre_allocated_SNP_windows,
@@ -256,7 +254,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
 
   RAM_per_thread <- benchmarkme::get_ram() / n_core
 
-  for(leading_0s in min_leading_0s:max_accuracy){
+  for(leading_0s in min_accuracy:max_accuracy){
 
     terminal_resampling <-
       determine_whether_final_resampling(
@@ -314,7 +312,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
           covariates = covariates,
           n_permutations = n_permutations,
           pre_allocated_SNP_windows = new_pre_allocated_SNP_windows,
-          raw_file_path = pre_allocated_SNP_windows[[1]][[3]])
+          scaffold_ID = pre_allocated_SNP_windows[[1]][[3]])
     }
 
     if(!null_models_fit_in_RAM_per_thread | more_threads_than_windows){
@@ -328,7 +326,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
           n_permutations = n_permutations,
           max_permutations_per_job = max_permutations_per_job,
           pre_allocated_SNP_windows = new_pre_allocated_SNP_windows,
-          raw_file_path = pre_allocated_SNP_windows[[1]][[3]])
+          scaffold_ID = pre_allocated_SNP_windows[[1]][[3]])
 
     }
 

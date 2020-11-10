@@ -2,7 +2,7 @@ map_SKAT_nm <- function(this_phenotype,
                         covariates,
                         null_model_index,
                         pos_and_SNP_list,
-                        raw_file_path,
+                        scaffold_ID,
                         n_permutations,
                         resampling=TRUE){
 
@@ -24,7 +24,7 @@ map_SKAT_nm <- function(this_phenotype,
       #print("About to go into SKAT_one_window")
       this_SKAT_out <- SKAT_one_window(this_position = pos_and_SNP_list[[i]][[1]],
                                        Z = pos_and_SNP_list[[i]][[2]],
-                                       raw_file_path = raw_file_path,
+                                       scaffold_ID = raw_file_path,
                                        resampling = resampling,
                                        null_model = null_model,
                                        n_permutations = n_permutations,
