@@ -25,10 +25,12 @@
 #' @examples
 MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
                               window_shift, output_dir, pre_allocated_dir,
-                              n_core="AllCores", job_id, desired_sig_figs = 2,
+                              job_id, desired_sig_figs = 2,
                               min_accuracy = 2,
                               max_accuracy = 5,
-                              chunk_size, switch_point = 4, plot = TRUE){ # get rid of switchpoint parameter once making function determine_switch_point?
+                              switch_point = 4, plot = TRUE,
+                              RAM="AllRAM",
+                              n_core="AllCores"){ # get rid of switchpoint parameter once making function determine_switch_point?
 
   set_accuracy <- function(master_output,
                            max_accuracy){
@@ -204,6 +206,9 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   if(n_core=="AllCores") {
     n_core <- future::availableCores()
   }
+  if(RAM=="AllRAM") {
+    RAM <- benchmarkme::get_ram()
+  }
 
   whole_genome_start <- proc.time()
 
@@ -226,7 +231,6 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
       window_size = window_size,
       window_shift = window_shift,
       pre_allocated_SNP_windows = pre_allocated_SNP_windows,
-      chunk_size = chunk_size,
       n_core = n_core)
 
   # Secondary SKAT round w/ resampling, multithread over SNP windows or NMs-----
@@ -252,7 +256,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
       RAM = size_RAM_wiggle(wiggle_factor = 2),
       n_core = n_core)
 
-  RAM_per_thread <- benchmarkme::get_ram() / n_core
+  RAM_per_thread <- RAM / n_core
 
   for(leading_0s in min_accuracy:max_accuracy){
 
@@ -341,7 +345,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   }
 
   output_dir <- paste0(output_dir, "/", job_id)
-  output_basename <- paste0(output_dir, "MTMCSKAT-pheno-",
+  output_basename <- paste0(output_dir, "/MTMCSKAT-pheno-",
                             basename(phenodata),
                             "-scaff-",
                             basename(raw_file_path),

@@ -71,9 +71,13 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
                                                                         genodata = genodata))
 
     time <- proc.time() - ptm
-    message(paste0("Took ", time[3], "s to allocate pos, SNP data structure"))
+    message(paste("Took", time[3],
+                  "seconds to allocate pos, SNP data structure"))
 
     saveRDS(pos_and_SNP_list, pre_allocated_path)
+
+    message(paste("Pre-allocated SNP data saved to",
+                  pre_allocated_path))
   }
 
   pos_and_SNP_list
