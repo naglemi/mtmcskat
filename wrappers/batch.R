@@ -128,8 +128,10 @@ if(opt$mode == "slurm"){
                       nodes = nrow(pars),
                       cpus_per_node = 1,
                       submit = FALSE,
-                      slurm_options = list(time = opt$time))
+                      slurm_options = list(time = opt$time,
+                                           A = "osu123"))
 }
+
 if(opt$mode == "sequential"){
   mapply(FUN = MTMCSKAT_workflow,
          phenodata = as.character(pars$phenodata),

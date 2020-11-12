@@ -199,9 +199,9 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
                                                    "character",
                                                    "numeric"))[, 3])
 
-  covariates <- read.csv(covariates,
-                         sep = ",",
-                         header = TRUE)
+  # fread is robust, automatically detects if there is a header and type of
+  # separation, which may vary across covariate files (lack a standard format).
+  covariates <- data.table::fread(covariates)
 
   if(n_core=="AllCores") {
     n_core <- future::availableCores()
