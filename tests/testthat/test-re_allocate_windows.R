@@ -30,10 +30,9 @@ test_that(paste("SNP windows extracted for p-value range are exactly as",
   expect_equal(
     re_allocate_windows(
       data = sample_mtskat_results,
-      upper_bound_p_val_for_MC_subset = 0.01,
-      lower_bound_p_val_for_MC_subset = 0.001,
-      pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows,
-      window_list = c(14502000, 14503000, 14504000, 14505000)),
+      upper_bound = 0.01,
+      lower_bound = 0.001,
+      pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows),
     sample_re_allocated_SNP_windows)
   }
 )

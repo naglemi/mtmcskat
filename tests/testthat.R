@@ -1,4 +1,4 @@
 library(testthat)
-library(SKATMCMT)
+library(mtmcskat)
 
-test_check("SKATMCMT")
+test_check("mtmcskat")
