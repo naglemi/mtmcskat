@@ -3,6 +3,9 @@
 language: R
 cache: packages
 
-script:
-  - cd testthat
-  - Rscript testthat.R
+r_binary_packages:
+  - devtools
+  - roxygen2
+
+after_success:
+  - Rscript -e 'devtools::install();devtools::test()'
