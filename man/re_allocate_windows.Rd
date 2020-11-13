@@ -4,11 +4,11 @@
 \alias{re_allocate_windows}
 \title{Obtain a new list of SNP windows, based on p-values from an earlier list}
 \usage{
-re_allocate_windows(data, upper_bound, lower_bound, pre_allocated_SNP_windows)
+re_allocate_windows(x, upper_bound, lower_bound, pre_allocated_SNP_windows)
 }
 \arguments{
-\item{data}{An output from \code{\link{mtskat}} or a similarly formatted
-data.frame}
+\item{x}{An output from \code{\link{mtskat}} or a similarly formatted
+x.frame}
 
 \item{upper_bound}{A numeric value corresponding to the maximum p-value for
 the range of interest}
@@ -32,7 +32,7 @@ Obtain a new list of SNP windows, based on p-values from an earlier list
 data("sample_pre_allocated_SNP_windows")
 
 re_allocate_windows(
-  data = sample_mtskat_results,
+  x = sample_mtskat_results,
   upper_bound = 0.01,
   lower_bound = 0.001,
   pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows)

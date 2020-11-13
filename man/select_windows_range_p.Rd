@@ -4,11 +4,11 @@
 \alias{select_windows_range_p}
 \title{Select windows corresponding to p-values within range of interest}
 \usage{
-select_windows_range_p(data, upper_bound, lower_bound)
+select_windows_range_p(x, upper_bound, lower_bound)
 }
 \arguments{
-\item{data}{An output from \code{\link{mtskat}} or a similarly formatted
-data.frame}
+\item{x}{An output from \code{\link{mtskat}} or a similarly formatted
+x.frame}
 
 \item{upper_bound}{A numeric value corresponding to the maximum p-value for
 the range of interest}
@@ -25,7 +25,7 @@ Select windows corresponding to p-values within range of interest
 }
 \examples{
 select_windows_range_p(
-  data = sample_mtskat_results,
+  x = sample_mtskat_results,
   upper_bound = 0.01,
   lower_bound = 0.001)
 

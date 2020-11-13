@@ -43,7 +43,8 @@ kept}
 
 \item{job_id}{string, identifier to label the job; this identifier will go into output filename}
 
-\item{desired_sig_figs}{number of significant figures desired for}
+\item{desired_sig_figs}{Integer, minimum number of significant figures
+desired for empirical p-values}
 
 \item{min_accuracy}{numeric, threshold x to begin resampling for SNP windows with p-values below 10^-x; default value is 2}
 

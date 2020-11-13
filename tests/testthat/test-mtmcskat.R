@@ -13,7 +13,7 @@ options(mc.cores=2)
 set.seed(5)
 
 test_that("MTMCSKAT threading on SNP windows gives expected results", {
-  expect_equal(mtmcskat_SNPs(
+  expect_equal(mtmcskat:::mtmcskat_SNPs(
     this_phenotype = sample_phenotype,
     covariates = sample_covariates,
     n_permutations = 500,
@@ -23,7 +23,7 @@ test_that("MTMCSKAT threading on SNP windows gives expected results", {
 })
 
 test_that("MTMCSKAT threading on models in 1 batch gives expected results", {
-  expect_equal(mtmcskat_NullModels(
+  expect_equal(mtmcskat:::mtmcskat_NullModels(
     this_phenotype = sample_phenotype,
     covariates = sample_covariates,
     n_permutations = 500,
@@ -35,7 +35,7 @@ test_that("MTMCSKAT threading on models in 1 batch gives expected results", {
 })
 
 test_that("MTMCSKAT threading on models in 2 batches gives expected results", {
-  expect_equal(mtmcskat_NullModels(
+  expect_equal(mtmcskat:::mtmcskat_NullModels(
     this_phenotype = sample_phenotype,
     covariates = sample_covariates,
     n_permutations = 500,

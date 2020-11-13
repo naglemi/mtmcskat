@@ -114,7 +114,8 @@ mtmcskat_NullModels <- function(n_thread,
 
   p_empirical_table <- p_empirical_from_tally(
     p_null_tallies = p_null_tallies,
-    scaffold_ID = scaffold_ID)
+    scaffold_ID = scaffold_ID,
+    min_n_permutations = n_permutations)
 
   p_empirical_table[order(p_empirical_table$position), ]
 

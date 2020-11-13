@@ -46,7 +46,7 @@ MTMCSKAT_workflow(phenodata = phenodata,
                   job_id = "my_sample_analysis_111220_trybuild",
                   desired_sig_figs = 2,
                   min_accuracy = 2,
-                  max_accuracy = 5,
+                  max_accuracy = 3,
                   plot = TRUE)
                   #RAM = 4e9)
 

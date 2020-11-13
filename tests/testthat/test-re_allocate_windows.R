@@ -7,10 +7,23 @@ data("sample_re_allocated_SNP_windows")
 test_that("SNP windows selected are those with p-values in range of interest", {
   expect_equal(
     select_windows_range_p(
-      data = sample_mtskat_results,
+      x = sample_mtskat_results,
       upper_bound = 0.01,
       lower_bound = 0.001),
     c(14502000, 14503000, 14504000, 14505000))
+  }
+)
+
+modified_sample_mtskat_results <- sample_mtskat_results
+modified_sample_mtskat_results$`SKAT_p-val_resampled`[1] <- 0.009
+
+test_that("Extra SNP windows for which initial guess was wrong were found", {
+  expect_equal(
+    select_windows_range_p(
+      x = modified_sample_mtskat_results,
+      upper_bound = 0.01,
+      lower_bound = 0.001),
+    c(14502000, 14503000, 14504000, 14505000, 14461000))
   }
 )
 
@@ -29,7 +42,7 @@ test_that(paste("SNP windows extracted for p-value range are exactly as",
                 "to `re_allocate_windows`"), {
   expect_equal(
     re_allocate_windows(
-      data = sample_mtskat_results,
+      x = sample_mtskat_results,
       upper_bound = 0.01,
       lower_bound = 0.001,
       pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows),

@@ -14,18 +14,24 @@
 #' data("sample_pre_allocated_SNP_windows")
 #'
 #' re_allocate_windows(
-#'   data = sample_mtskat_results,
+#'   x = sample_mtskat_results,
 #'   upper_bound = 0.01,
 #'   lower_bound = 0.001,
 #'   pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows)
 #'
-re_allocate_windows <- function(data,
+re_allocate_windows <- function(x,
                                 upper_bound,
                                 lower_bound,
                                 pre_allocated_SNP_windows){
 
+  find_leading_0s <- function(x){
+    # Thank you David Arenburg for this great one-liner
+    # https://stackoverflow.com/questions/35553244/count-leading-zeros-between-the-decimal-point-and-first-nonzero-digit
+    attr(regexpr("(?<=\\.)0+", x, perl = TRUE), "match.length")
+  }
+
   window_list <- select_windows_range_p(
-    data = data,
+    x = x,
     upper_bound = upper_bound,
     lower_bound = lower_bound)
 
@@ -44,8 +50,8 @@ re_allocate_windows <- function(data,
     desired_list = window_list,
     subindex = 1)
 
-  print(paste0("Number of SNP windows outside of subset_list_of_lists is ",
-               length(new_pre_allocated_SNP_windows)))
+  message(paste0("Number of SNP windows outside of subset_list_of_lists is ",
+                 length(new_pre_allocated_SNP_windows)))
 
   if(length(new_pre_allocated_SNP_windows) == 0){
     stop("Error: There is no SNP data for windows in the list provided.")

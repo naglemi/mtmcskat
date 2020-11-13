@@ -12,7 +12,7 @@ test_that("Empirical p-val is equal to earlier result with same null model", {
       n_permutations = 1000,
       null_model = sample_null_model,
       return_all_p = FALSE),
-    0.1008991)
+    0.101)
   }
 )
 
@@ -49,7 +49,7 @@ test_that(paste("Empirical p-val passed up one level to SKAT_one_window",
                       null_model = sample_null_model,
                       resampling = TRUE,
                       return_all_p = FALSE)[4],
-                    0.1008991)
+                    0.101)
                 }
 )
 
@@ -63,7 +63,7 @@ test_that(paste("Empirical p-val passed up two levels to mappable_SKAT",
                       resampling = TRUE,
                       n_permutations = 1000,
                       chunk = FALSE)$V4,
-                    0.1008991)
+                    0.101)
                 }
 )
 

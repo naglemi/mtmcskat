@@ -51,6 +51,9 @@ tally_p_null <- function(p_table){
 #'   below the initial p-value
 #' @param scaffold_ID a string or numeric value indicating the scaffold, to be
 #'   used only for labeling output
+#' @param min_n_permutations Integer, the minimum number of permutations needed
+#'   to calculate the empirical p-value out to the desired number of significant
+#'   figures
 #'
 #' @return
 #' @export
@@ -58,8 +61,10 @@ tally_p_null <- function(p_table){
 #' @examples
 #' data("sample_p_null_tallies")
 #' p_empirical_from_tally(p_null_tallies = sample_p_null_tallies,
-#'   scaffold_ID = 10)
-p_empirical_from_tally <- function(p_null_tallies, scaffold_ID){
+#'                        scaffold_ID = 10,
+#'                        min_n_permutations = 1e5)
+p_empirical_from_tally <- function(p_null_tallies, scaffold_ID,
+                                   min_n_permutations){
   total_perm_p_ltoreq <- stats::aggregate(
     p_null_tallies$n_perm_ltoreq,
     by=list(p_null_tallies$position,
@@ -88,6 +93,12 @@ p_empirical_from_tally <- function(p_null_tallies, scaffold_ID){
   output$`SKAT_p-val` <- as.numeric(as.character(output$`SKAT_p-val`))
   output$`SKAT_p-val_resampled` <- as.numeric(as.character(
     output$`SKAT_p-val_resampled`))
+
+  # round to significant figures (which are limtied by n_permutations)
+  output$`SKAT_p-val_resampled` <- round(
+    output$`SKAT_p-val_resampled`,
+    digits = log(min_n_permutations,
+                 base = 10))
 
   output
 }

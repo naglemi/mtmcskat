@@ -62,6 +62,12 @@ calculate_SKAT_empirical_p <- function(Z, n_permutations, null_model,
         this_SKAT_out$p.value.resampling <= this_SKAT_out$p.value)))+1) /
       (n_permutations+1)
 
+    # round to significant figures (which are limtied by n_permutations)
+    p_resampled_SKAT <- round(
+      p_resampled_SKAT,
+      digits = log(n_permutations,
+                   base = 10))
+
     return(p_resampled_SKAT)
   }
 

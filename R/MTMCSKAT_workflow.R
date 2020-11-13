@@ -10,7 +10,8 @@
 #' @param output_dir string for directory where results will be saved
 #' @param n_thread numeric, maximum number of cores over which parallelization is allowed
 #' @param job_id string, identifier to label the job; this identifier will go into output filename
-#' @param desired_sig_figs number of significant figures desired for
+#' @param desired_sig_figs Integer, minimum number of significant figures
+#'   desired for empirical p-values
 #' @param min_accuracy numeric, threshold x to begin resampling for SNP windows with p-values below 10^-x; default value is 2
 #' @param max_accuracy numeric, limit x to end resampling for SNP windows with p-values below 10^-x, usually due to computational cost
 #' @param switch_point numeric, limit x at which SNP windows with p-values below 10^-x must be testing by parallelizing over null models rather than SNP windows (may be set by user due to limitations on RAM preventing production of large null models)
@@ -66,10 +67,10 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
       min(stats::na.omit(master_output$`SKAT_p-val`)),
       base = 10)) - 1
 
-    message(paste0("\n\nMax # leading 0s is: ", max_leading_0s, "\n\n"))
+    message(paste0("\nMax # leading 0s is: ", max_leading_0s, "\n"))
 
     if (max_accuracy != "Auto"){
-      message(paste0("\n\nUser-defined accuracy is 10^-", max_accuracy, "\n\n"))
+      message(paste0("User-defined accuracy is 10^-", max_accuracy, "\n"))
       if (max_leading_0s < max_accuracy){
         message(paste0("This level of accuracy may need be needed since p-values",
                        "from mtskat have no more than ", max_leading_0s,
@@ -78,7 +79,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
       if (max_leading_0s > max_accuracy){
         message(paste0("This accuracy may not be enough to accurately calculate ",
                        "all empirical p-values since p-values from mtskat have ",
-                       "as many as ", max_leading_0s, "leading zeros"))
+                       "as many as ", max_leading_0s, " leading zeros"))
       }
     }
     if (max_accuracy == "Auto"){
@@ -129,43 +130,6 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
     n_permutations <- 10^( leading_0s + desired_sig_figs )
 
     n_permutations
-  }
-
-  re_allocate_windows <- function(master_output,
-                                  upper_bound_p_val_for_MC_subset,
-                                  lower_bound_p_val_for_MC_subset,
-                                  pre_allocated_SNP_windows,
-                                  window_list){
-
-    window_list <- select_windows_range_p(
-      data = master_output,
-      upper_bound = upper_bound_p_val_for_MC_subset,
-      lower_bound = lower_bound_p_val_for_MC_subset)
-
-    if(length(window_list) == 0){
-
-      message(paste0(Sys.time(),
-                     " - No SNPs with p-vals within the range bounded from ",
-                     lower_bound_p_val_for_MC_subset, " to ",
-                     upper_bound_p_val_for_MC_subset))
-
-      return("None")
-    }
-
-    new_pre_allocated_SNP_windows <- subset_list_of_lists(
-      list_of_lists = pre_allocated_SNP_windows,
-      desired_list = window_list,
-      subindex = 1)
-
-    message(paste0("Number of SNP windows is ",
-                   length(new_pre_allocated_SNP_windows)))
-
-    if(length(new_pre_allocated_SNP_windows) == 0){
-      stop("Error: There is no SNP data for windows in the list provided.")
-    }
-
-    new_pre_allocated_SNP_windows
-
   }
 
   check_if_more_threads_than_windows <- function(
@@ -297,9 +261,9 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
 
     new_pre_allocated_SNP_windows <-
       re_allocate_windows(
-        master_output = master_output,
-        upper_bound_p_val_for_MC_subset = boundaries$upper,
-        lower_bound_p_val_for_MC_subset = boundaries$lower,
+        x = master_output,
+        upper_bound = boundaries$upper,
+        lower_bound = boundaries$lower,
         pre_allocated_SNP_windows = pre_allocated_SNP_windows)
 
     if(new_pre_allocated_SNP_windows == "None") next
@@ -368,7 +332,10 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   }
 
   output_dir <- paste0(output_dir, "/", job_id)
-  output_basename <- paste0(output_dir, "/MTMCSKAT-pheno-",
+
+  if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+
+  output_basename <- paste0(output_dir, "/pheno-",
                             basename(phenodata),
                             "-scaff-",
                             basename(raw_file_path),

@@ -5,7 +5,7 @@
 \title{Tally p-values from permuted null model to enable calculation of empirical
 p-values}
 \usage{
-p_empirical_from_tally(p_null_tallies, scaffold_ID)
+p_empirical_from_tally(p_null_tallies, scaffold_ID, min_n_permutations)
 }
 \arguments{
 \item{p_null_tallies}{a matrix containing tallies of null p-values above or
@@ -13,6 +13,10 @@ below the initial p-value}
 
 \item{scaffold_ID}{a string or numeric value indicating the scaffold, to be
 used only for labeling output}
+
+\item{min_n_permutations}{Integer, the minimum number of permutations needed
+to calculate the empirical p-value out to the desired number of significant
+figures}
 }
 \value{
 
@@ -24,5 +28,6 @@ p-values
 \examples{
 data("sample_p_null_tallies")
 p_empirical_from_tally(p_null_tallies = sample_p_null_tallies,
-  scaffold_ID = 10)
+                       scaffold_ID = 10,
+                       min_n_permutations = 1e5)
 }
