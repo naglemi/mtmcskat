@@ -2,27 +2,29 @@
 % Please edit documentation in R/tally_p_null.R
 \name{tally_p_null}
 \alias{tally_p_null}
-\title{Functions for efficient parallelizable calculation of empirical p-values}
+\title{Multithreaded calculation of null p-values to enable calculation of empirical
+p-values}
 \usage{
 tally_p_null(p_table)
 }
 \arguments{
-\item{p_table}{a dataframe or matrix with a row for each SNP window and a column for each p-value resulting from a permuted null model}
-
-\item{p_null_tallies}{a matrix containing tallies of null p-values above or below the initial p-value}
-
-\item{scaffold_ID}{a string or numeric value indicating the scaffold, to be used only for labeling output}
+\item{p_table}{a dataframe or matrix with a row for each SNP window and a
+column for each p-value resulting from a permuted null model}
 }
 \value{
 
 }
 \description{
-These functions are used to calculate empirical p-values given initial p-values and null p-values from `SKAT`.
+These functions are used to calculate empirical p-values given initial
+p-values and null p-values from `SKAT`.
 }
 \details{
-Prior to completion of jobs by cores in `MTMC-SKAT`, the number of p-values above or below the in initial p-value are calculated using `tally_p_null`. This reduces the load of data to be returned. Empirical p-values are then calculated from all returned data using `p_empirical_from_tally`.
+Prior to completion of jobs by cores in `MTMC-SKAT`, the number of p-values
+above or below the in initial p-value are calculated using `tally_p_null`.
+This reduces the load of data to be returned. Empirical p-values are then
+calculated from all returned data using `p_empirical_from_tally`.
 }
 \examples{
 \dontrun{sample_p_null_tallies <- tally_p_null(sample_p_table)}
-\dontrun{p_empirical_table <- p_empirical_from_tally(sample_p_null_tallies)}
+
 }

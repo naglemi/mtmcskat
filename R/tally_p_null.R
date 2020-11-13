@@ -1,19 +1,23 @@
-#' Functions for efficient parallelizable calculation of empirical p-values
+#' Multithreaded calculation of null p-values to enable calculation of empirical
+#' p-values
 #'
-#' These functions are used to calculate empirical p-values given initial p-values and null p-values from `SKAT`.
+#' These functions are used to calculate empirical p-values given initial
+#' p-values and null p-values from `SKAT`.
 #'
-#' Prior to completion of jobs by cores in `MTMC-SKAT`, the number of p-values above or below the in initial p-value are calculated using `tally_p_null`. This reduces the load of data to be returned. Empirical p-values are then calculated from all returned data using `p_empirical_from_tally`.
+#' Prior to completion of jobs by cores in `MTMC-SKAT`, the number of p-values
+#' above or below the in initial p-value are calculated using `tally_p_null`.
+#' This reduces the load of data to be returned. Empirical p-values are then
+#' calculated from all returned data using `p_empirical_from_tally`.
 #'
-#' @param p_table a dataframe or matrix with a row for each SNP window and a column for each p-value resulting from a permuted null model
-#' @param p_null_tallies a matrix containing tallies of null p-values above or below the initial p-value
-#' @param scaffold_ID a string or numeric value indicating the scaffold, to be used only for labeling output
+#' @param p_table a dataframe or matrix with a row for each SNP window and a
+#'   column for each p-value resulting from a permuted null model
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #' \dontrun{sample_p_null_tallies <- tally_p_null(sample_p_table)}
-#' \dontrun{p_empirical_table <- p_empirical_from_tally(sample_p_null_tallies)}
+#'
 tally_p_null <- function(p_table){
 
   p_table <- stats::na.omit(p_table)
@@ -40,6 +44,21 @@ tally_p_null <- function(p_table){
   empirical_p_table
 }
 
+#' Tally p-values from permuted null model to enable calculation of empirical
+#' p-values
+#'
+#' @param p_null_tallies a matrix containing tallies of null p-values above or
+#'   below the initial p-value
+#' @param scaffold_ID a string or numeric value indicating the scaffold, to be
+#'   used only for labeling output
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' data("sample_p_null_tallies")
+#' p_empirical_from_tally(p_null_tallies = sample_p_null_tallies,
+#'   scaffold_ID = 10)
 p_empirical_from_tally <- function(p_null_tallies, scaffold_ID){
   total_perm_p_ltoreq <- stats::aggregate(
     p_null_tallies$n_perm_ltoreq,

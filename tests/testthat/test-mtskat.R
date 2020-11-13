@@ -13,7 +13,7 @@ options(mc.cores=2)
 test_that("After pre-allocation, SNP windows are divided in desired n chunks", {
   expect_equal(length(chunk_windows(
     pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows,
-    n_core = 48)),
+    n_thread = 48)),
     48)
 })
 
@@ -25,7 +25,7 @@ test_that("Multi-threaded SKAT produces output matching expected results", {
     window_size = 3000,
     window_shift = 1000,
     pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows,
-    n_core = future::availableCores()),
+    n_thread = 2),
     sample_mtskat_results,
     tolerance = 1e-7) # Due to inequality that appears to be floating point error
 })

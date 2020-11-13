@@ -10,10 +10,6 @@ covariates <- system.file("extdata",
                           "poplar_PCs_covariates.tbt",
                           package = "SKATMCMT")
 
-covariates <- system.file("extdata",
-                          "poplar_PCs_covariates.tbt",
-                          package = "SKATMCMT")
-
 raw_file_path <- system.file("extdata",
                              "poplar_SNPs_Chr10_14460to14550kb.traw",
                              package = "SKATMCMT")
@@ -40,16 +36,14 @@ raw_file_path <- system.file("extdata",
 # }
 
 MTMCSKAT_workflow(phenodata = phenodata,
-                  #phenodata = "/scratch2/NSF_GWAS/SKAT_SLURMS/inputs/shoot_5w.header.pheno",
                   covariates = covariates,
                   raw_file_path = raw_file_path,
                   window_size = 3000,
                   window_shift = 1000,
                   output_dir = "/scratch2/NSF_GWAS/Results/SKAT/",
                   pre_allocated_dir = "/scratch2/NSF_GWAS/SKAT_SLURMS/mtmcskat/pre_allocated_dir",
-                  n_core = "AllCores",
-                  #n_core = 2,
-                  job_id = "my_sample_analysis_110320_remove_callSKAT",
+                  n_thread = "AllCores",
+                  job_id = "my_sample_analysis_111220_trybuild",
                   desired_sig_figs = 2,
                   min_accuracy = 2,
                   max_accuracy = 5,

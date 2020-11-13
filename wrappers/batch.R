@@ -129,7 +129,7 @@ pars <- foreach(raw_file_path = raw_file_path_list,
                              max_accuracy = opt$max_accuracy,
                              plot = TRUE,
                              RAM = "AllRAM",
-                             n_core = "AllCores")
+                             n_thread = "AllCores")
           }
 
 if(opt$mode == "slurm"){
@@ -158,7 +158,7 @@ if(opt$mode == "sequential"){
          max_accuracy = pars$max_accuracy,
          plot = pars$plot,
          RAM = pars$RAM,
-         n_core = pars$n_core)
+         n_thread = "AllCores")
 }
 
 

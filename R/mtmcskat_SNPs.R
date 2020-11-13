@@ -31,7 +31,7 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
   add_to_master_output
 }
 
-mtmcskat_NullModels <- function(n_core,
+mtmcskat_NullModels <- function(n_thread,
                                 n_permutations,
                                 max_permutations_per_job,
                                 this_phenotype,
@@ -40,19 +40,19 @@ mtmcskat_NullModels <- function(n_core,
                                 scaffold_ID){
 
   arrange_jobs_NullModel_multithreading <-
-    function(n_core,
+    function(n_thread,
              n_permutations,
              max_permutations_per_job){
       # How many jobs do we want to break this down into?
       #   Makes sense to have one for each core to minimize communication
-      n_jobs <- n_core
+      n_jobs <- n_thread
 
       # The number of permutations per null model should be such that
       #   there is only one round of communication... unless we don't have
       #   enough RAM for that, in which case we can divide jobs to give
       #   each core twice as many (or more if needed)
 
-      n_total_permutations_per_thread <- ceiling(n_permutations / n_core)
+      n_total_permutations_per_thread <- ceiling(n_permutations / n_thread)
 
       if(n_total_permutations_per_thread >= max_permutations_per_job ){
         message(paste0("Memory constraint recognized; ",
@@ -68,7 +68,7 @@ mtmcskat_NullModels <- function(n_core,
                        "models simultaneously."))
 
         n_permutations_per_job <- n_total_permutations_per_thread
-        n_jobs <- n_core
+        n_jobs <- n_thread
       }
 
       # Due to rounding up and using same n permutations in null model for
@@ -84,7 +84,7 @@ mtmcskat_NullModels <- function(n_core,
     }
 
   job_details <- arrange_jobs_NullModel_multithreading(
-    n_core = n_core,
+    n_thread = n_thread,
     n_permutations = n_permutations,
     max_permutations_per_job = max_permutations_per_job
   )

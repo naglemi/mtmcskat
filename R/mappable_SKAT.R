@@ -29,7 +29,6 @@
 #'
 #'
 mappable_SKAT <- function(pos_and_SNPs,
-                          window_size,
                           scaffold_ID,
                           null_model,
                           n_permutations,
@@ -44,7 +43,6 @@ mappable_SKAT <- function(pos_and_SNPs,
     for ( i in 1:length(pos_and_SNPs)){
 
       to_append <- SKAT_one_window(this_position = pos_and_SNPs[[i]][[1]],
-                                   #window_size,
                                    Z = pos_and_SNPs[[i]][[2]],
                                    scaffold_ID = scaffold_ID,
                                    resampling = resampling,
@@ -59,7 +57,6 @@ mappable_SKAT <- function(pos_and_SNPs,
 
   if ( chunk == FALSE ) {
     to_append <- SKAT_one_window(this_position = pos_and_SNPs[[1]],
-                                 #window_size,
                                  Z = pos_and_SNPs[[2]],
                                  scaffold_ID = scaffold_ID,
                                  resampling = resampling,

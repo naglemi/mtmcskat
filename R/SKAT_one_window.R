@@ -74,7 +74,7 @@ SKAT_one_window <- function(this_position,
         p_list <- calculate_SKAT_empirical_p(Z = Z,
                                              n_permutations = n_permutations,
                                              null_model = null_model,
-                                             return_all_p = TRUE)
+                                             return_all_p_vals = TRUE)
 
         to_append <- as.numeric(
           c(this_position,

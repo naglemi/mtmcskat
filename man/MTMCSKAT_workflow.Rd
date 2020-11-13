@@ -19,7 +19,7 @@ MTMCSKAT_workflow(
   switch_point = 4,
   plot = TRUE,
   RAM = "AllRAM",
-  n_core = "AllCores"
+  n_thread = "AllCores"
 )
 }
 \arguments{
@@ -29,11 +29,17 @@ MTMCSKAT_workflow(
 
 \item{raw_file_path}{string for filepath to .traw file (see [PLINK file format reference](https://www.cog-genomics.org/plink/2.0/formats))}
 
-\item{window_size}{numeric, the size of each SNP window for which the SKAT kernalization is to be performed, in base pairs}
+\item{window_size}{An integer, indicating the size of each SNP window (in
+base pairs)}
 
-\item{window_shift}{numeric, the number of base pairs over which each rolling window will slide; in other terms, the distance between the start (or end) positions of adjacent overlapping windows}
+\item{window_shift}{An integer, indicating the number of base pairs over
+which each rolling window will slide; in other terms, the distance between
+the start (or end) positions of adjacent overlapping windows}
 
 \item{output_dir}{string for directory where results will be saved}
+
+\item{pre_allocated_dir}{a directory where pre-allocated SNP window lists are
+kept}
 
 \item{job_id}{string, identifier to label the job; this identifier will go into output filename}
 
@@ -47,9 +53,10 @@ MTMCSKAT_workflow(
 
 \item{plot}{if TRUE, produce Manhattan plot of results}
 
-\item{n_core}{numeric, maximum number of cores over which parallelization is allowed}
+\item{RAM}{Integer, the total amount of RAM available to be used, for all
+threads (in bytes)}
 
-\item{chunk_size}{DEPRECATED?}
+\item{n_thread}{numeric, maximum number of cores over which parallelization is allowed}
 }
 \value{
 None; outputs are saved to the user-specified output directory, with the user-specified ```job_id```
@@ -59,4 +66,34 @@ This function provides a one-liner to run MTMC-SKAT over a scaffold.
 }
 \details{
 For whole-genome analysis, this function (accesible by command line) is to be parallelized over jobs submitted in a batch query system on a high-performance cluster, or looped over scaffolds if running on a single machine.
+}
+\examples{
+\dontrun{
+phenodata <- system.file("extdata",
+  "TDZ_shoot_area.plink.pheno",
+  package = "SKATMCMT")
+
+covariates <- system.file("extdata",
+                          "poplar_PCs_covariates.tbt",
+                          package = "SKATMCMT")
+
+raw_file_path <- system.file("extdata",
+                             "poplar_SNPs_Chr10_14460to14550kb.traw",
+                             package = "SKATMCMT")
+
+MTMCSKAT_workflow(phenodata = phenodata,
+                  covariates = covariates,
+                  raw_file_path = raw_file_path,
+                  window_size = 3000,
+                  window_shift = 1000,
+                  output_dir = "Results/",
+                  pre_allocated_dir = "pre_allocated_dir/",
+                  n_thread = "AllCores",
+                  job_id = "my_sample_analysis",
+                  desired_sig_figs = 2,
+                  min_accuracy = 2,
+                  max_accuracy = 5,
+                  plot = TRUE)
+}
+
 }

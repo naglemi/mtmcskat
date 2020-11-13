@@ -10,7 +10,7 @@ Description: This package is an extension of SKAT, with the purpose of enabling
     for efficient parallelization both across CPUs in a high-performance cluster
     (parallelized over scaffolds) as well as across cores(parallelized over SNP
     windows and/or null models).
-License: What license is it under?
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/naglemi/mtmcskat
