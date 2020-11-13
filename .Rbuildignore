@@ -1,2 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.travis\.yml$
+^pre_allocated_dir$
+^wrappers$
+^LICENSE\.md$
