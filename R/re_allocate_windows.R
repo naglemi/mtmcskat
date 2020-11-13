@@ -1,13 +1,13 @@
 #' Obtain a new list of SNP windows, based on p-values from an earlier list
 #'
-#' @inheritParams select_windows_range_p.R
+#' @inheritParams select_windows_range_p
 #' @param pre_allocated_SNP_windows Output from \code{\link{pre_allocate}},
 #'   which is a list of lists, with each sub-list containing elements as
-#'   described in documentation for \code{\link(extract_window)}
+#'   described in documentation for \code{\link{extract_window}}
 #'
 #' @return Output is the same format as for \code{\link{pre_allocate}}: a list
 #'   of lists, with each sub-list containing elements as described in
-#'   documentation for \code{\link(extract_window)}
+#'   documentation for \code{\link{extract_window}}
 #' @export
 #'
 #' @examples
@@ -15,10 +15,9 @@
 #'
 #' re_allocate_windows(
 #'   data = sample_mtskat_results,
-#'   upper_bound_p_val_for_MC_subset = 0.01,
-#'   lower_bound_p_val_for_MC_subset = 0.001,
-#'   pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows,
-#'   window_list = c(14502000, 14503000, 14504000, 14505000))
+#'   upper_bound = 0.01,
+#'   lower_bound = 0.001,
+#'   pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows)
 #'
 re_allocate_windows <- function(data,
                                 upper_bound,

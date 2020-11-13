@@ -116,6 +116,6 @@ mtmcskat_NullModels <- function(n_core,
     p_null_tallies = p_null_tallies,
     scaffold_ID = scaffold_ID)
 
-  p_empirical_table
+  p_empirical_table[order(p_empirical_table$position), ]
 
 }

@@ -80,13 +80,25 @@ option_list = list(
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 
-# setwd("/scratch2/NSF_GWAS/notebooks/MTMC-SKAT")
-# opt = list(phenodata = "test_two_phenotypes",
-#            covariates = "/scratch2/NSF_GWAS/notebooks/InPlantaGWAS/02_Parsing_phenodata/pheno_files/Covariates_AllPhasesButLast_Stem_noheader_PLINKformat.txt",
-#            genodata = "test_two_scaffolds_wholeChr_1323geno",
-#            output = "/scratch2/NSF_GWAS/Results/SKAT/",
-#            pre_allocated_dir = "/scratch2/NSF_GWAS/SKAT_SLURMS/mtmcskat/pre_allocated_dir",
-#            job_id = "test_twogeno_twopheno_111020",
+setwd("/scratch2/NSF_GWAS/notebooks/MTMC-SKAT")
+opt = list(phenodata = "test_two_phenotypes",
+           covariates = "/scratch2/NSF_GWAS/notebooks/InPlantaGWAS/02_Parsing_phenodata/pheno_files/Covariates_AllPhasesButLast_Stem_noheader_PLINKformat.txt",
+           genodata = "test_two_scaffolds_wholeChr_1323geno",
+           output = "/scratch2/NSF_GWAS/Results/SKAT/",
+           pre_allocated_dir = "/scratch2/NSF_GWAS/SKAT_SLURMS/mtmcskat/pre_allocated_dir",
+           job_id = "test_twogeno_twopheno_111020",
+           window_size = 3000,
+           window_shift = 1000,
+           min_accuracy = 2,
+           max_accuracy = 5,
+           mode = "sequential")
+
+# opt = list(phenodata = "/oasis/projects/nsf/osu123/naglemi/test_two_phenotypes",
+#            covariates = "/oasis/projects/nsf/osu123/naglemi/covariates/Covariates_AllPhasesButLast_Stem_noheader_PLINKformat.txt",
+#            genodata = "/oasis/projects/nsf/osu123/naglemi/test_two_scaffolds_wholeChr_1323geno",
+#            output = "/oasis/projects/nsf/osu123/naglemi/mtmcskat_out",
+#            pre_allocated_dir = "/oasis/projects/nsf/osu123/naglemi/pre_allocated",
+#            job_id = "firstrun_twoscaffolds_two_phenos_on_debug_node_a1",
 #            window_size = 3000,
 #            window_shift = 1000,
 #            min_accuracy = 2,
@@ -128,8 +140,7 @@ if(opt$mode == "slurm"){
                       nodes = nrow(pars),
                       cpus_per_node = 1,
                       submit = FALSE,
-                      slurm_options = list(time = opt$time,
-                                           A = "osu123"))
+                      slurm_options = list(time = opt$time))
 }
 
 if(opt$mode == "sequential"){

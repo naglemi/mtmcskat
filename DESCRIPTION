@@ -30,4 +30,9 @@ RoxygenNote: 7.1.0
 Imports: 
     SKAT,
     data.table,
-    future
+    future,
+    future.apply,
+    plyr,
+    dplyr,
+    benchmarkme
+Depends: R (>= 3.4.0)

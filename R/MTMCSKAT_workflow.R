@@ -36,7 +36,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
                            max_accuracy){
 
     max_leading_0s <- ceiling(-log(
-      min(na.omit(master_output$`SKAT_p-val`)),
+      min(stats::na.omit(master_output$`SKAT_p-val`)),
       base = 10)) - 1
 
     message(paste0("\n\nMax # leading 0s is: ", max_leading_0s, "\n\n"))
@@ -193,11 +193,11 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
 
   }
 
-  this_phenotype <- unlist(read.csv(phenodata,
-                                    sep = "\t",
-                                    colClasses = c("character",
-                                                   "character",
-                                                   "numeric"))[, 3])
+  this_phenotype <- unlist(utils::read.csv(phenodata,
+                                           sep = "\t",
+                                           colClasses = c("character",
+                                                          "character",
+                                                          "numeric"))[, 3])
 
   # fread is robust, automatically detects if there is a header and type of
   # separation, which may vary across covariate files (lack a standard format).
@@ -276,8 +276,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
         master_output = master_output,
         upper_bound_p_val_for_MC_subset = boundaries$upper,
         lower_bound_p_val_for_MC_subset = boundaries$lower,
-        pre_allocated_SNP_windows = pre_allocated_SNP_windows,
-        window_list = window_list)
+        pre_allocated_SNP_windows = pre_allocated_SNP_windows)
 
     if(new_pre_allocated_SNP_windows == "None") next
 
@@ -333,6 +332,8 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
           scaffold_ID = pre_allocated_SNP_windows[[1]][[3]])
 
     }
+
+    browser()
 
     # Update the master output, replacing entries for which we now have...
     # ...empirical p-values

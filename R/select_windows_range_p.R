@@ -1,6 +1,6 @@
 #' Select windows corresponding to p-values within range of interest
 #'
-#' @param data An output from \code{\link{mtskat}) or a similarly formatted
+#' @param data An output from \code{\link{mtskat}} or a similarly formatted
 #'   data.frame
 #' @param upper_bound A numeric value corresponding to the maximum p-value for
 #'   the range of interest

@@ -2,17 +2,17 @@
 #'
 #' SNP data is converted into overlapping windows as specified. This data
 #' structure preparation is useful for parallelization of
-#' \code{\link[SKAT]{SKAT}}}.
+#' \code{\link[SKAT]{SKAT}}.
 #'
 #' @param raw_file_path complete file path to SNP data in `.traw` format (see
-#'   \url{https://www.cog-genomics.org/plink2/formats}{PLINK documentation})
+#'   \href{https://www.cog-genomics.org/plink2/formats}{PLINK documentation})
 #' @param window_list a list of window centers
 #' @param pre_allocated_dir a directory where pre-allocated SNP window lists are
 #'   kept
-#' @inheritParams extract_windows
+#' @inheritParams extract_window
 #'
 #' @return a list of lists, with each sub-list containing elements as described
-#'   in documentation for \code{\link(extract_window)}
+#'   in documentation for \code{\link{extract_window}}
 #' @export
 #'
 #' @examples
@@ -31,10 +31,14 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
   if(!dir.exists(pre_allocated_dir)) dir.create(pre_allocated_dir,
                                                 recursive = TRUE)
 
-  pre_allocated_path <- paste0(pre_allocated_dir, "/", basename(tools::file_path_sans_ext(raw_file_path)), ".", window_size, "bp_win.rds")
+  pre_allocated_path <- paste0(
+    pre_allocated_dir, "/",
+    basename(tools::file_path_sans_ext(raw_file_path)), ".",
+    window_size, "bp_win.rds")
 
   if(file.exists(pre_allocated_path)){
-    message(paste0("Data structure already exists. Read in from: ", pre_allocated_path))
+    message(paste0("Data structure already exists. Read in from: ",
+                   pre_allocated_path))
     pos_and_SNP_list <- readRDS(pre_allocated_path)
   }
   if(!file.exists(pre_allocated_path)){
@@ -66,9 +70,11 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
     message("Allocating data structure")
     ptm <- proc.time()
 
-    pos_and_SNP_list <- lapply(window_list,  function(x) extract_window(this_position = x,
-                                                                        window_size = window_size,
-                                                                        genodata = genodata))
+    pos_and_SNP_list <- future.apply::future_lapply(window_list,
+                                                    function(x) extract_window(
+                                                      this_position = x,
+                                                      window_size = window_size,
+                                                      genodata = genodata))
 
     time <- proc.time() - ptm
     message(paste("Took", time[3],

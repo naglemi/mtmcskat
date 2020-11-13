@@ -7,6 +7,9 @@ data("sample_pre_allocated_SNP_windows")
 
 library(future)
 
+old <- options(stringsAsFactors = FALSE)
+options(mc.cores=2)
+
 test_that("After pre-allocation, SNP windows are divided in desired n chunks", {
   expect_equal(length(chunk_windows(
     pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows,
@@ -26,3 +29,5 @@ test_that("Multi-threaded SKAT produces output matching expected results", {
     sample_mtskat_results,
     tolerance = 1e-7) # Due to inequality that appears to be floating point error
 })
+
+on.exit(options(old), add = TRUE)

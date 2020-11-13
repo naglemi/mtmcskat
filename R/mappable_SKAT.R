@@ -7,7 +7,8 @@
 #'   individual windows to each worker, broken into chunks using
 #'   \code{\link{chunk_windows}}.
 #' @param chunk Should be TRUE if the list passed by `pos_and_SNPs` argument has
-#'   been processed into chunks by \code{\link{chunk_windows}}
+#'   been processed into chunks by `chunk_windows()`, as is done in a standard
+#'   \code{\link{mtskat}} workflow
 #' @inheritParams SKAT_one_window
 #'
 #' @return A dataframe to be appended to results. If chunking (see above), this

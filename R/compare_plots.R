@@ -5,18 +5,18 @@ compare_plots <- function(master_output, plot_out_name, scaffold_ID){
 
   master_output$Chr <- rep(scaffold_ID, nrow(master_output))
 
-  par(mfrow=c(2,1))
+  graphics::par(mfrow=c(2,1))
 
   qqman::manhattan(
     master_output[!is.na(master_output$`SKAT_p-val`), ],
     chr = "Chr",
     bp = "position",
     p = "SKAT_p-val",
-    xlim = c(min(na.omit(master_output$position)),
-             max(na.omit(master_output$position))),
+    xlim = c(min(stats::na.omit(master_output$position)),
+             max(stats::na.omit(master_output$position))),
     ylim = c(0,
              ceiling(max(
-               na.omit((-log(master_output$`SKAT_p-val`,
+               stats::na.omit((-log(master_output$`SKAT_p-val`,
                              base = 10)))))),
     suggestiveline = FALSE,
     genomewideline = FALSE)
@@ -26,11 +26,11 @@ compare_plots <- function(master_output, plot_out_name, scaffold_ID){
     chr = "Chr",
     bp = "position",
     p = "SKAT_p-val_resampled",
-    xlim = c(min(na.omit(master_output$position)),
-             max(na.omit(master_output$position))),
+    xlim = c(min(stats::na.omit(master_output$position)),
+             max(stats::na.omit(master_output$position))),
     ylim = c(0,
              ceiling(max(
-               na.omit((-log(master_output$`SKAT_p-val`,
+               stats::na.omit((-log(master_output$`SKAT_p-val`,
                              base = 10)))))),
     suggestiveline = FALSE,
     genomewideline = FALSE)
@@ -38,7 +38,7 @@ compare_plots <- function(master_output, plot_out_name, scaffold_ID){
   message(paste0("Writing ",
                  plot_out_name))
 
-  p <- recordPlot()
+  p <- grDevices::recordPlot()
   g <- grid::grid.grabExpr(
     gridGraphics::grid.echo(p))
 

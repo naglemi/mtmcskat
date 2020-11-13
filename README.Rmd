@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 # Introduction to MTMC-SKAT
 
 <!-- badges: start -->
+[![Travis build status](https://travis-ci.org/naglemi/mtmcskat.svg?branch=master)](https://travis-ci.org/naglemi/mtmcskat)
 <!-- badges: end -->
 
 Multi-Threaded Monte Carlo Sequence Kernel Association Test (MTMC-SKAT) provides high-level R and command line interfaces for [SKAT](https://github.com/leeshawn/SKAT) (Wu et al., 2011; Lee et al., 2016), most notably with support for adaptive resampling with multi-threading using the [future](https://github.com/HenrikBengtsson/future) parallel framework to rapidly calculate empirical p-values. These features can facilitate high-powered and accurate GWAS for traits that do not satisfy linear model assumptions. 

@@ -19,7 +19,7 @@ benchmark_nm <- function(phenotype, covariates, benchmark_size = 1000){
                                       n.Resampling = benchmark_size,
                                       type.Resampling="bootstrap")
 
-  nm_RAM_per_perm <- object.size(null_model) / benchmark_size
+  nm_RAM_per_perm <- utils::object.size(null_model) / benchmark_size
   nm_RAM_per_perm
 }
 
