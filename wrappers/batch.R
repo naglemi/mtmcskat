@@ -74,7 +74,12 @@ option_list = list(
               type="character",
               default="sequential",
               help=paste('character string of "sequential" or "slurms"'),
-              metavar="character")
+              metavar="character"),
+  make_option(c("-n", "--n_thread"),
+              type="numeric",
+              default=24,
+              help=paste('Number of threads for this job'),
+              metavar="numeric")
   );
 
 opt_parser = OptionParser(option_list=option_list);
@@ -129,7 +134,7 @@ pars <- foreach(raw_file_path = raw_file_path_list,
                              max_accuracy = opt$max_accuracy,
                              plot = TRUE,
                              RAM = "AllRAM",
-                             n_thread = "AllCores")
+                             n_thread = opt$n_thread)
           }
 
 if(opt$mode == "slurm"){
@@ -140,7 +145,8 @@ if(opt$mode == "slurm"){
                       nodes = nrow(pars),
                       cpus_per_node = 1,
                       submit = FALSE,
-                      slurm_options = list(time = opt$time))
+                      slurm_options = list(time = opt$time,
+                                           ntasks-per-node = opt$n_thread))
 }
 
 if(opt$mode == "sequential"){
