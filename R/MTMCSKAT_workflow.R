@@ -241,7 +241,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   max_permutations_per_job <-
     calculate_max_perm_per_core(
       nm_RAM_per_perm = RAM_per_permutation,
-      RAM = size_RAM_wiggle(wiggle_factor = 4),
+      RAM = size_RAM_wiggle(wiggle_factor = 10),
       n_thread = n_thread)
 
   RAM_per_thread <- RAM / n_thread

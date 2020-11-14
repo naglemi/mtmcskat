@@ -50,8 +50,8 @@ re_allocate_windows <- function(x,
     desired_list = window_list,
     subindex = 1)
 
-  message(paste0("Number of SNP windows outside of subset_list_of_lists is ",
-                 length(new_pre_allocated_SNP_windows)))
+  # message(paste0("Number of SNP windows outside of subset_list_of_lists is ",
+  #                length(new_pre_allocated_SNP_windows)))
 
   if(length(new_pre_allocated_SNP_windows) == 0){
     stop("Error: There is no SNP data for windows in the list provided.")

@@ -20,9 +20,9 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
     n_permutations = n_permutations,
     chunk = FALSE)
 
-  message(paste0("Finished parallel run in ",
-                 (proc.time() - time_to_run_mapping)[3],
-                 "s"))
+  message(paste("Finished parallel run in",
+                (proc.time() - time_to_run_mapping)[3],
+                "seconds\n"))
 
   add_to_master_output <- dplyr::bind_rows(add_to_master_output)
   add_to_master_output <- post_process_master_output(
@@ -59,8 +59,25 @@ mtmcskat_NullModels <- function(n_thread,
                        "Unable to multithread over all null models ",
                        "simultaneously."))
 
-        n_permutations_per_job <- max_permutations_per_job
-        n_jobs <- ceiling(n_permutations / n_permutations_per_job)
+        # Old way, not efficient... Doesn't use all cores for last round
+        #   of resampling if there are fewer tasks remaining than n threads.
+        # n_permutations_per_job <- max_permutations_per_job
+        # n_jobs <- ceiling(n_permutations / n_permutations_per_job)
+
+        # New approach, makes sure the number of tasks is always a multiple
+        #   of the number of threads available, and decides on a number of
+        #   permutations per core that allows us to use ALL threads ALWAYS
+        #   to reach the desired # of permutations with EXACTLY the same number
+        #   of permutations per thread
+
+        # The smallest # jobs we could possibly divide needed permutations
+        #   over without crashing due to running over RAM
+        min_n_jobs <- ceiling(n_permutations / max_permutations_per_job)
+
+        # To make full use of resources and ensure we're always running the
+        #   maximum possible number of threads...
+        n_jobs <- plyr::round_any(min_n_jobs, n_thread, f = ceiling)
+        n_permutations_per_job <- ceiling(n_permutations / n_jobs)
       }
 
       if(n_total_permutations_per_thread < max_permutations_per_job ){
