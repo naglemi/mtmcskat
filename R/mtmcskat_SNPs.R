@@ -90,7 +90,8 @@ mtmcskat_NullModels <- function(n_thread,
   )
 
   message(paste0("To run ", job_details$n_jobs, "jobs, each with ",
-                 job_details$n_permutations_per_job, " permutations ",
+                 format(job_details$n_permutations_per_job,
+                        big.mark=",",scientific=FALSE), " permutations ",
                  "for a total of ", job_details$actual_n_permutations,
                  " permutations\n"))
 
