@@ -5,7 +5,7 @@
 \title{Calculate the number of permutations in a null model that can fit in RAM
 partitioned for a single thread}
 \usage{
-calculate_max_perm_per_core(nm_RAM_per_perm, RAM, n_thread)
+calculate_max_perm_per_core(nm_RAM_per_perm, RAM, n_thread, verbose = TRUE)
 }
 \arguments{
 \item{nm_RAM_per_perm}{Integer, the amount of RAM needed per permutation in a
@@ -15,6 +15,8 @@ null model (in bytes); this is the output from \code{\link{benchmark_nm}}}
 threads (in bytes)}
 
 \item{n_thread}{Integer, the number of threads over which RAM will be divided}
+
+\item{verbose}{If TRUE, print messages explaining logic}
 }
 \value{
 An integer indicating the amount of RAM that is available to be used

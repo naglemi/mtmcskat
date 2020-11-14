@@ -92,7 +92,9 @@ mtmcskat_NullModels <- function(n_thread,
   message(paste0("To run ", job_details$n_jobs, "jobs, each with ",
                  format(job_details$n_permutations_per_job,
                         big.mark=",",scientific=FALSE), " permutations ",
-                 "for a total of ", job_details$actual_n_permutations,
+                 "for a total of ",
+                 format(job_details$actual_n_permutations,
+                        big.mark=",",scientific=FALSE),
                  " permutations\n"))
 
   timer <- proc.time()
@@ -109,8 +111,9 @@ mtmcskat_NullModels <- function(n_thread,
 
   p_null_tallies <- dplyr::bind_rows(p_null_tallies)
 
-  message(paste0(Sys.time(), " - Finished resampling up to ",
-                 job_details$actual_n_permutations, " permutations in",
+  message(paste0(Sys.time(), " - Finished resampling with ",
+                 format(job_details$actual_n_permutations,
+                        big.mark=",",scientific=FALSE), " permutations in",
                  (proc.time() - timer)[3], "s\n\n"))
 
   p_empirical_table <- p_empirical_from_tally(

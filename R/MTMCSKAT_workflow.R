@@ -338,8 +338,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   output_basename <- paste0(output_dir, "/pheno-",
                             basename(phenodata),
                             "-scaff-",
-                            basename(raw_file_path),
-                             ".csv")
+                            basename(raw_file_path))
 
   raw_out_name <- paste0(output_basename, ".csv")
   plot_out_name <- paste0(output_basename, ".png")

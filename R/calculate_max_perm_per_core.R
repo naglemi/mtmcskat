@@ -80,7 +80,8 @@ calculate_max_perm_per_core <- function(nm_RAM_per_perm,
                          big.mark=",",scientific=FALSE),
                   "permutations at once. Divided over", n_thread,
                   "threads, each thread can run up to",
-                  max_simultaneous_perm_per_core, "permutations."))
+                  format(max_simultaneous_perm_per_core,
+                         big.mark=",",scientific=FALSE), "permutations."))
   }
 
   max_simultaneous_perm_per_core
