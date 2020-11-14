@@ -1,3 +1,4 @@
+context("MTMCSKAT with multithreading over SNP windows and over null models")
 
 data("sample_mtskat_results")
 data("sample_phenotype")
