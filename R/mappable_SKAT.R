@@ -63,8 +63,8 @@ mappable_SKAT <- function(pos_and_SNPs,
                                  null_model = null_model,
                                  n_permutations = n_permutations)
 
-    pos_and_SNPs <-NULL
-    gc()
+    #pos_and_SNPs <-NULL
+    #gc()
     return(as.data.frame(t(to_append)))
 
   }

@@ -70,16 +70,18 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
     message(paste0("\nMax # leading 0s is: ", max_leading_0s, "\n"))
 
     if (max_accuracy != "Auto"){
-      message(paste0("User-defined accuracy is 10^-", max_accuracy, "\n"))
+      message(paste0("User-defined accuracy limit is 10^-", max_accuracy, "\n"))
       if (max_leading_0s < max_accuracy){
-        message(paste0("This level of accuracy may need be needed since p-values",
-                       "from mtskat have no more than ", max_leading_0s,
-                       "leading zeros"))
+        message(paste("This level of accuracy may be more than the accuracy",
+                      "needed to calculate empirical p-values since model",
+                      "p-values from mtskat have no more than ", max_leading_0s,
+                      "leading zeros\n"))
       }
       if (max_leading_0s > max_accuracy){
-        message(paste0("This accuracy may not be enough to accurately calculate ",
-                       "all empirical p-values since p-values from mtskat have ",
-                       "as many as ", max_leading_0s, " leading zeros"))
+        message(paste("This accuracy may not be enough to accurately",
+                      "calculate all empirical p-values since p-values from",
+                      "mtskat have as many as", max_leading_0s,
+                      "leading zeros\n"))
       }
     }
     if (max_accuracy == "Auto"){

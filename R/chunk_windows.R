@@ -20,11 +20,12 @@ chunk_windows <- function(pre_allocated_SNP_windows,
 
   chunk_size <- length(pre_allocated_SNP_windows) / n_thread
 
-  message(paste0(Sys.time(), " - Chunking list of length ",
-                 length(pre_allocated_SNP_windows),
-                 " into blocks each with no more than",
-                 ceiling(chunk_size),
-                 " SNP windows each"))
+  message(paste(Sys.time(), "- Chunking list with",
+                format(length(pre_allocated_SNP_windows),
+                       big.mark=",",scientific=FALSE),
+                "SNP windows into blocks with no more than",
+                ceiling(chunk_size),
+                "SNP windows each"))
 
   pre_allocated_SNP_windows <- split(
     pre_allocated_SNP_windows,

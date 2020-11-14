@@ -43,7 +43,8 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
 
   if(file.exists(pre_allocated_path)){
     message(paste0("Data structure already exists. Read in from: ",
-                   pre_allocated_path))
+                   pre_allocated_path,
+                   "\n"))
     pos_and_SNP_list <- readRDS(pre_allocated_path)
   }
   if(!file.exists(pre_allocated_path)){
@@ -88,7 +89,8 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
     saveRDS(pos_and_SNP_list, pre_allocated_path)
 
     message(paste("Pre-allocated SNP data saved to",
-                  pre_allocated_path))
+                  pre_allocated_path,
+                  "\n"))
   }
 
   pos_and_SNP_list
