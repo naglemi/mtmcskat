@@ -305,7 +305,8 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
           covariates = covariates,
           n_permutations = n_permutations,
           pre_allocated_SNP_windows = new_pre_allocated_SNP_windows,
-          scaffold_ID = pre_allocated_SNP_windows[[1]][[3]])
+          scaffold_ID = pre_allocated_SNP_windows[[1]][[3]],
+          n_thread = n_thread)
     }
 
     if(!null_models_fit_in_RAM_per_thread | more_threads_than_windows){

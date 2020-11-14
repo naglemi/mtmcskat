@@ -2,12 +2,17 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
                           n_permutations,
                           this_phenotype,
                           covariates,
-                          scaffold_ID){
+                          scaffold_ID,
+                          n_thread){
 
   null_model <- SKAT::SKAT_Null_Model(
     this_phenotype ~ 1 + as.matrix(covariates),
     n.Resampling = n_permutations,
     type.Resampling = "bootstrap")
+
+  pre_allocated_SNP_windows <- chunk_windows(
+    pre_allocated_SNP_windows = pre_allocated_SNP_windows,
+    n_thread = n_thread)
 
   time_to_run_mapping <- proc.time()
 
@@ -18,7 +23,7 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
     null_model = null_model,
     resampling = TRUE,
     n_permutations = n_permutations,
-    chunk = FALSE)
+    chunk = TRUE)
 
   message(paste("Finished parallel run in",
                 (proc.time() - time_to_run_mapping)[3],

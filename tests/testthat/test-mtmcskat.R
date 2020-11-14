@@ -19,7 +19,8 @@ test_that("MTMCSKAT threading on SNP windows gives expected results", {
     covariates = sample_covariates,
     n_permutations = 500,
     pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows[2:4],
-    scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]]),
+    scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]],
+    n_thread = 2),
     sample_mtmcskat_results)
 })
 
