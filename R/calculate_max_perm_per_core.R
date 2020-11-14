@@ -29,6 +29,7 @@ benchmark_nm <- function(phenotype, covariates, benchmark_size = 1000){
                                       type.Resampling="bootstrap")
 
   nm_RAM_per_perm <- utils::object.size(null_model) / benchmark_size
+
   nm_RAM_per_perm
 }
 
@@ -40,6 +41,7 @@ benchmark_nm <- function(phenotype, covariates, benchmark_size = 1000){
 #' @param RAM Integer, the total amount of RAM available to be used, for all
 #'   threads (in bytes)
 #' @param n_thread Integer, the number of threads over which RAM will be divided
+#' @param verbose If TRUE, print messages explaining logic
 #'
 #' @return An integer indicating the amount of RAM that is available to be used
 #'   by any given thread
@@ -61,13 +63,25 @@ benchmark_nm <- function(phenotype, covariates, benchmark_size = 1000){
 #'
 calculate_max_perm_per_core <- function(nm_RAM_per_perm,
                                         RAM,
-                                        n_thread){
+                                        n_thread,
+                                        verbose = TRUE){
 
   # What is the maximum number of permutations that can be performed without a
   #   round of boss-worker communication?
-  max_simultaneous_perm <- as.numeric(RAM / nm_RAM_per_perm)
+  max_simultaneous_perm <- floor(as.numeric(RAM / nm_RAM_per_perm))
 
   max_simultaneous_perm_per_core <- floor(max_simultaneous_perm / n_thread)
+
+  if(verbose == TRUE){
+    message(paste("Amount of RAM we are banking on is", RAM/1e9,
+                  "GB and each permutation requires", nm_RAM_per_perm/1e3, "kB",
+                  "so there can be ",
+                  format(max_simultaneous_perm,
+                         big.mark=",",scientific=FALSE),
+                  "permutations at once. Divided over", n_thread,
+                  "threads, each thread can run up to",
+                  max_simultaneous_perm_per_core, "permutations."))
+  }
 
   max_simultaneous_perm_per_core
 }

@@ -39,5 +39,8 @@ map_SKAT_nm <- function(null_model_index,
 
   p_null_tallies <- tally_p_null(chunked_output[-1,])
 
+  null_model <- NULL
+  gc()
+
   return(p_null_tallies)
 }
