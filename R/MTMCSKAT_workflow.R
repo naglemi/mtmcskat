@@ -241,10 +241,13 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   max_permutations_per_job <-
     calculate_max_perm_per_core(
       nm_RAM_per_perm = RAM_per_permutation,
-      RAM = size_RAM_wiggle(RAM = RAM, wiggle_factor = 4),
+      RAM = size_RAM_wiggle(RAM = RAM, wiggle_factor = 6),
       n_thread = n_thread)
 
-  RAM_per_thread <- RAM / n_thread
+  # This should be less than (option 'future.globals.maxSize')
+  #   which is 500MB by default.
+  #RAM_per_thread <- RAM / n_thread
+  RAM_per_thread <- 500*1e6
 
   for(leading_0s in min_accuracy:max_accuracy){
 
@@ -259,12 +262,18 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
         desired_sig_figs = desired_sig_figs,
         terminal_resampling = terminal_resampling)
 
+    message(paste(Sys.time(), "- Re-allocating SNP windows with only those",
+                  "with p-values between", boundaries$upper, "and",
+                  boundaries$lower, "..."))
+
     new_pre_allocated_SNP_windows <-
       re_allocate_windows(
         x = master_output,
         upper_bound = boundaries$upper,
         lower_bound = boundaries$lower,
         pre_allocated_SNP_windows = pre_allocated_SNP_windows)
+
+    message(paste(Sys.time(), "Complete."))
 
     if(new_pre_allocated_SNP_windows == "None") next
 

@@ -4,12 +4,13 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
                           covariates,
                           scaffold_ID,
                           n_thread){
-
+  message(paste(Sys.time(), "- Making null model with",
+                n_permutations, "permutations..."))
   null_model <- SKAT::SKAT_Null_Model(
     this_phenotype ~ 1 + as.matrix(covariates),
     n.Resampling = n_permutations,
     type.Resampling = "bootstrap")
-
+  message(paste(Sys.time(), "- Complete\n"))
   pre_allocated_SNP_windows <- chunk_windows(
     pre_allocated_SNP_windows = pre_allocated_SNP_windows,
     n_thread = n_thread)

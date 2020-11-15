@@ -94,6 +94,7 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
   }
 
   genodata <- NULL # Will this prevent it from being exported on slurm?
+  gc()
 
   print(paste("Pre-allocated SNP window data takes up",
               object.size(pos_and_SNP_list)/1e6,
