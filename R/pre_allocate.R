@@ -76,11 +76,11 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
     message("Allocating data structure")
     ptm <- proc.time()
 
-    pos_and_SNP_list <- future.apply::future_lapply(window_list,
-                                                    function(x) extract_window(
-                                                      this_position = x,
-                                                      window_size = window_size,
-                                                      genodata = genodata))
+    pos_and_SNP_list <- lapply(window_list,
+                               function(x) extract_window(
+                                 this_position = x,
+                                 window_size = window_size,
+                                 genodata = genodata))
 
     time <- proc.time() - ptm
     message(paste("Took", time[3],
@@ -92,6 +92,12 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
                   pre_allocated_path,
                   "\n"))
   }
+
+  genodata <- NULL # Will this prevent it from being exported on slurm?
+
+  print(paste("Pre-allocated SNP window data takes up",
+              object.size(pos_and_SNP_list)/1e6,
+              "MB\n"))
 
   pos_and_SNP_list
 }

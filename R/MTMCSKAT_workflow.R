@@ -70,11 +70,11 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
     message(paste0("\nMax # leading 0s is: ", max_leading_0s, "\n"))
 
     if (max_accuracy != "Auto"){
-      message(paste0("User-defined accuracy limit is 10^-", max_accuracy, "\n"))
+      message(paste0("User-defined accuracy limit is 10^-", max_accuracy, "."))
       if (max_leading_0s < max_accuracy){
         message(paste("This level of accuracy may be more than the accuracy",
                       "needed to calculate empirical p-values since model",
-                      "p-values from mtskat have no more than ", max_leading_0s,
+                      "p-values from mtskat have no more than", max_leading_0s,
                       "leading zeros\n"))
       }
       if (max_leading_0s > max_accuracy){
@@ -197,7 +197,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
     n_thread <- future::availableCores()
   }
   if(RAM=="AllRAM") {
-    RAM <- benchmarkme::get_ram()
+    RAM <- as.numeric(benchmarkme::get_ram())
   }
 
   whole_genome_start <- proc.time()
@@ -243,7 +243,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   max_permutations_per_job <-
     calculate_max_perm_per_core(
       nm_RAM_per_perm = RAM_per_permutation,
-      RAM = size_RAM_wiggle(wiggle_factor = 4),
+      RAM = size_RAM_wiggle(RAM = RAM, wiggle_factor = 4),
       n_thread = n_thread)
 
   RAM_per_thread <- RAM / n_thread

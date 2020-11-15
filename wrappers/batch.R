@@ -86,17 +86,18 @@ opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 
 # setwd("/scratch2/NSF_GWAS/notebooks/MTMC-SKAT")
-# opt = list(phenodata = "test_two_phenotypes",
+# opt = list(phenodata = "/scratch2/NSF_GWAS/notebooks/InPlantaGWAS/02_Parsing_phenodata/pheno_files/untransformed_allpheno_with_header",
 #            covariates = "/scratch2/NSF_GWAS/notebooks/InPlantaGWAS/02_Parsing_phenodata/pheno_files/Covariates_AllPhasesButLast_Stem_noheader_PLINKformat.txt",
-#            genodata = "test_two_scaffolds_wholeChr_1323geno",
+#            genodata = "/scratch2/NSF_GWAS/notebooks/InPlantaGWAS/00_SNP_format_conversions/wholeChr1323geno/",
 #            output = "/scratch2/NSF_GWAS/Results/SKAT/",
-#            pre_allocated_dir = "/scratch2/NSF_GWAS/SKAT_SLURMS/mtmcskat/pre_allocated_dir",
-#            job_id = "test_twogeno_twopheno_111020",
+#            pre_allocated_dir = "/scratch2/NSF_GWAS/SKAT_SLURMS/pre_allocated_dir",
+#            job_id = "test_allpheno_allgeno_steed_a1",
 #            window_size = 3000,
 #            window_shift = 1000,
 #            min_accuracy = 2,
 #            max_accuracy = 5,
-#            mode = "sequential")
+#            mode = "sequential",
+#            n_thread = 40)
 
 # opt = list(phenodata = "/oasis/projects/nsf/osu123/naglemi/test_two_phenotypes",
 #            covariates = "/oasis/projects/nsf/osu123/naglemi/covariates/Covariates_AllPhasesButLast_Stem_noheader_PLINKformat.txt",
@@ -116,9 +117,9 @@ raw_file_path_list <- list.files(opt$genodata,
 phenotype_files <- list.files(opt$phenodata,
                               full.names = TRUE)
 
-pars <- foreach(raw_file_path = raw_file_path_list,
+pars <- foreach(phenotype = phenotype_files,
                 .combine = rbind) %:%
-  foreach(phenotype = phenotype_files,
+  foreach(raw_file_path = raw_file_path_list,
           .combine = rbind) %do% {
 
           pars <- data.frame(phenodata = phenotype,
@@ -146,7 +147,9 @@ if(opt$mode == "slurm"){
                       cpus_per_node = 1,
                       submit = FALSE,
                       slurm_options = list(time = opt$time,
-                                           "ntasks-per-node" = opt$n_thread))
+                                           "ntasks-per-node" = opt$n_thread,
+                                           nodes = 1,
+                                           ntasks = 1))
 }
 
 if(opt$mode == "sequential"){
@@ -164,7 +167,7 @@ if(opt$mode == "sequential"){
          max_accuracy = pars$max_accuracy,
          plot = pars$plot,
          RAM = pars$RAM,
-         n_thread = "AllCores")
+         n_thread = opt$n_thread)
 }
 
 

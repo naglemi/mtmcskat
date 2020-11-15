@@ -55,9 +55,17 @@ mtskat <- function(this_phenotype,
         pre_allocated_dir = pre_allocated_dir)
   }
 
+  message(paste("Memory taken up by pre-allocated SNP windows before chunking is",
+                object.size(pre_allocated_SNP_windows)/1e6,
+                "MB"))
+
   pre_allocated_SNP_windows <- chunk_windows(
     pre_allocated_SNP_windows = pre_allocated_SNP_windows,
     n_thread = n_thread)
+
+  message(paste("Memory taken up by pre-allocated SNP windows AFTER chunking is",
+                object.size(pre_allocated_SNP_windows)/1e6,
+                "MB"))
 
   time_to_run_mapping <- proc.time()
 

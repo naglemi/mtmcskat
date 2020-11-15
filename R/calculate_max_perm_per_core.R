@@ -74,8 +74,8 @@ calculate_max_perm_per_core <- function(nm_RAM_per_perm,
 
   if(verbose == TRUE){
     message(paste("Amount of RAM we are banking on is", RAM/1e9,
-                  "GB and each permutation requires", nm_RAM_per_perm/1e3, "kB",
-                  "so there can be ",
+                  "GB and each permutation requires", nm_RAM_per_perm/1e3, "kB,",
+                  "so there can be",
                   format(max_simultaneous_perm,
                          big.mark=",",scientific=FALSE),
                   "permutations at once. Divided over", n_thread,
@@ -87,9 +87,9 @@ calculate_max_perm_per_core <- function(nm_RAM_per_perm,
   max_simultaneous_perm_per_core
 }
 
-size_RAM_wiggle <- function(wiggle_factor){
+size_RAM_wiggle <- function(RAM, wiggle_factor){
 
-  RAM <- as.numeric(benchmarkme::get_ram())/wiggle_factor
+  RAM <- RAM/wiggle_factor
   RAM
 }
 
