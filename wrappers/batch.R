@@ -147,7 +147,6 @@ if(opt$mode == "slurm"){
                       cpus_per_node = opt$n_thread,
                       submit = FALSE,
                       slurm_options = list(time = opt$time,
-                                           nodes = 1,
                                            ntasks = 1))
 }
 
