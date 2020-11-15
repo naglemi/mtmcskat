@@ -146,8 +146,8 @@ if(opt$mode == "slurm"){
                       nodes = nrow(pars),
                       cpus_per_node = opt$n_thread,
                       submit = FALSE,
-                      slurm_options = list(time = opt$time,
-                                           ntasks = 1))
+                      slurm_options = list(time = opt$time),
+                      preschedule_cores = FALSE)
 }
 
 if(opt$mode == "sequential"){
