@@ -144,7 +144,7 @@ if(opt$mode == "slurm"){
                       pars,
                       jobname = opt$job_id,
                       nodes = nrow(pars),
-                      cpus_per_node = n_thread,
+                      cpus_per_node = opt$n_thread,
                       submit = FALSE,
                       slurm_options = list(time = opt$time,
                                            nodes = 1,
