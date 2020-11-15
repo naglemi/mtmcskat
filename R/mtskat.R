@@ -69,6 +69,9 @@ mtskat <- function(this_phenotype,
 
   time_to_run_mapping <- proc.time()
 
+  print("Size of all objects in environment, in MB is: ")
+  print(sort( sapply(ls(),function(x){object.size(get(x))/1e6})))
+
   master_output <- future.apply::future_lapply(X = pre_allocated_SNP_windows,
                                                FUN = mappable_SKAT,
                                                scaffold_ID = raw_file_path,
