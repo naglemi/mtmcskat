@@ -218,8 +218,6 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
       this_phenotype = this_phenotype,
       covariates = covariates,
       raw_file_path = pre_allocated_SNP_windows[[1]][[3]],
-      window_size = window_size,
-      window_shift = window_shift,
       pre_allocated_SNP_windows = pre_allocated_SNP_windows,
       n_thread = n_thread)
 
