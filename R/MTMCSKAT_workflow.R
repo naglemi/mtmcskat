@@ -202,7 +202,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
 
   whole_genome_start <- proc.time()
 
-  future::plan("multiprocess")
+  future::plan("multisession")
 
   # Initial SKAT round w/o resampling, parallelized over SNP windows --------
 
