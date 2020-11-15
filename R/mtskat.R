@@ -36,24 +36,12 @@
 #' }
 mtskat <- function(this_phenotype,
                    covariates,
-                   raw_file_path,
                    pre_allocated_SNP_windows,
-                   pre_allocated_dir,
-                   window_size,
-                   window_shift,
+                   raw_file_path,
                    n_thread){
 
   null_model_noresample <- SKAT::SKAT_Null_Model(
     this_phenotype ~ 1 + as.matrix(covariates), out_type="C")
-
-  if(!exists("pre_allocated_SNP_windows")){
-
-      pre_allocated_SNP_windows <- pre_allocate(
-        raw_file_path = raw_file_path,
-        window_size = window_size,
-        window_shift = window_shift,
-        pre_allocated_dir = pre_allocated_dir)
-  }
 
   message(paste("Memory taken up by pre-allocated SNP windows before chunking is",
                 object.size(pre_allocated_SNP_windows)/1e6,
