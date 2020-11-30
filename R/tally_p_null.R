@@ -9,10 +9,16 @@
 #' This reduces the load of data to be returned. Empirical p-values are then
 #' calculated from all returned data using `p_empirical_from_tally`.
 #'
-#' @param p_table a dataframe or matrix with a row for each SNP window and a
+#' @param p_table a data frame or matrix with a row for each SNP window and a
 #'   column for each p-value resulting from a permuted null model
 #'
-#' @return
+#' @return a data frame with four columns: 1) position, in base pairs, for
+#' the center of a SNP; 2) the original p-value
+#'   for the given SNP window, obtained by SKAT without resampling; 3) The
+#'   number of permuted p-values from a given thread that are above the
+#'   original p-value for a given window; and 4) The number of permuted
+#'   p-values from a given thread that are below the original p-value for a
+#'   given window
 #' @export
 #'
 #' @examples
@@ -55,7 +61,9 @@ tally_p_null <- function(p_table){
 #'   to calculate the empirical p-value out to the desired number of significant
 #'   figures
 #'
-#' @return
+#' @return A dataframe with four columns, for 1) scaffold ID, 2) SNP window
+#' position, 3) p-values from the model used in SKAT without resampling, and
+#' 4) empirical p-values
 #' @export
 #'
 #' @examples
@@ -71,15 +79,15 @@ p_empirical_from_tally <- function(p_null_tallies, scaffold_ID,
             p_null_tallies$`SKAT_p-val`),
     FUN=sum) # https://stackoverflow.com/questions/1660124/how-to-sum-a-variable-by-group
 
-  total_perm_p_ltoreq$x <- total_perm_p_ltoreq$x + 1 # Add one for our p-value without resampling
+  total_perm_p_ltoreq$x <- total_perm_p_ltoreq$x
 
   total_perm_p_above <- stats::aggregate(
     p_null_tallies$n_perm_above,
     by=list(p_null_tallies$position,
             p_null_tallies$`SKAT_p-val`), FUN=sum)
 
-  total_perm_p_ltoreq$empirical_p <- total_perm_p_ltoreq$x /
-    ( total_perm_p_ltoreq$x + total_perm_p_above$x )
+  total_perm_p_ltoreq$empirical_p <- (total_perm_p_ltoreq$x + 1) /
+    ( total_perm_p_ltoreq$x + total_perm_p_above$x + 1)
 
   output <- cbind(scaffold_ID,
                   total_perm_p_ltoreq$Group.1,

@@ -97,7 +97,7 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
   gc()
 
   print(paste("Pre-allocated SNP window data takes up",
-              object.size(pos_and_SNP_list)/1e6,
+              utils::object.size(pos_and_SNP_list)/1e6,
               "MB\n"))
 
   pos_and_SNP_list

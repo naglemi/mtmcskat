@@ -7,11 +7,8 @@
 mtskat(
   this_phenotype,
   covariates,
-  raw_file_path,
   pre_allocated_SNP_windows,
-  pre_allocated_dir,
-  window_size,
-  window_shift,
+  raw_file_path,
   n_thread
 )
 }
@@ -24,21 +21,11 @@ standard PLINK phenotype file format
 comma-delimited text file with a header and one row for each genotype, in
 the same order as the phenotype file.}
 
-\item{raw_file_path}{complete file path to SNP data in `.traw` format (see
-\href{https://www.cog-genomics.org/plink2/formats}{PLINK documentation})}
-
 \item{pre_allocated_SNP_windows}{A list of SNP windows along with their
 positions and scaffolds, prepared using \code{\link{pre_allocate}}}
 
-\item{pre_allocated_dir}{a directory where pre-allocated SNP window lists are
-kept}
-
-\item{window_size}{An integer, indicating the size of each SNP window (in
-base pairs)}
-
-\item{window_shift}{An integer, indicating the number of base pairs over
-which each rolling window will slide; in other terms, the distance between
-the start (or end) positions of adjacent overlapping windows}
+\item{raw_file_path}{complete file path to SNP data in `.traw` format (see
+\href{https://www.cog-genomics.org/plink2/formats}{PLINK documentation})}
 
 \item{n_thread}{An integer indicating the number of threads to be used for
 multithreading}

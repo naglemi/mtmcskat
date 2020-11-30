@@ -19,7 +19,9 @@ to calculate the empirical p-value out to the desired number of significant
 figures}
 }
 \value{
-
+A dataframe with four columns, for 1) scaffold ID, 2) SNP window
+position, 3) p-values from the model used in SKAT without resampling, and
+4) empirical p-values
 }
 \description{
 Tally p-values from permuted null model to enable calculation of empirical

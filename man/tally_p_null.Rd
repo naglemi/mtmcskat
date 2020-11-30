@@ -8,11 +8,17 @@ p-values}
 tally_p_null(p_table)
 }
 \arguments{
-\item{p_table}{a dataframe or matrix with a row for each SNP window and a
+\item{p_table}{a data frame or matrix with a row for each SNP window and a
 column for each p-value resulting from a permuted null model}
 }
 \value{
-
+a data frame with four columns: 1) position, in base pairs, for
+the center of a SNP; 2) the original p-value
+  for the given SNP window, obtained by SKAT without resampling; 3) The
+  number of permuted p-values from a given thread that are above the
+  original p-value for a given window; and 4) The number of permuted
+  p-values from a given thread that are below the original p-value for a
+  given window
 }
 \description{
 These functions are used to calculate empirical p-values given initial

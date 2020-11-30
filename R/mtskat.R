@@ -43,25 +43,27 @@ mtskat <- function(this_phenotype,
   null_model_noresample <- SKAT::SKAT_Null_Model(
     this_phenotype ~ 1 + as.matrix(covariates), out_type="C")
 
-  message(paste("Memory taken up by pre-allocated SNP windows before chunking is",
-                object.size(pre_allocated_SNP_windows)/1e6,
-                "MB"))
+  # message(paste(
+  #   "Memory taken up by pre-allocated SNP windows before chunking is",
+  #   object.size(pre_allocated_SNP_windows)/1e6,
+  #   "MB"))
 
   pre_allocated_SNP_windows <- chunk_windows(
     pre_allocated_SNP_windows = pre_allocated_SNP_windows,
     n_thread = n_thread)
 
-  message(paste("Memory taken up by pre-allocated SNP windows AFTER chunking is",
-                object.size(pre_allocated_SNP_windows)/1e6,
-                "MB"))
+  # message(paste(
+  #   "Memory taken up by pre-allocated SNP windows AFTER chunking is",
+  #   object.size(pre_allocated_SNP_windows)/1e6,
+  #   "MB"))
 
   time_to_run_mapping <- proc.time()
 
-  print("Size of each objects in environment, in MB is: ")
-  print(sort( sapply(ls(),function(x){object.size(get(x))/1e6})))
-
-  print("Total size of all objects in environment, in MB is: ")
-  print(sum( sapply(ls(),function(x){object.size(get(x))/1e6})))
+  # print("Size of each objects in environment, in MB is: ")
+  # print(sort( sapply(ls(),function(x){object.size(get(x))/1e6})))
+  #
+  # print("Total size of all objects in environment, in MB is: ")
+  # print(sum( sapply(ls(),function(x){object.size(get(x))/1e6})))
 
   master_output <- future.apply::future_lapply(X = pre_allocated_SNP_windows,
                                                FUN = mappable_SKAT,

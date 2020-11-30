@@ -1,9 +1,12 @@
 context("Empirical p-values")
 
 data("sample_covariates")
-data("sample_null_model")
+# data("sample_null_model")
 data("sample_pre_allocated_SNP_windows")
 data("sample_phenotype")
+
+sample_null_model <- SKAT::SKAT_Null_Model(
+  sample_phenotype ~ 1 + as.matrix(sample_covariates), out_type="C")
 
 test_that("Empirical p-val is equal to earlier result with same null model", {
   expect_equal(

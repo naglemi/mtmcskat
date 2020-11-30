@@ -1,44 +1,81 @@
-mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
-                          n_permutations,
-                          this_phenotype,
-                          covariates,
-                          scaffold_ID,
-                          n_thread){
-  message(paste(Sys.time(), "- Making null model with",
-                n_permutations, "permutations..."))
-  null_model <- SKAT::SKAT_Null_Model(
-    this_phenotype ~ 1 + as.matrix(covariates),
-    n.Resampling = n_permutations,
-    type.Resampling = "bootstrap")
-  message(paste(Sys.time(), "- Complete\n"))
-  pre_allocated_SNP_windows <- chunk_windows(
-    pre_allocated_SNP_windows = pre_allocated_SNP_windows,
-    n_thread = n_thread)
-
-  time_to_run_mapping <- proc.time()
-
-  #browser()
-
-  add_to_master_output <- future.apply::future_lapply(
-    X = pre_allocated_SNP_windows,
-    FUN = mappable_SKAT,
-    scaffold_ID = scaffold_ID,
-    null_model = null_model,
-    resampling = TRUE,
-    n_permutations = n_permutations,
-    chunk = TRUE)
-
-  message(paste("Finished parallel run in",
-                (proc.time() - time_to_run_mapping)[3],
-                "seconds\n"))
-
-  add_to_master_output <- dplyr::bind_rows(add_to_master_output)
-  add_to_master_output <- post_process_master_output(
-    master_output = add_to_master_output)
-
-  add_to_master_output
-}
-
+#' Run multi-threaded Monte Carlo Sequence Kernel Association Test over a
+#' pre-allcoated set of SNP windows
+#'
+#' These function provide means of running SKAT over a set of pre-allocated
+#' SNP windows (see \code{\link{pre_allocate}}) while performing resampling
+#' with a user-specified number of permutations. Multithreading is implemented
+#' over SNP windows or null models, depending on the function called.
+#'
+#' @inheritParams mtskat
+#' @inheritParams chunk_windows
+#' @inheritParams mappable_SKAT
+#' @param max_permutations_per_job the maximum number of permutations that may fit
+#' into a `SKAT_NULL_Model` object generated for any given thread
+#'
+#' @return A dataframe with four columns, for 1) scaffold ID, 2) SNP window
+#' position, 3) p-values from the model used in SKAT without resampling, and
+#' 4) empirical p-values
+#' @export
+#'
+#' @details The choice of the appropriate function (either `mtmcskat_SNPs` or
+#' `mtmcskat_NullModels`) depends on whether the user desired to multithread
+#' over SNP windows or null models, which in turn depends on several factors.
+#' First, if multi-threading over SNP windows, the number of SNP windows should
+#' not be less than the number of threads available, as efficient computation
+#' requires each thread receive at least one SNP window. Second, available RAM
+#' limits the amount of permutation that can be accomodated simultaneously in
+#' null models.
+#'
+#'
+#' Multithreading over null models is recommended for situations
+#' in which the number of permutations that must be tested cannot fit into
+#' available RAM divided by available threads. Multithreading over SNP windows
+#' is only recommended for situations involving relatively few permutations and
+#' large number of SNP windows, for example, in the standard MTMCSKAT workflow,
+#' when calculating empirical p-values for large groups of SNP windows with
+#' initial \code{\link{mtskat}} p-values that are not very low.
+#'
+#' @examples
+#'
+#' data("sample_phenotype")
+#' data("sample_covariates")
+#' data("sample_pre_allocated_SNP_windows")
+#'
+#' # Multithreading over SNP windows
+#' mtmcskat_SNPs(
+#' this_phenotype = sample_phenotype,
+#' covariates = sample_covariates,
+#' n_permutations = 500,
+#' pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows[2:4],
+#' scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]],
+#' n_thread = 2)
+#'
+#' # Multithreading over null models, where all necessary permutations can
+#' #  simultaneously fit into memory and computation can be completed in a
+#' #  single "batch."
+#' mtmcskat_NullModels(
+#' this_phenotype = sample_phenotype,
+#' covariates = sample_covariates,
+#' n_permutations = 500,
+#' n_thread = 2,
+#' max_permutations_per_job = 251,
+#' pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows[2:4],
+#' scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]])
+#'
+#'
+#' # Multithreading over null models, where the the number of permutations
+#' #   is greater than that which can fit into memory (as indicated by the
+#' #   user or upstream functions through the `max_permutations_per_job`
+#' #   argument), thus requiring multiple sequential "batches" of computation.
+#' mtmcskat_NullModels(
+#' this_phenotype = sample_phenotype,
+#' covariates = sample_covariates,
+#' n_permutations = 500,
+#' n_thread = 2,
+#' max_permutations_per_job = 249,
+#' pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows[2:4],
+#' scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]])
+#'
 mtmcskat_NullModels <- function(n_thread,
                                 n_permutations,
                                 max_permutations_per_job,
@@ -149,3 +186,52 @@ mtmcskat_NullModels <- function(n_thread,
   p_empirical_table[order(p_empirical_table$position), ]
 
 }
+
+
+#' @rdname mtmcskat_NullModels
+#' @export
+mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
+                          n_permutations,
+                          this_phenotype,
+                          covariates,
+                          scaffold_ID,
+                          n_thread){
+
+  message(paste(Sys.time(), "- Making null model with",
+                n_permutations, "permutations..."))
+
+  null_model <- SKAT::SKAT_Null_Model(
+    this_phenotype ~ 1 + as.matrix(covariates),
+    n.Resampling = n_permutations,
+    type.Resampling = "bootstrap")
+
+  message(paste(Sys.time(), "- Complete\n"))
+
+  pre_allocated_SNP_windows <- chunk_windows(
+    pre_allocated_SNP_windows = pre_allocated_SNP_windows,
+    n_thread = n_thread)
+
+  time_to_run_mapping <- proc.time()
+
+  #browser()
+
+  add_to_master_output <- future.apply::future_lapply(
+    X = pre_allocated_SNP_windows,
+    FUN = mappable_SKAT,
+    scaffold_ID = scaffold_ID,
+    null_model = null_model,
+    resampling = TRUE,
+    n_permutations = n_permutations,
+    chunk = TRUE)
+
+  message(paste("Finished parallel run in",
+                (proc.time() - time_to_run_mapping)[3],
+                "seconds\n"))
+
+  add_to_master_output <- dplyr::bind_rows(add_to_master_output)
+  add_to_master_output <- post_process_master_output(
+    master_output = add_to_master_output)
+
+  add_to_master_output
+}
+

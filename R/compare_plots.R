@@ -5,6 +5,7 @@ compare_plots <- function(master_output, plot_out_name, scaffold_ID){
 
   master_output$Chr <- rep(scaffold_ID, nrow(master_output))
 
+
   graphics::par(mfrow=c(2,1))
 
   qqman::manhattan(
@@ -21,19 +22,22 @@ compare_plots <- function(master_output, plot_out_name, scaffold_ID){
     suggestiveline = FALSE,
     genomewideline = FALSE)
 
-  qqman::manhattan(
-    master_output[!is.na(master_output$`SKAT_p-val_resampled`), ],
-    chr = "Chr",
-    bp = "position",
-    p = "SKAT_p-val_resampled",
-    xlim = c(min(stats::na.omit(master_output$position)),
-             max(stats::na.omit(master_output$position))),
-    ylim = c(0,
-             ceiling(max(
-               stats::na.omit((-log(master_output$`SKAT_p-val`,
-                             base = 10)))))),
-    suggestiveline = FALSE,
-    genomewideline = FALSE)
+  if(nrow(master_output[!is.na(master_output$`SKAT_p-val_resampled`), ]) > 0){
+    qqman::manhattan(
+      master_output[!is.na(master_output$`SKAT_p-val_resampled`), ],
+      chr = "Chr",
+      bp = "position",
+      p = "SKAT_p-val_resampled",
+      xlim = c(min(stats::na.omit(master_output$position)),
+               max(stats::na.omit(master_output$position))),
+      ylim = c(0,
+               ceiling(max(
+                 stats::na.omit((-log(master_output$`SKAT_p-val`,
+                                      base = 10)))))),
+      suggestiveline = FALSE,
+      genomewideline = FALSE)
+  }
+
 
   message(paste0("Writing ",
                  plot_out_name))

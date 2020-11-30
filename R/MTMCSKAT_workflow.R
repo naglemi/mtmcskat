@@ -50,7 +50,6 @@
 #'                   max_accuracy = 5,
 #'                   plot = TRUE)
 #' }
-#'
 MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
                               window_shift, output_dir, pre_allocated_dir,
                               job_id, desired_sig_figs = 2,
@@ -107,31 +106,6 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
 
     terminal_resampling
 
-  }
-
-  determine_subset_pval_boundaries <- function(leading_0s,
-                                               desired_sig_figs,
-                                               terminal_resampling){
-
-    if(terminal_resampling == TRUE){
-      lower_bound_p_val_for_MC_subset <- 0
-    }
-    if(terminal_resampling == FALSE){
-      lower_bound_p_val_for_MC_subset <- 0.1^(leading_0s+(desired_sig_figs-1))
-    }
-    upper_bound_p_val_for_MC_subset <- 0.1^leading_0s
-
-    boundaries <- list("upper" = upper_bound_p_val_for_MC_subset,
-                       "lower" = lower_bound_p_val_for_MC_subset)
-
-    boundaries
-  }
-
-  determine_n_permutations <- function(leading_0s,
-                                       desired_sig_figs){
-    n_permutations <- 10^( leading_0s + desired_sig_figs )
-
-    n_permutations
   }
 
   check_if_more_threads_than_windows <- function(

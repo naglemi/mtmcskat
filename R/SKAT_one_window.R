@@ -14,7 +14,7 @@
 #'   `scaffold_ID`, `this_position`, the model p-value, and finally the
 #'   empirical p-value (if applicable; otherwise NA). If returning all p-values,
 #'   the length of the output vector will be two (for SNP scaffold and window
-#'   center position) plus the number of permutations. NA)
+#'   center position) plus the number of permutations
 #' @export
 #'
 #' @examples

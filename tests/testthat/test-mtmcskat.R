@@ -14,7 +14,7 @@ options(mc.cores=2)
 set.seed(5)
 
 test_that("MTMCSKAT threading on SNP windows gives expected results", {
-  expect_equal(mtmcskat:::mtmcskat_SNPs(
+  expect_equal(mtmcskat_SNPs(
     this_phenotype = sample_phenotype,
     covariates = sample_covariates,
     n_permutations = 500,

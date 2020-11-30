@@ -96,5 +96,4 @@ MTMCSKAT_workflow(phenodata = phenodata,
                   max_accuracy = 5,
                   plot = TRUE)
 }
-
 }

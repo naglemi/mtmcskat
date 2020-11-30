@@ -22,8 +22,6 @@ test_that("Multi-threaded SKAT produces output matching expected results", {
     this_phenotype = sample_phenotype,
     covariates = sample_covariates,
     raw_file_path = sample_pre_allocated_SNP_windows[[1]][[3]],
-    window_size = 3000,
-    window_shift = 1000,
     pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows,
     n_thread = 2),
     sample_mtskat_results,
