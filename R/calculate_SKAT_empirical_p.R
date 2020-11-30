@@ -18,17 +18,20 @@
 #' @export
 #'
 #' @examples
-#' data("sample_null_model")
-#' data("sample_pre_allocated_SNP_windows")
+#' data("small_pre_allocated_windows")
+#'
+#' sample_null_model <- SKAT::SKAT_Null_Model(
+#'   small_phenodata ~ 1 + as.matrix(small_covariates), out_type="C",
+#'   n.Resampling = 1000)
 #'
 #' calculate_SKAT_empirical_p(
-#'   Z = sample_pre_allocated_SNP_windows[[1]][[2]],
+#'   Z = small_pre_allocated_windows[[1]][[2]],
 #'   n_permutations = 1000,
 #'   null_model = sample_null_model,
 #'   return_all_p = FALSE)
 #'
 #' calculate_SKAT_empirical_p(
-#'   Z = sample_pre_allocated_SNP_windows[[1]][[2]],
+#'   Z = small_pre_allocated_windows[[1]][[2]],
 #'   n_permutations = 1000,
 #'   null_model = sample_null_model,
 #'   return_all_p = TRUE)

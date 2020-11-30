@@ -11,7 +11,7 @@ A list containing three values
   \item{Position}{Integer, the position of the center of a SNP window,
   in base pairs}
   \item{Z}{Matrix of integers containing alternative allele counts for
-  each of 175 SNPs (columns) in the SNP window, across 882 genotypes (rows)}
+  each of 175 SNPs (columns) in the SNP window, across 200 genotypes (rows)}
   \item{Chr}{Integer or character indicating the chromosome or other
   scaffold, respectively, on which the SNP window is found}
 }

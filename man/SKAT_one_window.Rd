@@ -53,13 +53,15 @@ Run SKAT, optionally obtaining permuted p-values or empirical p-value, and
 organize results into a vector to be added to dataframe of results
 }
 \examples{
-data("sample_null_model")
-data("sample_pre_allocated_SNP_windows")
+data("small_pre_allocated_windows")
+sample_null_model <- SKAT::SKAT_Null_Model(
+  small_phenodata ~ 1 + as.matrix(small_covariates), out_type="C",
+  n.Resampling = 1000)
 
 SKAT_one_window(
-  this_position = sample_pre_allocated_SNP_windows[[1]][[1]],
-  Z = sample_pre_allocated_SNP_windows[[1]][[2]],
-  scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]],
+  this_position = small_pre_allocated_windows[[1]][[1]],
+  Z = small_pre_allocated_windows[[1]][[2]],
+  scaffold_ID = small_pre_allocated_windows[[1]][[3]],
   n_permutations = 1000,
   null_model = sample_null_model,
   resampling = TRUE,

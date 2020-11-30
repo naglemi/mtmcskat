@@ -1,22 +1,22 @@
 context("SNP windows to be kernelized in SKAT")
 
-data("sample_genodata")
+data("small_genodata")
 data("sample_SNP_window")
 
 test_that("SNP window is centered around desired position", {
   expect_equal(
-    extract_window(this_position = 14460000,
+    extract_window(this_position = 145e5,
                    window_size = 3000,
-                   genodata = sample_genodata)$Position,
-    14460000)
+                   genodata = small_genodata)$Position,
+    145e5)
   }
 )
 
 test_that("SNP window is labeled with chromosome of origin", {
   expect_equal(
-    extract_window(this_position = 14460000,
+    extract_window(this_position = 145e5,
                    window_size = 3000,
-                   genodata = sample_genodata)$Chr,
+                   genodata = small_genodata)$Chr,
     10)
   }
 )
@@ -40,11 +40,9 @@ test_that("Extracted SNP window and metadata is exactly the same as expected", {
   }
 )
 
-data("sample_pre_allocated_SNP_windows")
-
 raw_file_path <- system.file("extdata",
-                             "poplar_SNPs_Chr10_14460to14550kb.traw",
-                             package = "SKATMCMT")
+                             "poplar_200genotypes_14490to14520kb.traw",
+                             package = "mtmcskat")
 
 test_that("Length of pre-allocated window list is the same as expected", {
   expect_equal(
@@ -52,9 +50,11 @@ test_that("Length of pre-allocated window list is the same as expected", {
                         raw_file_path = raw_file_path,
                         window_size = 3000,
                         window_shift = 1000)),
-    90)
+    30)
   }
 )
+
+data("small_pre_allocated_windows")
 
 test_that("Pre-allocated window list is exactly the same as expected", {
   expect_equal(
@@ -62,6 +62,6 @@ test_that("Pre-allocated window list is exactly the same as expected", {
                  raw_file_path = raw_file_path,
                  window_size = 3000,
                  window_shift = 1000),
-    sample_pre_allocated_SNP_windows)
+    small_pre_allocated_windows)
   }
 )

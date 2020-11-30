@@ -15,8 +15,7 @@ This dataset contains a list of SNP windows, each formatted as described
 in documentation for \code{\link{sample_SNP_window}}. This list of SNP
 windows includes all those within the range of 14.46Mb 14.55Mb on Chr. 10
 that produced p-values between 0.01 and 0.001 in \code{\link{mtskat}}.
-This list was produced by feeding
-\code{\link{sample_pre_allocated_SNP_windows}} into
+This list was produced by using
 \code{\link{re_allocate_windows}} to yield a subset of SNP windows that
 produced p-values within the desired range.
 }

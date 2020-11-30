@@ -18,7 +18,7 @@
 #'   \item{Position}{Integer, the position of the center of a SNP window,
 #'   in base pairs}
 #'   \item{Z}{Matrix of integers containing alternative allele counts for
-#'   each of 175 SNPs (columns) in the SNP window, across 882 genotypes (rows)}
+#'   each of 175 SNPs (columns) in the SNP window, across 200 genotypes (rows)}
 #'   \item{Chr}{Integer or character indicating the chromosome or other
 #'   scaffold, respectively, on which the SNP window is found}
 #' }
@@ -28,9 +28,10 @@
 #' Covariates for poplar samples in stem regeneration experiment
 #'
 #' A dataset containing covariates including stem diameter, phase and principal
-#' components (PCs)
+#' components (PCs), for a small subset of 200 genotypes out of the poplar
+#' GWAS population
 #'
-#' @format A data frame with 882 rows and 11 variables
+#' @format A data frame with 200 rows and 11 variables
 #'
 #' \describe{
 #'   \item{Stem_diameter}{Numeric value (double) representing the diameter of
@@ -56,58 +57,7 @@
 #'   \item{PC3}{Loadings for the third principal component derived from SNPs
 #'   using the `pca` method in PLINK}
 #'}
-"sample_covariates"
-
-#' SNP data in `.traw` format for poplar samples in stem regeneration experiment
-#'
-#' This dataset contains alternative allele counts for 5076 base positions from
-#' about 14.46Mb 14.55Mb to on Chromosome 10 of Populus trichocarpa. This data
-#' was obtained first by downloading
-#' (\href{https://cbi.ornl.gov/data}{poplar SNP data}) from the Department
-#' of Energy's Center for Bioenergy Innovation, converting the data from Variant
-#' Call Format (VCF) to `.traw` using PLINK (see
-#' \href{https://www.cog-genomics.org/plink2/formats}{PLINK documentation})
-#' and finally loading the `.traw` file into R using
-#' \code{\link[data.table]{fread}}. Each row represents a single nucleotide
-#' polymorphism (SNP) with variation across the poplar GWAS population.
-#'
-#' Support for the Poplar GWAS dataset is provided by the U.S.
-#' Department of Energy, Office of Science Biological and Environmental
-#' Research (BER) via the Bioenergy Science Center (BESC) under Contract
-#' No. DE-PS02-06ER64304.  The Poplar GWAS Project used resources of the
-#' Oak Ridge Leadership Computing Facility and the Compute and Data Environment
-#' for Science at Oak Ridge National Laboratory, which is supported by the
-#' Office of Science of the U.S. Department of Energy under
-#' Contract No. DE-AC05-00OR22725
-#'
-#' @format A data frame with 5076 rows and 888 variables
-#'
-#' \describe{
-#'   \item{CHR}{Integer or character value indicating the chromosome or scaffold
-#'   on which a given SNP is found}
-#'   \item{SNP}{Character providing a label for a given SNP; this is optional
-#'   and the column contains "." for all values by default if SNPs are not
-#'   named. This variable is not used by the `mtmcskat` package.}
-#'   \item{X.C.M}{Position of a given SNP in morgans or centimorgans; this is
-#'   optional and can be filled with "0" if not used. This variable is not used
-#'   by the `mtmcskat` package.}
-#'   \item{POS}{Integer providing the position of a given SNP, in base pairs}
-#'   \item{COUNTED}{Character, either "A", "T", "C" or "G" indicating the
-#'   common (or most common) allele at the position of the given SNP}
-#'   \item{COUNTER}{Character, either "A", "T", "C" or "G" indicating the
-#'   alternative allele, also known as the rare allele,
-#'   at the position of the given SNP. If multiple alternative alleles exist
-#'   for a position, they are provided on separate rows with the same common
-#'   allele and position.}
-#'   \item{X201782_400194}{Columns 7-888 contain alternative allele
-#'   counts for each of 882 genotypes in the poplar GWAS population. These are
-#'   integer values ranging from 0-2, indicating the number of alleles which are
-#'   the alternative allele for a given SNP in the column for a given genotype.
-#'   The name of each column from 7-888 follows a format that includes the
-#'   Family ID and Individual ID for each genotype, following the format
-#'   X<FID>_<IID>}
-#'}
-"sample_genodata"
+"small_covariates"
 
 #' MTMCSKAT results from multithreading over SNP windows
 #'
@@ -176,7 +126,7 @@
 #' in \code{\link{sample_re_allocated_SNP_windows}}, using the function
 #' \code{\link{mtskat}}
 #'
-#' @format A data frame with 3 rows and 4 variables
+#' @format A data frame with 29 rows and 4 variables
 #' \describe{
 #'   \item{Chr}{Integer or character value indicating the chromosome or scaffold
 #'   on which a given SNP is found}
@@ -188,7 +138,7 @@
 #'   empirical p-values when this data structure is provided to
 #'   \code{\link{mtmcskat_NullModels}} or \code{\link{mtmcskat_SNPs}}}
 #'}
-"sample_mtskat_results"
+"small_mtskat_results"
 
 #' Tallies of p-values from resampling
 #'
@@ -215,28 +165,27 @@
 
 #' Proportions of poplar image pixels labeled as shoot
 #'
-#' For all samples in the 882-genotype poplar GWAS population, this list
-#' contains either 1) NA, or samples not studied in the sample GWAS, or 2)
-#' a value ranging from 0 to 1, indicating the proportion of image pixels that
+#' For 200 out of samples in the 882-genotype poplar GWAS population, this list
+#' contains a value from 0 to 1, indicating the proportion of image pixels that
 #' are labeled as shoot (rather than as callus or unregenerated stem). Samples
 #' were treated by submerging poplar cuttings in water, applying TDZ to their
 #' tips, and leaving a microcentrifuge tube ontop to provide humid conditions.
 #' Phenotyping was performed five weeks after this treatment, via imaging plants
 #' and classifying pixels with a trained convolutional neural network.
 #'
-#' @format A list with 882 values
-"sample_phenotype"
+#' @format A list with 200 values
+"small_phenodata"
 
 #' List of consecutive SNP windows with positon labels
 #'
 #' This dataset contains a list of SNP windows, each formatted as described
 #' in documentation for \code{\link{sample_SNP_window}}. All of these SNP
-#' windows are consecutive and span the range of 14.46Mb 14.55Mb on Chr. 10.
+#' windows are consecutive and span the range of 14.49Mb 14.52Mb on Chr. 10.
 #' Each SNP window spans a range of 3kb and consecutive windows are shifted by
 #' 1kb relative to the previous adjacent window.
 #'
 #' @format A list with 90 values
-"sample_pre_allocated_SNP_windows"
+"small_pre_allocated_windows"
 
 #' List of selected SNP windows significantly associated with shoot trait
 #'
@@ -244,8 +193,7 @@
 #' in documentation for \code{\link{sample_SNP_window}}. This list of SNP
 #' windows includes all those within the range of 14.46Mb 14.55Mb on Chr. 10
 #' that produced p-values between 0.01 and 0.001 in \code{\link{mtskat}}.
-#' This list was produced by feeding
-#' \code{\link{sample_pre_allocated_SNP_windows}} into
+#' This list was produced by using
 #' \code{\link{re_allocate_windows}} to yield a subset of SNP windows that
 #' produced p-values within the desired range.
 #'
