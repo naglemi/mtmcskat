@@ -1,7 +1,7 @@
 context("Initial multi-threaded SKAT without resampling")
 
 data("small_mtskat_results")
-data("small_phenotype")
+data("small_phenodata")
 data("small_covariates")
 data("small_pre_allocated_windows")
 

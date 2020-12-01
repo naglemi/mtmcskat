@@ -12,7 +12,8 @@ mappable_SKAT(
   n_permutations,
   resampling = FALSE,
   return_all_p_vals = FALSE,
-  chunk = TRUE
+  chunk = TRUE,
+  ...
 )
 }
 \arguments{
@@ -41,6 +42,8 @@ empirical p-value}
 \item{chunk}{Should be TRUE if the list passed by `pos_and_SNPs` argument has
 been processed into chunks by `chunk_windows()`, as is done in a standard
 \code{\link{mtskat}} workflow}
+
+\item{...}{Additional parameters passed on to \code{\link[SKAT]{SKAT}}}
 }
 \value{
 A dataframe to be appended to results. If chunking (see above), this

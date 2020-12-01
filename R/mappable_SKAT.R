@@ -40,7 +40,8 @@ mappable_SKAT <- function(pos_and_SNPs,
                           n_permutations,
                           resampling=FALSE,
                           return_all_p_vals=FALSE,
-                          chunk = TRUE){
+                          chunk = TRUE,
+                          ...){
 
   if ( chunk == TRUE ) {
 
@@ -53,7 +54,8 @@ mappable_SKAT <- function(pos_and_SNPs,
                                    scaffold_ID = scaffold_ID,
                                    resampling = resampling,
                                    null_model = null_model,
-                                   n_permutations = n_permutations)
+                                   n_permutations = n_permutations,
+                                   ...)
 
       result_df <- rbind(result_df, to_append)
 
@@ -67,7 +69,8 @@ mappable_SKAT <- function(pos_and_SNPs,
                                  scaffold_ID = scaffold_ID,
                                  resampling = resampling,
                                  null_model = null_model,
-                                 n_permutations = n_permutations)
+                                 n_permutations = n_permutations,
+                                 ...)
 
     #pos_and_SNPs <-NULL
     #gc()

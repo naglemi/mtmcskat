@@ -12,7 +12,8 @@ SKAT_one_window(
   null_model,
   n_permutations,
   resampling = FALSE,
-  return_all_p_vals = FALSE
+  return_all_p_vals = FALSE,
+  ...
 )
 }
 \arguments{
@@ -39,6 +40,8 @@ If FALSE, will pass NA in place of an empirical p-value}
 p-values (useful for when not all permutations can fit into memory
 available for a single thread); if `FALSE`, will calculate and return the
 empirical p-value}
+
+\item{...}{Additional parameters passed on to \code{\link[SKAT]{SKAT}}}
 }
 \value{
 If not returning all permuted p-values (as indicated by

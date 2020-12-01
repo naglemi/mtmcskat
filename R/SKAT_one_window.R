@@ -39,7 +39,8 @@ SKAT_one_window <- function(this_position,
                             null_model,
                             n_permutations,
                             resampling=FALSE,
-                            return_all_p_vals=FALSE){
+                            return_all_p_vals=FALSE,
+                            ...){
 
   # Only run SKAT over a SNP window if the window actually contains SNPs
   if(is.matrix(Z)==TRUE){
@@ -59,7 +60,8 @@ SKAT_one_window <- function(this_position,
         p_empirical <- calculate_SKAT_empirical_p(
           Z = Z,
           n_permutations = n_permutations,
-          null_model = null_model)
+          null_model = null_model,
+          ...)
 
         to_append <- c(scaffold_ID,
                        this_position,
@@ -76,7 +78,8 @@ SKAT_one_window <- function(this_position,
         p_list <- calculate_SKAT_empirical_p(Z = Z,
                                              n_permutations = n_permutations,
                                              null_model = null_model,
-                                             return_all_p_vals = TRUE)
+                                             return_all_p_vals = TRUE,
+                                             ...)
 
         to_append <- as.numeric(
           c(this_position,
