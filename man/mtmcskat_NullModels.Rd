@@ -80,30 +80,30 @@ initial \code{\link{mtskat}} p-values that are not very low.
 }
 \examples{
 
-data("sample_phenotype")
-data("sample_covariates")
-data("sample_pre_allocated_SNP_windows")
+data("small_phenodata")
+data("small_covariates")
+data("small_pre_allocated_windows")
 
 # Multithreading over SNP windows
 mtmcskat_SNPs(
-this_phenotype = sample_phenotype,
-covariates = sample_covariates,
+this_phenotype = small_phenodata,
+covariates = small_covariates,
 n_permutations = 500,
-pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows[2:4],
-scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]],
+pre_allocated_SNP_windows = small_pre_allocated_windows[2:4],
+scaffold_ID = small_pre_allocated_windows[[1]][[3]],
 n_thread = 2)
 
 # Multithreading over null models, where all necessary permutations can
 #  simultaneously fit into memory and computation can be completed in a
 #  single "batch."
 mtmcskat_NullModels(
-this_phenotype = sample_phenotype,
-covariates = sample_covariates,
+this_phenotype = small_phenodata,
+covariates = small_covariates,
 n_permutations = 500,
 n_thread = 2,
 max_permutations_per_job = 251,
-pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows[2:4],
-scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]])
+pre_allocated_SNP_windows = small_pre_allocated_windows[2:4],
+scaffold_ID = small_pre_allocated_windows[[1]][[3]])
 
 
 # Multithreading over null models, where the the number of permutations
@@ -111,12 +111,12 @@ scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]])
 #   user or upstream functions through the `max_permutations_per_job`
 #   argument), thus requiring multiple sequential "batches" of computation.
 mtmcskat_NullModels(
-this_phenotype = sample_phenotype,
-covariates = sample_covariates,
+this_phenotype = small_phenodata,
+covariates = small_covariates,
 n_permutations = 500,
 n_thread = 2,
 max_permutations_per_job = 249,
-pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows[2:4],
-scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]])
+pre_allocated_SNP_windows = small_pre_allocated_windows[2:4],
+scaffold_ID = small_pre_allocated_windows[[1]][[3]])
 
 }

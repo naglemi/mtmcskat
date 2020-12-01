@@ -26,11 +26,11 @@ Integer, the amount of RAM needed per permutation in a null model (in
 Benchmark the amount of RAM needed per permutation in a null model
 }
 \examples{
-data("sample_phenotype")
-data("sample_covariates")
+data("small_phenodata")
+data("small_covariates")
 
-nm_RAM_per_perm <- benchmark_nm(phenotype = sample_phenotype,
-                                covariates = sample_covariates,
+nm_RAM_per_perm <- benchmark_nm(phenotype = small_phenodata,
+                                covariates = small_covariates,
                                 benchmark_size = 1000)
 
 }

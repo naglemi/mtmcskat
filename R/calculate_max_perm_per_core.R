@@ -14,11 +14,11 @@
 #' @export
 #'
 #' @examples
-#' data("sample_phenotype")
-#' data("sample_covariates")
+#' data("small_phenodata")
+#' data("small_covariates")
 #'
-#' nm_RAM_per_perm <- benchmark_nm(phenotype = sample_phenotype,
-#'                                 covariates = sample_covariates,
+#' nm_RAM_per_perm <- benchmark_nm(phenotype = small_phenodata,
+#'                                 covariates = small_covariates,
 #'                                 benchmark_size = 1000)
 #'
 benchmark_nm <- function(phenotype, covariates, benchmark_size = 1000){
@@ -48,11 +48,11 @@ benchmark_nm <- function(phenotype, covariates, benchmark_size = 1000){
 #' @export
 #'
 #' @examples
-#' data("sample_phenotype")
-#' data("sample_covariates")
+#' data("small_phenodata")
+#' data("small_covariates")
 #'
-#' nm_RAM_per_perm <- mtmcskat::benchmark_nm(phenotype = sample_phenotype,
-#'                                           covariates = sample_covariates,
+#' nm_RAM_per_perm <- mtmcskat::benchmark_nm(phenotype = small_phenodata,
+#'                                           covariates = small_covariates,
 #'                                           benchmark_size = 1000)
 #'
 #' RAM <- benchmarkme::get_ram()

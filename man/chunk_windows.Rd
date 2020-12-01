@@ -23,9 +23,9 @@ a list of lists of lists, in which the list of lists passed by the
 Divide a list of SNP windows into a chunk for each thread
 }
 \examples{
-data("sample_pre_allocated_SNP_windows")
+data("small_pre_allocated_windows")
 pre_allocated_SNP_windows <- chunk_windows(
-  pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows,
+  pre_allocated_SNP_windows = small_pre_allocated_windows,
   n_thread = 2)
 
 }

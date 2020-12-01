@@ -1,6 +1,9 @@
 context("SNP windows to be kernelized in SKAT")
 
-data("small_genodata")
+small_genodata_path <- system.file("extdata",
+                                   "poplar_200genotypes_14490to14520kb.traw",
+                                   package = "mtmcskat")
+small_genodata <- data.table::fread(small_genodata_path)
 data("sample_SNP_window")
 
 test_that("SNP window is centered around desired position", {
@@ -23,9 +26,9 @@ test_that("SNP window is labeled with chromosome of origin", {
 
 test_that("Extracted SNP window is exactly the same as expected", {
   expect_equal(
-    extract_window(this_position = 14460000,
+    extract_window(this_position = 145e5,
                    window_size = 3000,
-                   genodata = sample_genodata)$Z,
+                   genodata = small_genodata)$Z,
     sample_SNP_window$Z)
   }
 )
@@ -33,9 +36,9 @@ test_that("Extracted SNP window is exactly the same as expected", {
 
 test_that("Extracted SNP window and metadata is exactly the same as expected", {
   expect_equal(
-    extract_window(this_position = 14460000,
+    extract_window(this_position = 145e5,
                    window_size = 3000,
-                   genodata = sample_genodata),
+                   genodata = small_genodata),
     sample_SNP_window)
   }
 )

@@ -14,10 +14,9 @@
 #' @export
 #'
 #' @examples
-#' subset_list_of_lists(
-#'   list_of_lists = sample_pre_allocated_SNP_windows,
-#'   desired_list = c(14502000, 14503000, 14504000, 14505000),
-#'   subindex = 1)
+#' subset_list_of_lists(list_of_lists = small_pre_allocated_windows,
+#'                      desired_list = c(14515000, 14491000),
+#'                      subindex = 1)
 #'
 subset_list_of_lists <- function(list_of_lists,
                                  desired_list,

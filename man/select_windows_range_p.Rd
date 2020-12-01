@@ -24,8 +24,10 @@ A numeric vector with indices for the position (center of window) for
 Select windows corresponding to p-values within range of interest
 }
 \examples{
+data("small_mtskat_results")
+
 select_windows_range_p(
-  x = sample_mtskat_results,
+  x = small_mtskat_results,
   upper_bound = 0.01,
   lower_bound = 0.001)
 

@@ -10,9 +10,9 @@
 #' @export
 #'
 #' @examples
-#' data("sample_pre_allocated_SNP_windows")
+#' data("small_pre_allocated_windows")
 #' pre_allocated_SNP_windows <- chunk_windows(
-#'   pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows,
+#'   pre_allocated_SNP_windows = small_pre_allocated_windows,
 #'   n_thread = 2)
 #'
 chunk_windows <- function(pre_allocated_SNP_windows,

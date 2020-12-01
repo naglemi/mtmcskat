@@ -27,11 +27,11 @@ Calculate the number of permutations in a null model that can fit in RAM
 partitioned for a single thread
 }
 \examples{
-data("sample_phenotype")
-data("sample_covariates")
+data("small_phenodata")
+data("small_covariates")
 
-nm_RAM_per_perm <- mtmcskat::benchmark_nm(phenotype = sample_phenotype,
-                                          covariates = sample_covariates,
+nm_RAM_per_perm <- mtmcskat::benchmark_nm(phenotype = small_phenodata,
+                                          covariates = small_covariates,
                                           benchmark_size = 1000)
 
 RAM <- benchmarkme::get_ram()

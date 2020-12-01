@@ -29,12 +29,13 @@ Output is the same format as for \code{\link{pre_allocate}}: a list
 Obtain a new list of SNP windows, based on p-values from an earlier list
 }
 \examples{
-data("sample_pre_allocated_SNP_windows")
+data("small_pre_allocated_windows")
+data("small_mtskat_results")
 
 re_allocate_windows(
-  x = sample_mtskat_results,
+  x = small_mtskat_results,
   upper_bound = 0.01,
   lower_bound = 0.001,
-  pre_allocated_SNP_windows = sample_pre_allocated_SNP_windows)
+  pre_allocated_SNP_windows = small_pre_allocated_windows)
 
 }

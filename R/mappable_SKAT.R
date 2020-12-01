@@ -19,9 +19,15 @@
 #' @export
 #'
 #' @examples
+#' data("small_pre_allocated_windows")
+#'
+#' sample_null_model <- SKAT::SKAT_Null_Model(
+#'   small_phenodata ~ 1 + as.matrix(small_covariates), out_type="C",
+#'   n.Resampling = 1000)
+#'
 #' mappable_SKAT(
-#'   pos_and_SNPs = sample_pre_allocated_SNP_windows[[1]],
-#'   scaffold_ID = sample_pre_allocated_SNP_windows[[1]][[3]],
+#'   pos_and_SNPs = small_pre_allocated_windows[[1]],
+#'   scaffold_ID = small_pre_allocated_windows[[1]][[3]],
 #'   null_model = sample_null_model,
 #'   resampling = TRUE,
 #'   n_permutations = 1000,

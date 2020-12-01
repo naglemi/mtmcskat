@@ -14,11 +14,14 @@
 #' @export
 #'
 #' @examples
-#' data("sample_genodata")
+#' small_genodata_path <- system.file("extdata",
+#'                                    "poplar_200genotypes_14490to14520kb.traw",
+#'                                    package = "mtmcskat")
+#' small_genodata <- data.table::fread(small_genodata_path)
 #'
-#' extract_window(this_position = 14460000,
+#' extract_window(this_position = 145e5,
 #'   window_size = 3000,
-#'   genodata = sample_genodata)
+#'   genodata = small_genodata)
 #'
 extract_window <- function(this_position, window_size, genodata){
 
