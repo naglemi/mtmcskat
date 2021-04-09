@@ -4,6 +4,7 @@ map_SKAT_nm <- function(null_model_index,
                         pos_and_SNP_list,
                         scaffold_ID,
                         n_permutations,
+                        missing_cutoff,
                         resampling=TRUE){
 
   set.seed(null_model_index)
@@ -30,7 +31,8 @@ map_SKAT_nm <- function(null_model_index,
         resampling = resampling,
         null_model = null_model,
         n_permutations = n_permutations,
-        return_all_p_vals = TRUE)
+        return_all_p_vals = TRUE,
+        missing_cutoff = missing_cutoff)
 
     } else { # This condition should never happen since we next if no SNPs
       return(rep(NA, 4))

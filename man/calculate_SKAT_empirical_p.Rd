@@ -8,6 +8,7 @@ calculate_SKAT_empirical_p(
   Z,
   n_permutations,
   null_model,
+  missing_cutoff = 0.15,
   return_all_p_vals = FALSE,
   ...
 )

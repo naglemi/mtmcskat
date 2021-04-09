@@ -37,6 +37,7 @@
 #'   return_all_p = TRUE)
 
 calculate_SKAT_empirical_p <- function(Z, n_permutations, null_model,
+                                       missing_cutoff = 0.15,
                                        return_all_p_vals = FALSE, ...){
 
   if(null_model$n.Resampling != n_permutations){
@@ -51,6 +52,7 @@ calculate_SKAT_empirical_p <- function(Z, n_permutations, null_model,
 
   this_SKAT_out <- SKAT::SKAT(Z,
                               null_model,
+                              missing_cutoff = 0.15,
                               # This is the default argument, need not be
                               # explicitly declared
                               #kernel = "linear.weighted",

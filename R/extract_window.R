@@ -7,6 +7,9 @@
 #' @param genodata A matrix obtained by reading data from `.traw` format (see
 #'   (see \url{https://www.cog-genomics.org/plink2/formats}{PLINK
 #'   documentation})) into R
+#' @param impute_to_mean If `TRUE`, NA values for each SNP are replaced with
+#'   the mean alternative allele count for the given SNP
+#' @param remove_novar_SNPs If `TRUE`, SNPs with no variation will be removed
 #'
 #' @return A list containing three objects: an integer of chromosome of origin,
 #'   an integer of SNP window center position, and a matrix of alternative
@@ -23,7 +26,10 @@
 #'   window_size = 3000,
 #'   genodata = small_genodata)
 #'
-extract_window <- function(this_position, window_size, genodata){
+extract_window <- function(this_position, window_size, genodata,
+                           impute_to_mean = TRUE,
+                           remove_novar_SNPs = TRUE,
+                           missing_cutoff = 0.15){
 
   locus_of_interest <- this_position
   window_start <- as.numeric(as.character(locus_of_interest)) - (window_size/2)
@@ -41,9 +47,9 @@ extract_window <- function(this_position, window_size, genodata){
 
   if(length(indices_to_pull) >= 1){
     genodata_thiswindow <-
-      genodata[indices_to_pull[1]:indices_to_pull[length(indices_to_pull)],]
+      genodata[indices_to_pull[1]:indices_to_pull[length(indices_to_pull)], ]
 
-    Chr <- unique(genodata_thiswindow[,1])
+    Chr <- unique(genodata_thiswindow[, 1])
     if(length(Chr) < 1) {
       stop("Where is chromosome data?")
     }
@@ -55,7 +61,49 @@ extract_window <- function(this_position, window_size, genodata){
 
     Z <- convert_to_Z(genodata_thiswindow = genodata_thiswindow)
 
-    out_list <- list(this_position, Z, Chr)
+    if(missing_cutoff > 0){
+      missing_count_per_SNP <- colSums(is.na(Z))
+      n_genotypes <- nrow(Z)
+
+      missing_proportion_per_SNP <-
+        missing_count_per_SNP /
+        n_genotypes
+
+      SNPs_with_missing_rate_gt_threshold <-
+        which(missing_proportion_per_SNP > missing_cutoff, arr.ind = TRUE)
+
+      if(length(SNPs_with_missing_rate_gt_threshold > 0)){
+        Z <- Z[, -SNPs_with_missing_rate_gt_threshold]
+      }
+    }
+
+    if(impute_to_mean==TRUE){
+      for(i in 1:ncol(Z)){
+        Z[is.na(Z[, i]), i] <- mean(Z[, i], na.rm = TRUE)
+      }
+    }
+
+    if(remove_novar_SNPs == TRUE){
+      # Count number of factors for each SNP
+      factors_per_SNP <- c()
+      for(i in 1:ncol(Z)){
+        factors_per_SNP <- c(factors_per_SNP,
+                             length(levels(factor(Z[, i]))))
+      }
+
+      n_SNPs <- ncol(Z)
+      factors_per_SNP_gt1 <- which(factors_per_SNP > 1)
+      if(n_SNPs != length(factors_per_SNP_gt1)){
+        Z <- Z[, factors_per_SNP_gt1]
+      }
+
+    }
+
+    if(ncol(Z) == 0) { # If no SNPs left after filtering...
+      out_list <- list(NA, NA, NA)
+    } else {
+      out_list <- list(this_position, Z, Chr)
+    }
   }
 
   if(length(indices_to_pull) == 0) {

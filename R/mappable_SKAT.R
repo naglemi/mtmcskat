@@ -19,7 +19,7 @@
 #' @export
 #'
 #' @examples
-#' data("small_pre_allocated_windows")
+#' data("small_pre_allocated_windows_processed")
 #'
 #' sample_null_model <- SKAT::SKAT_Null_Model(
 #'   small_phenodata ~ 1 + as.matrix(small_covariates), out_type="C",
@@ -41,6 +41,7 @@ mappable_SKAT <- function(pos_and_SNPs,
                           resampling=FALSE,
                           return_all_p_vals=FALSE,
                           chunk = TRUE,
+                          missing_cutoff = 0.15,
                           ...){
 
   if ( chunk == TRUE ) {
@@ -55,6 +56,7 @@ mappable_SKAT <- function(pos_and_SNPs,
                                    resampling = resampling,
                                    null_model = null_model,
                                    n_permutations = n_permutations,
+                                   missing_cutoff = missing_cutoff,
                                    ...)
 
       result_df <- rbind(result_df, to_append)
@@ -70,6 +72,7 @@ mappable_SKAT <- function(pos_and_SNPs,
                                  resampling = resampling,
                                  null_model = null_model,
                                  n_permutations = n_permutations,
+                                 missing_cutoff = missing_cutoff,
                                  ...)
 
     #pos_and_SNPs <-NULL

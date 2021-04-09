@@ -19,7 +19,8 @@ MTMCSKAT_workflow(
   switch_point = 4,
   plot = TRUE,
   RAM = "AllRAM",
-  n_thread = "AllCores"
+  n_thread = "AllCores",
+  missing_cutoff
 )
 }
 \arguments{

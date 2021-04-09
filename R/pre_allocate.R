@@ -31,7 +31,10 @@
 #' }
 #'
 pre_allocate <- function(raw_file_path, window_size, window_shift,
-                         pre_allocated_dir){
+                         pre_allocated_dir,
+                         impute_to_mean = TRUE,
+                         remove_novar_SNPs = TRUE,
+                         missing_cutoff = 0.15){
 
   if(!dir.exists(pre_allocated_dir)) dir.create(pre_allocated_dir,
                                                 recursive = TRUE)
@@ -80,7 +83,10 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
                                function(x) extract_window(
                                  this_position = x,
                                  window_size = window_size,
-                                 genodata = genodata))
+                                 genodata = genodata,
+                                 impute_to_mean = impute_to_mean,
+                                 remove_novar_SNPs = remove_novar_SNPs,
+                                 missing_cutoff = missing_cutoff))
 
     time <- proc.time() - ptm
     message(paste("Took", time[3],

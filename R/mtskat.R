@@ -38,7 +38,8 @@ mtskat <- function(this_phenotype,
                    covariates,
                    pre_allocated_SNP_windows,
                    raw_file_path,
-                   n_thread){
+                   n_thread,
+                   missing_cutoff = 0.15){
 
   null_model_noresample <- SKAT::SKAT_Null_Model(
     this_phenotype ~ 1 + as.matrix(covariates), out_type="C")
@@ -71,7 +72,8 @@ mtskat <- function(this_phenotype,
                                                null_model = null_model_noresample,
                                                resampling = FALSE,
                                                n_permutations = NA,
-                                               chunk = TRUE)
+                                               chunk = TRUE,
+                                               missing_cutoff = missing_cutoff)
   message(paste0("Finished parallel run in ",
                  (proc.time() - time_to_run_mapping)[3],
                  "s"))

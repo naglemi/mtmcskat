@@ -57,7 +57,8 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
                               max_accuracy = 5,
                               switch_point = 4, plot = TRUE,
                               RAM="AllRAM",
-                              n_thread="AllCores"){ # get rid of switchpoint parameter once making function determine_switch_point?
+                              n_thread="AllCores",
+                              missing_cutoff){ # get rid of switchpoint parameter once making function determine_switch_point?
 
   set_accuracy <- function(master_output,
                            max_accuracy){
@@ -193,7 +194,8 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
       covariates = covariates,
       raw_file_path = pre_allocated_SNP_windows[[1]][[3]],
       pre_allocated_SNP_windows = pre_allocated_SNP_windows,
-      n_thread = n_thread)
+      n_thread = n_thread,
+      missing_cutoff = missing_cutoff)
 
   # Secondary SKAT round w/ resampling, multithread over SNP windows or NMs-----
 
@@ -287,7 +289,8 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
           n_permutations = n_permutations,
           pre_allocated_SNP_windows = new_pre_allocated_SNP_windows,
           scaffold_ID = pre_allocated_SNP_windows[[1]][[3]],
-          n_thread = n_thread)
+          n_thread = n_thread,
+          missing_cutoff = missing_cutoff)
     }
 
     if(!null_models_fit_in_RAM_per_thread | more_threads_than_windows){
@@ -301,7 +304,8 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
           n_permutations = n_permutations,
           max_permutations_per_job = max_permutations_per_job,
           pre_allocated_SNP_windows = new_pre_allocated_SNP_windows,
-          scaffold_ID = pre_allocated_SNP_windows[[1]][[3]])
+          scaffold_ID = pre_allocated_SNP_windows[[1]][[3]],
+          missing_cutoff = missing_cutoff)
 
     }
 

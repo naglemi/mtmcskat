@@ -4,7 +4,14 @@
 \alias{extract_window}
 \title{Extract and format a window of SNPs to be tested in a SKAT kernel}
 \usage{
-extract_window(this_position, window_size, genodata)
+extract_window(
+  this_position,
+  window_size,
+  genodata,
+  impute_to_mean = TRUE,
+  remove_novar_SNPs = TRUE,
+  missing_cutoff = 0.15
+)
 }
 \arguments{
 \item{this_position}{An integer, indicating the center of a SNP window for
@@ -16,6 +23,11 @@ base pairs)}
 \item{genodata}{A matrix obtained by reading data from `.traw` format (see
 (see \url{https://www.cog-genomics.org/plink2/formats}{PLINK
 documentation})) into R}
+
+\item{impute_to_mean}{If `TRUE`, NA values for each SNP are replaced with
+the mean alternative allele count for the given SNP}
+
+\item{remove_novar_SNPs}{If `TRUE`, SNPs with no variation will be removed}
 }
 \value{
 A list containing three objects: an integer of chromosome of origin,

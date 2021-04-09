@@ -4,7 +4,15 @@
 \alias{pre_allocate}
 \title{Pre-allocate a list of overlapping SNP windows}
 \usage{
-pre_allocate(raw_file_path, window_size, window_shift, pre_allocated_dir)
+pre_allocate(
+  raw_file_path,
+  window_size,
+  window_shift,
+  pre_allocated_dir,
+  impute_to_mean = TRUE,
+  remove_novar_SNPs = TRUE,
+  missing_cutoff = 0.15
+)
 }
 \arguments{
 \item{raw_file_path}{complete file path to SNP data in `.traw` format (see
@@ -19,6 +27,11 @@ the start (or end) positions of adjacent overlapping windows}
 
 \item{pre_allocated_dir}{a directory where pre-allocated SNP window lists are
 kept}
+
+\item{impute_to_mean}{If `TRUE`, NA values for each SNP are replaced with
+the mean alternative allele count for the given SNP}
+
+\item{remove_novar_SNPs}{If `TRUE`, SNPs with no variation will be removed}
 }
 \value{
 a list of lists, with each sub-list containing elements as described

@@ -13,6 +13,7 @@ SKAT_one_window(
   n_permutations,
   resampling = FALSE,
   return_all_p_vals = FALSE,
+  missing_cutoff = 0.15,
   ...
 )
 }

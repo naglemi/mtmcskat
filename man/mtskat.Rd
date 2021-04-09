@@ -9,7 +9,8 @@ mtskat(
   covariates,
   pre_allocated_SNP_windows,
   raw_file_path,
-  n_thread
+  n_thread,
+  missing_cutoff = 0.15
 )
 }
 \arguments{

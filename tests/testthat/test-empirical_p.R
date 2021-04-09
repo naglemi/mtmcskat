@@ -1,7 +1,7 @@
 context("Empirical p-values")
 
 data("small_covariates")
-data("small_pre_allocated_windows")
+data("small_pre_allocated_windows_processed")
 data("small_phenodata")
 
 set.seed(5)
@@ -13,7 +13,7 @@ sample_null_model <- SKAT::SKAT_Null_Model(
 test_that("Empirical p-val is equal to earlier result with same null model", {
   expect_equal(
     calculate_SKAT_empirical_p(
-      Z = small_pre_allocated_windows[[18]][[2]],
+      Z = small_pre_allocated_windows_processed[[18]][[2]],
       n_permutations = 1000,
       null_model = sample_null_model,
       return_all_p = FALSE),
@@ -25,7 +25,7 @@ test_that("Vector of empirical p-values is equal to # permutations", {
   expect_equal(
     length(
       calculate_SKAT_empirical_p(
-        Z = small_pre_allocated_windows[[18]][[2]],
+        Z = small_pre_allocated_windows_processed[[18]][[2]],
         n_permutations = 1000,
         null_model = sample_null_model,
         return_all_p = TRUE)),
@@ -36,7 +36,7 @@ test_that("Vector of empirical p-values is equal to # permutations", {
 test_that("n_permutation must match # permutations in null model submitted", {
   expect_error(
     calculate_SKAT_empirical_p(
-      Z = sample_pre_allocated_windows[[31]][[2]],
+      Z = sample_pre_allocated_windows_processed[[31]][[2]],
       n_permutations = 500,
       null_model = sample_null_model,
       return_all_p = TRUE))
@@ -47,9 +47,9 @@ test_that(paste("Empirical p-val passed up one level to SKAT_one_window",
                 "is as expected"), {
                   expect_equal(
                     SKAT_one_window(
-                      this_position = small_pre_allocated_windows[[18]][[1]],
-                      Z = small_pre_allocated_windows[[18]][[2]],
-                      scaffold_ID = small_pre_allocated_windows[[18]][[3]],
+                      this_position = small_pre_allocated_windows_processed[[18]][[1]],
+                      Z = small_pre_allocated_windows_processed[[18]][[2]],
+                      scaffold_ID = small_pre_allocated_windows_processed[[18]][[3]],
                       n_permutations = 1000,
                       null_model = sample_null_model,
                       resampling = TRUE,
@@ -62,8 +62,8 @@ test_that(paste("Empirical p-val passed up two levels to mappable_SKAT",
                 "is as expected"), {
                   expect_equal(
                     mappable_SKAT(
-                      pos_and_SNPs = small_pre_allocated_windows[[18]],
-                      scaffold_ID = small_pre_allocated_windows[[18]][[3]],
+                      pos_and_SNPs = small_pre_allocated_windows_processed[[18]],
+                      scaffold_ID = small_pre_allocated_windows_processed[[18]][[3]],
                       null_model = sample_null_model,
                       resampling = TRUE,
                       n_permutations = 1000,

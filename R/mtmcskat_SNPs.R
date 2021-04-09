@@ -82,7 +82,8 @@ mtmcskat_NullModels <- function(n_thread,
                                 this_phenotype,
                                 covariates,
                                 pre_allocated_SNP_windows,
-                                scaffold_ID){
+                                scaffold_ID,
+                                missing_cutoff = 0.15){
 
   arrange_jobs_NullModel_multithreading <-
     function(n_thread,
@@ -169,7 +170,8 @@ mtmcskat_NullModels <- function(n_thread,
     pos_and_SNP_list = pre_allocated_SNP_windows,
     scaffold_ID = pre_allocated_SNP_windows[[1]][[3]],
     n_permutations = job_details$n_permutations_per_job,
-    resampling=TRUE)
+    resampling=TRUE,
+    missing_cutoff = missing_cutoff)
 
   p_null_tallies <- dplyr::bind_rows(p_null_tallies)
 
@@ -195,7 +197,9 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
                           this_phenotype,
                           covariates,
                           scaffold_ID,
-                          n_thread){
+                          n_thread,
+                          missing_cutoff = 0.15,
+                          ...){
 
   message(paste(Sys.time(), "- Making null model with",
                 n_permutations, "permutations..."))
@@ -222,7 +226,8 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
     null_model = null_model,
     resampling = TRUE,
     n_permutations = n_permutations,
-    chunk = TRUE)
+    chunk = TRUE,
+    missing_cutoff = missing_cutoff)
 
   message(paste("Finished parallel run in",
                 (proc.time() - time_to_run_mapping)[3],

@@ -13,7 +13,8 @@ mtmcskat_NullModels(
   this_phenotype,
   covariates,
   pre_allocated_SNP_windows,
-  scaffold_ID
+  scaffold_ID,
+  missing_cutoff = 0.15
 )
 
 mtmcskat_SNPs(
@@ -22,7 +23,9 @@ mtmcskat_SNPs(
   this_phenotype,
   covariates,
   scaffold_ID,
-  n_thread
+  n_thread,
+  missing_cutoff = 0.15,
+  ...
 )
 }
 \arguments{
@@ -47,6 +50,8 @@ the same order as the phenotype file.}
 positions and scaffolds, prepared using \code{\link{pre_allocate}}}
 
 \item{scaffold_ID}{Integer indicating the chromosome or scaffold of interest}
+
+\item{...}{Additional parameters passed on to \code{\link[SKAT]{SKAT}}}
 }
 \value{
 A dataframe with four columns, for 1) scaffold ID, 2) SNP window

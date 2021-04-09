@@ -13,6 +13,7 @@ mappable_SKAT(
   resampling = FALSE,
   return_all_p_vals = FALSE,
   chunk = TRUE,
+  missing_cutoff = 0.15,
   ...
 )
 }
@@ -57,7 +58,7 @@ Obtain SKAT results, including permuted or empirical p-values, for a SNP
 window or chunk of SNP windows
 }
 \examples{
-data("small_pre_allocated_windows")
+data("small_pre_allocated_windows_processed")
 
 sample_null_model <- SKAT::SKAT_Null_Model(
   small_phenodata ~ 1 + as.matrix(small_covariates), out_type="C",
