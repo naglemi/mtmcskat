@@ -20,7 +20,8 @@ MTMCSKAT_workflow(
   plot = TRUE,
   RAM = "AllRAM",
   n_thread = "AllCores",
-  missing_cutoff
+  missing_cutoff = 0.15,
+  top_N = Inf
 )
 }
 \arguments{
@@ -65,6 +66,12 @@ missing rate; missing rate is defined for each SNP as the proportion
 of genotypes missing data for the given SNP. Imputation to mean is
 performed , either by `pre_allocate` or `SKAT` itself,
 for all remaining missing values}
+
+\item{top_N}{Integer representing the number of top associations on which the user
+wishes to perform resampling. For example,
+if this value is set to 5, any SNPs that
+do not produce p-values among the lowest 5 will not be included in outputs
+from this function.}
 }
 \value{
 None; outputs are saved to the user-specified output directory, with the user-specified ```job_id```

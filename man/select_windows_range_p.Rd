@@ -4,7 +4,7 @@
 \alias{select_windows_range_p}
 \title{Select windows corresponding to p-values within range of interest}
 \usage{
-select_windows_range_p(x, upper_bound, lower_bound)
+select_windows_range_p(x, upper_bound, lower_bound, top_N = Inf)
 }
 \arguments{
 \item{x}{An output from \code{\link{mtskat}} or a similarly formatted
@@ -15,6 +15,12 @@ the range of interest}
 
 \item{lower_bound}{A numeric value correspondign to the minimum p-value for
 the range of interest}
+
+\item{top_N}{Integer representing the number of top associations on which the user
+wishes to perform resampling. For example,
+if this value is set to 5, any SNPs that
+do not produce p-values among the lowest 5 will not be included in outputs
+from this function.}
 }
 \value{
 A numeric vector with indices for the position (center of window) for
@@ -26,9 +32,17 @@ Select windows corresponding to p-values within range of interest
 \examples{
 data("small_mtskat_results")
 
+# Select any windows with p-values within bounds, regardless of whether they
+#   are among top SNPs
 select_windows_range_p(
   x = small_mtskat_results,
   upper_bound = 0.01,
   lower_bound = 0.001)
 
+# Only include SNP windows if they are among the top 5 SNP windows
+select_windows_range_p(
+  x = small_mtskat_results,
+  upper_bound = 0.01,
+  lower_bound = 0.001,
+  top_N = 5)
 }

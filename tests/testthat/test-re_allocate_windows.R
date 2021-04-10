@@ -49,3 +49,28 @@ test_that(paste("SNP windows extracted for p-value range are exactly as",
     sample_re_allocated_SNP_windows)
   }
 )
+
+test_that("Top N windows are extracted", {
+  expect_equal(
+    length(re_allocate_windows(
+      x = modified_sample_mtskat_results,
+      upper_bound = 0.1,
+      lower_bound = 0.01,
+      pre_allocated_SNP_windows = small_pre_allocated_windows,
+      top_N = 5)),
+    4)
+}
+)
+
+test_that("All windows within range are extracted", {
+  expect_equal(
+    length(re_allocate_windows(
+      x = modified_sample_mtskat_results,
+      upper_bound = 0.1,
+      lower_bound = 0.01,
+      pre_allocated_SNP_windows = small_pre_allocated_windows,
+      top_N = Inf)),
+    14)
+}
+)
+

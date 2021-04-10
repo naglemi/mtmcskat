@@ -23,7 +23,8 @@
 re_allocate_windows <- function(x,
                                 upper_bound,
                                 lower_bound,
-                                pre_allocated_SNP_windows){
+                                pre_allocated_SNP_windows,
+                                top_N = Inf){
 
   find_leading_0s <- function(x){
     # Thank you David Arenburg for this great one-liner
@@ -34,7 +35,8 @@ re_allocate_windows <- function(x,
   window_list <- select_windows_range_p(
     x = x,
     upper_bound = upper_bound,
-    lower_bound = lower_bound)
+    lower_bound = lower_bound,
+    top_N = top_N)
 
   if(length(window_list) == 0){
 

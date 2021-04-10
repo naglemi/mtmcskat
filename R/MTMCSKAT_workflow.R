@@ -18,6 +18,7 @@
 #' @param plot if TRUE, produce Manhattan plot of results
 #' @inheritParams pre_allocate
 #' @inheritParams calculate_max_perm_per_core
+#' @inheritParams select_windows_range_p
 #'
 #' @return None; outputs are saved to the user-specified output directory, with the user-specified ```job_id```
 #' @export
@@ -58,7 +59,8 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
                               switch_point = 4, plot = TRUE,
                               RAM="AllRAM",
                               n_thread="AllCores",
-                              missing_cutoff){ # get rid of switchpoint parameter once making function determine_switch_point?
+                              missing_cutoff = 0.15,
+                              top_N = Inf){ # get rid of switchpoint parameter once making function determine_switch_point?
 
   set_accuracy <- function(master_output,
                            max_accuracy){
@@ -247,7 +249,8 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
         x = master_output,
         upper_bound = boundaries$upper,
         lower_bound = boundaries$lower,
-        pre_allocated_SNP_windows = pre_allocated_SNP_windows)
+        pre_allocated_SNP_windows = pre_allocated_SNP_windows,
+        top_N = top_N)
 
     message(paste(Sys.time(), "Complete."))
 

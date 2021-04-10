@@ -4,7 +4,13 @@
 \alias{re_allocate_windows}
 \title{Obtain a new list of SNP windows, based on p-values from an earlier list}
 \usage{
-re_allocate_windows(x, upper_bound, lower_bound, pre_allocated_SNP_windows)
+re_allocate_windows(
+  x,
+  upper_bound,
+  lower_bound,
+  pre_allocated_SNP_windows,
+  top_N = Inf
+)
 }
 \arguments{
 \item{x}{An output from \code{\link{mtskat}} or a similarly formatted
@@ -19,6 +25,12 @@ the range of interest}
 \item{pre_allocated_SNP_windows}{Output from \code{\link{pre_allocate}},
 which is a list of lists, with each sub-list containing elements as
 described in documentation for \code{\link{extract_window}}}
+
+\item{top_N}{Integer representing the number of top associations on which the user
+wishes to perform resampling. For example,
+if this value is set to 5, any SNPs that
+do not produce p-values among the lowest 5 will not be included in outputs
+from this function.}
 }
 \value{
 Output is the same format as for \code{\link{pre_allocate}}: a list
