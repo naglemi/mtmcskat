@@ -28,6 +28,12 @@ documentation})) into R}
 the mean alternative allele count for the given SNP}
 
 \item{remove_novar_SNPs}{If `TRUE`, SNPs with no variation will be removed}
+
+\item{missing_cutoff}{A numeric threshold representing the minimum desired
+missing rate; missing rate is defined for each SNP as the proportion
+of genotypes missing data for the given SNP. Imputation to mean is
+performed , either by `pre_allocate` or `SKAT` itself,
+for all remaining missing values}
 }
 \value{
 A list containing three objects: an integer of chromosome of origin,

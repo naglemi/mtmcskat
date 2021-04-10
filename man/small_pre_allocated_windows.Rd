@@ -17,4 +17,10 @@ windows are consecutive and span the range of 14.49Mb 14.52Mb on Chr. 10.
 Each SNP window spans a range of 3kb and consecutive windows are shifted by
 1kb relative to the previous adjacent window.
 }
+\details{
+This object has not undergone processing to filter out SNPs with high
+missing rates or to impute missing values to the mean. Thus, the use of this
+object will produce several warning messages from `SKAT`, noting that
+ad-hoc missing rate filtering and imputation is being performed.
+}
 \keyword{datasets}

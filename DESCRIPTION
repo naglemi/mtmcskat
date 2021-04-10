@@ -24,7 +24,8 @@ Suggests:
     gridGraphics,
     testthat,
     foreach,
-    optparse
+    optparse,
+    stringi
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 Imports: 

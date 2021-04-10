@@ -59,6 +59,12 @@ desired for empirical p-values}
 threads (in bytes)}
 
 \item{n_thread}{numeric, maximum number of cores over which parallelization is allowed}
+
+\item{missing_cutoff}{A numeric threshold representing the minimum desired
+missing rate; missing rate is defined for each SNP as the proportion
+of genotypes missing data for the given SNP. Imputation to mean is
+performed , either by `pre_allocate` or `SKAT` itself,
+for all remaining missing values}
 }
 \value{
 None; outputs are saved to the user-specified output directory, with the user-specified ```job_id```

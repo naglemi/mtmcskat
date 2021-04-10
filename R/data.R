@@ -1,7 +1,12 @@
-#' Labeled window of alternative allele counts for Populus trichocarpa SNPs
+#' Labeled window of alt. allele counts for P trichocarpa
 #'
 #' A dataset containing the position of a SNP window in the genome and all of
 #' the alternative allele counts for each SNP within the SNP window
+#'
+#' This object has not undergone processing to filter out SNPs with high
+#' missing rates or to impute missing values to the mean. Thus, the use of this
+#' object will produce several warning messages from `SKAT`, noting that
+#' ad-hoc missing rate filtering and imputation is being performed.
 #'
 #' Support for the Poplar GWAS dataset is provided by the U.S.
 #' Department of Energy, Office of Science Biological and Environmental
@@ -24,6 +29,40 @@
 #' }
 #' @source \url{https://cbi.ornl.gov/data}
 "sample_SNP_window"
+
+#' Labeled window of alt. allele counts (filtered and imputed) for P trichocarpa
+#'
+#' A dataset containing the position of a SNP window in the genome and all of
+#' the alternative allele counts for each SNP within the SNP window
+#'
+#' Unlike \code{\link{sample_SNP_window}}, this object HAS
+#' undergone processing to filter out SNPs with high
+#' missing rates (> 0.15) or to impute missing values to the mean.
+#' Thus, the use of this object will NOT produce warning messages from `SKAT`,
+#' as there is no need for ad-hoc missing rate filtering and imputation
+#' to be performed.
+#'
+#' Support for the Poplar GWAS dataset is provided by the U.S.
+#' Department of Energy, Office of Science Biological and Environmental
+#' Research (BER) via the Bioenergy Science Center (BESC) under Contract
+#' No. DE-PS02-06ER64304.  The Poplar GWAS Project used resources of the
+#' Oak Ridge Leadership Computing Facility and the Compute and Data Environment
+#' for Science at Oak Ridge National Laboratory, which is supported by the
+#' Office of Science of the U.S. Department of Energy under
+#' Contract No. DE-AC05-00OR22725
+#'
+#' @format A list containing three values
+#'
+#' \describe{
+#'   \item{Position}{Integer, the position of the center of a SNP window,
+#'   in base pairs}
+#'   \item{Z}{Matrix of integers containing alternative allele counts for
+#'   each of 175 SNPs (columns) in the SNP window, across 200 genotypes (rows)}
+#'   \item{Chr}{Integer or character indicating the chromosome or other
+#'   scaffold, respectively, on which the SNP window is found}
+#' }
+#' @source \url{https://cbi.ornl.gov/data}
+"sample_SNP_window_processed"
 
 #' Covariates for poplar samples in stem regeneration experiment
 #'
@@ -184,8 +223,32 @@
 #' Each SNP window spans a range of 3kb and consecutive windows are shifted by
 #' 1kb relative to the previous adjacent window.
 #'
+#' This object has not undergone processing to filter out SNPs with high
+#' missing rates or to impute missing values to the mean. Thus, the use of this
+#' object will produce several warning messages from `SKAT`, noting that
+#' ad-hoc missing rate filtering and imputation is being performed.
+#'
 #' @format A list with 90 values
 "small_pre_allocated_windows"
+
+#' List of consecutive SNP windows (filtered and imputed) with positon labels
+#'
+#' Similarly to \code{\link{small_pre_allocated_windows}},
+#' this dataset contains a list of SNP windows, each formatted as described
+#' in documentation for \code{\link{sample_SNP_window}}. All of these SNP
+#' windows are consecutive and span the range of 14.49Mb 14.52Mb on Chr. 10.
+#' Each SNP window spans a range of 3kb and consecutive windows are shifted by
+#' 1kb relative to the previous adjacent window.
+#'
+#' Unlike \code{\link{small_pre_allocated_windows}}, this object HAS
+#' undergone processing to filter out SNPs with high
+#' missing rates (> 0.15) or to impute missing values to the mean.
+#' Thus, the use of this object will NOT produce warning messages from `SKAT`,
+#' as there is no need for ad-hoc missing rate filtering and imputation
+#' to be performed.
+#'
+#' @format A list with 90 values
+"small_pre_allocated_windows_processed"
 
 #' List of selected SNP windows significantly associated with shoot trait
 #'

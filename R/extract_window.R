@@ -10,6 +10,11 @@
 #' @param impute_to_mean If `TRUE`, NA values for each SNP are replaced with
 #'   the mean alternative allele count for the given SNP
 #' @param remove_novar_SNPs If `TRUE`, SNPs with no variation will be removed
+#' @param missing_cutoff A numeric threshold representing the minimum desired
+#'   missing rate; missing rate is defined for each SNP as the proportion
+#'   of genotypes missing data for the given SNP. Imputation to mean is
+#'   performed , either by `pre_allocate` or `SKAT` itself,
+#'   for all remaining missing values
 #'
 #' @return A list containing three objects: an integer of chromosome of origin,
 #'   an integer of SNP window center position, and a matrix of alternative

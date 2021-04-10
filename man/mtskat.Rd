@@ -30,6 +30,12 @@ positions and scaffolds, prepared using \code{\link{pre_allocate}}}
 
 \item{n_thread}{An integer indicating the number of threads to be used for
 multithreading}
+
+\item{missing_cutoff}{A numeric threshold representing the minimum desired
+missing rate; missing rate is defined for each SNP as the proportion
+of genotypes missing data for the given SNP. Imputation to mean is
+performed , either by `pre_allocate` or `SKAT` itself,
+for all remaining missing values}
 }
 \value{
 A dataframe with columns for scaffold ID, SNP window position,

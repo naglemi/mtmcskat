@@ -12,6 +12,7 @@
 #'   available for a single thread); if `FALSE`, will calculate and return the
 #'   empirical p-value
 #' @param ... Additional parameters passed on to \code{\link[SKAT]{SKAT}}
+#' @inheritParams extract_window
 #'
 #' @return An empirical p-value or vector of permuted p-values, depending on the
 #'   user-submitted argument for `return_all_p` as described above

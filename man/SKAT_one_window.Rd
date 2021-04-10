@@ -42,6 +42,12 @@ p-values (useful for when not all permutations can fit into memory
 available for a single thread); if `FALSE`, will calculate and return the
 empirical p-value}
 
+\item{missing_cutoff}{A numeric threshold representing the minimum desired
+missing rate; missing rate is defined for each SNP as the proportion
+of genotypes missing data for the given SNP. Imputation to mean is
+performed , either by `pre_allocate` or `SKAT` itself,
+for all remaining missing values}
+
 \item{...}{Additional parameters passed on to \code{\link[SKAT]{SKAT}}}
 }
 \value{
