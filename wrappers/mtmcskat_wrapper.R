@@ -103,6 +103,25 @@ option_list = list(
               type="numeric",
               default=24,
               help=paste('Number of threads for this job'),
+              metavar="numeric"),
+  make_option(c("-t", "--top_N"),
+              type="numeric",
+              default=Inf,
+              help=paste('Integer representing the number of top associations',
+              'on which the user wishes to perform resampling. For example,',
+              '   if this value is set to 5, any SNPs that',
+              '   do not produce p-values among the lowest 5 will not be',
+              'included in outputs'),
+              metavar="numeric"),
+  make_option(c("-m", "--missing_cutoff"),
+              type="numeric",
+              default=0.15,
+              help=paste('A numeric threshold representing the minimum desired',
+                         'missing rate; missing rate is defined for each SNP',
+                         'as the proportion of genotypes missing data for the',
+                         'given SNP. Imputation to mean is performed , either',
+                         'by `pre_allocate` or `SKAT` itself,',
+                         'for all remaining missing values'),
               metavar="numeric")
 );
 
@@ -123,4 +142,6 @@ MTMCSKAT_workflow(
   max_accuracy = opt$max_accuracy,
   plot = opt$plot,
   RAM = opt$RAM,
-  n_thread = opt$n_thread)
+  n_thread = opt$n_thread,
+  top_N = opt$top_N,
+  missing_cutoff = opt$missing_cutoff)
