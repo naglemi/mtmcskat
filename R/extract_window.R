@@ -66,46 +66,48 @@ extract_window <- function(this_position, window_size, genodata,
 
     Z <- convert_to_Z(genodata_thiswindow = genodata_thiswindow)
 
-    if(missing_cutoff > 0){
-      missing_count_per_SNP <- colSums(is.na(Z))
-      n_genotypes <- nrow(Z)
-
-      missing_proportion_per_SNP <-
-        missing_count_per_SNP /
-        n_genotypes
-
-      SNPs_with_missing_rate_gt_threshold <-
-        which(missing_proportion_per_SNP > missing_cutoff, arr.ind = TRUE)
-
-      if(length(SNPs_with_missing_rate_gt_threshold > 0)){
-        Z <- Z[, -SNPs_with_missing_rate_gt_threshold]
-      }
-    }
-
-    if(impute_to_mean==TRUE){
-      for(i in 1:ncol(Z)){
-        Z[is.na(Z[, i]), i] <- mean(Z[, i], na.rm = TRUE)
-      }
-    }
-
-    if(remove_novar_SNPs == TRUE){
-      # Count number of factors for each SNP
-      factors_per_SNP <- c()
-      for(i in 1:ncol(Z)){
-        factors_per_SNP <- c(factors_per_SNP,
-                             length(levels(factor(Z[, i]))))
-      }
-
-      n_SNPs <- ncol(Z)
-      factors_per_SNP_gt1 <- which(factors_per_SNP > 1)
-      if(n_SNPs != length(factors_per_SNP_gt1)){
-        Z <- Z[, factors_per_SNP_gt1]
-      }
-
-    }
-
     if(ncol(Z) == 0) { # If no SNPs left after filtering...
+
+      if(missing_cutoff > 0){
+        missing_count_per_SNP <- colSums(is.na(Z))
+        n_genotypes <- nrow(Z)
+
+        missing_proportion_per_SNP <-
+          missing_count_per_SNP /
+          n_genotypes
+
+        SNPs_with_missing_rate_gt_threshold <-
+          which(missing_proportion_per_SNP > missing_cutoff, arr.ind = TRUE)
+
+        if(length(SNPs_with_missing_rate_gt_threshold > 0)){
+          Z <- Z[, -SNPs_with_missing_rate_gt_threshold]
+        }
+      }
+
+      if(impute_to_mean==TRUE){
+        for(i in 1:ncol(Z)){
+          Z[is.na(Z[, i]), i] <- mean(Z[, i], na.rm = TRUE)
+        }
+      }
+
+      if(remove_novar_SNPs == TRUE){
+        # Count number of factors for each SNP
+        factors_per_SNP <- c()
+        for(i in 1:ncol(Z)){
+          factors_per_SNP <- c(factors_per_SNP,
+                               length(levels(factor(Z[, i]))))
+        }
+
+        n_SNPs <- ncol(Z)
+        factors_per_SNP_gt1 <- which(factors_per_SNP > 1)
+        if(n_SNPs != length(factors_per_SNP_gt1)){
+          Z <- Z[, factors_per_SNP_gt1]
+        }
+
+      }
+
       out_list <- list(NA, NA, NA)
+
     } else {
       out_list <- list(this_position, Z, Chr)
     }

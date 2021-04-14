@@ -35,5 +35,6 @@ Imports:
     future.apply,
     plyr,
     dplyr,
-    benchmarkme
+    benchmarkme,
+    R.utils
 Depends: R (>= 3.4.0)
