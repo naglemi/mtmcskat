@@ -219,7 +219,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   max_permutations_per_job <-
     calculate_max_perm_per_core(
       nm_RAM_per_perm = RAM_per_permutation,
-      RAM = size_RAM_wiggle(RAM = RAM, wiggle_factor = 6),
+      RAM = size_RAM_wiggle(RAM = RAM, wiggle_factor = 10),
       n_thread = n_thread)
 
   # This should be less than (option 'future.globals.maxSize')
