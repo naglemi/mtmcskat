@@ -170,6 +170,18 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   # separation, which may vary across covariate files (lack a standard format).
   covariates <- data.table::fread(covariates)
 
+  output_dir <- paste0(output_dir, "/", job_id)
+
+  if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+
+  output_basename <- paste0(output_dir, "/pheno-",
+                            basename(phenodata),
+                            "-scaff-",
+                            basename(raw_file_path))
+
+  sink(file = paste0(output_basename,
+                     ".log"))
+
   if(n_thread=="AllCores") {
     n_thread <- future::availableCores()
   }
@@ -322,14 +334,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
 
   }
 
-  output_dir <- paste0(output_dir, "/", job_id)
 
-  if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
-
-  output_basename <- paste0(output_dir, "/pheno-",
-                            basename(phenodata),
-                            "-scaff-",
-                            basename(raw_file_path))
 
   raw_out_name <- paste0(output_basename, ".csv")
   plot_out_name <- paste0(output_basename, ".png")
@@ -349,5 +354,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   message(paste0("Done running in...",
                  print(proc.time() - whole_genome_start)[3],
                  "s"))
+
+  sink()
 
 }
