@@ -82,31 +82,37 @@ extract_window <- function(this_position, window_size, genodata,
       }
     }
 
-    if(remove_novar_SNPs == TRUE){
-      # Count number of factors for each SNP
-      factors_per_SNP <- c()
-      for(i in 1:ncol(Z)){
-        factors_per_SNP <- c(factors_per_SNP,
-                             length(levels(factor(Z[, i]))))
-      }
 
-      n_SNPs <- ncol(Z)
-      factors_per_SNP_gt1 <- which(factors_per_SNP > 1)
-      if(n_SNPs != length(factors_per_SNP_gt1)){
-        Z <- Z[, factors_per_SNP_gt1]
-      }
-
-    }
 
     if(ncol(Z) > 0) {
 
-      if(impute_to_mean==TRUE){
+      if(remove_novar_SNPs == TRUE){
+        # Count number of factors for each SNP
+        factors_per_SNP <- c()
         for(i in 1:ncol(Z)){
-          Z[is.na(Z[, i]), i] <- mean(Z[, i], na.rm = TRUE)
+          factors_per_SNP <- c(factors_per_SNP,
+                               length(levels(factor(Z[, i]))))
         }
+
+        n_SNPs <- ncol(Z)
+        factors_per_SNP_gt1 <- which(factors_per_SNP > 1)
+        if(n_SNPs != length(factors_per_SNP_gt1)){
+          Z <- Z[, factors_per_SNP_gt1]
+        }
+
       }
 
-      out_list <- list(this_position, Z, Chr)
+      if(ncol(Z) > 0){ # if STILL > 0 SNPs after removing those w no variance ^
+        if(impute_to_mean==TRUE){
+          for(i in 1:ncol(Z)){
+            Z[is.na(Z[, i]), i] <- mean(Z[, i], na.rm = TRUE)
+          }
+        }
+
+        out_list <- list(this_position, Z, Chr)
+      } else {
+        out_list <- list(NA, NA, NA)
+      }
 
     } else{
       out_list <- list(NA, NA, NA)
@@ -114,8 +120,8 @@ extract_window <- function(this_position, window_size, genodata,
   }
 
   if(length(indices_to_pull) == 0) {
-    message(paste0("No SNPs within ",window_size/1000,"kb window with center",
-                   " of ", this_position))
+    cat(paste0("No SNPs within ",window_size/1000,"kb window with center",
+               " of ", this_position))
     out_list <- list(NA, NA, NA)
   }
 
