@@ -69,18 +69,18 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
       min(stats::na.omit(master_output$`SKAT_p-val`)),
       base = 10)) - 1
 
-    message(paste0("\nMax # leading 0s is: ", max_leading_0s, "\n"))
+    cat(paste0("\nMax # leading 0s is: ", max_leading_0s, "\n"))
 
     if (max_accuracy != "Auto"){
-      message(paste0("User-defined accuracy limit is 10^-", max_accuracy, "."))
+      cat(paste0("User-defined accuracy limit is 10^-", max_accuracy, "."))
       if (max_leading_0s < max_accuracy){
-        message(paste("This level of accuracy may be more than the accuracy",
+        cat(paste("This level of accuracy may be more than the accuracy",
                       "needed to calculate empirical p-values since model",
                       "p-values from mtskat have no more than", max_leading_0s,
                       "leading zeros\n"))
       }
       if (max_leading_0s > max_accuracy){
-        message(paste("This accuracy may not be enough to accurately",
+        cat(paste("This accuracy may not be enough to accurately",
                       "calculate all empirical p-values since p-values from",
                       "mtskat have as many as", max_leading_0s,
                       "leading zeros\n"))
@@ -119,7 +119,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
     if(length(pre_allocated_SNP_windows) < n_thread){
       # SWITCH MODE TO PARALLELIZE OVER NULL MODELS INTEAD OF WINDOWS
 
-      message(paste0(
+      cat(paste0(
         "Automatically switching modes for windows with p-vals <= 10^-",
         leading_0s,
         " because there are fewer windows (",
@@ -252,7 +252,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
         desired_sig_figs = desired_sig_figs,
         terminal_resampling = terminal_resampling)
 
-    message(paste(Sys.time(), "- Re-allocating SNP windows with only those",
+    cat(paste(Sys.time(), "- Re-allocating SNP windows with only those",
                   "with p-values between", boundaries$upper, "and",
                   boundaries$lower, "..."))
 
@@ -264,7 +264,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
         pre_allocated_SNP_windows = pre_allocated_SNP_windows,
         top_N = top_N)
 
-    message(paste(Sys.time(), "Complete."))
+    cat(paste(Sys.time(), "Complete."))
 
     if(new_pre_allocated_SNP_windows == "None") next
 
@@ -284,7 +284,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
         pre_allocated_SNP_windows = new_pre_allocated_SNP_windows,
         n_thread = n_thread)
 
-    message(paste0(Sys.time(), " - Running resampling for ",
+    cat(paste0(Sys.time(), " - Running resampling for ",
                    length(new_pre_allocated_SNP_windows),
                    " SNP windows with p-values between ",
                    boundaries$upper, " and ",
@@ -295,7 +295,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
                    " significant figures...\n"))
 
     if(null_models_fit_in_RAM_per_thread & !more_threads_than_windows){
-      message("Multithreading over SNP windows\n")
+      cat("Multithreading over SNP windows\n")
 
       add_to_master_output <-
         mtmcskat_SNPs(
@@ -309,7 +309,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
     }
 
     if(!null_models_fit_in_RAM_per_thread | more_threads_than_windows){
-      message("Multithreading over null models\n")
+      cat("Multithreading over null models\n")
 
       add_to_master_output <-
         mtmcskat_NullModels(
@@ -339,7 +339,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
   raw_out_name <- paste0(output_basename, ".csv")
   plot_out_name <- paste0(output_basename, ".png")
 
-  message(paste0("Writing ", raw_out_name))
+  cat(paste0("Writing ", raw_out_name))
 
   data.table::fwrite(master_output, raw_out_name)
 
@@ -351,7 +351,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
 
   }
 
-  message(paste0("Done running in...",
+  cat(paste0("Done running in...",
                  print(proc.time() - whole_genome_start)[3],
                  "s"))
 

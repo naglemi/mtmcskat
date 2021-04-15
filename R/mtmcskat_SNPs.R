@@ -101,7 +101,7 @@ mtmcskat_NullModels <- function(n_thread,
       n_total_permutations_per_thread <- ceiling(n_permutations / n_thread)
 
       if(n_total_permutations_per_thread >= max_permutations_per_job ){
-        message(paste0("Memory constraint recognized; ",
+        cat(paste0("Memory constraint recognized; ",
                        "Unable to multithread over all null models ",
                        "simultaneously."))
 
@@ -127,7 +127,7 @@ mtmcskat_NullModels <- function(n_thread,
       }
 
       if(n_total_permutations_per_thread < max_permutations_per_job ){
-        message(paste0("Memory is enough to multithread over all null ",
+        cat(paste0("Memory is enough to multithread over all null ",
                        "models simultaneously."))
 
         n_permutations_per_job <- n_total_permutations_per_thread
@@ -152,7 +152,7 @@ mtmcskat_NullModels <- function(n_thread,
     max_permutations_per_job = max_permutations_per_job
   )
 
-  message(paste0("To run ", job_details$n_jobs, "jobs, each with ",
+  cat(paste0("To run ", job_details$n_jobs, "jobs, each with ",
                  format(job_details$n_permutations_per_job,
                         big.mark=",",scientific=FALSE), " permutations ",
                  "for a total of ",
@@ -175,7 +175,7 @@ mtmcskat_NullModels <- function(n_thread,
 
   p_null_tallies <- dplyr::bind_rows(p_null_tallies)
 
-  message(paste0(Sys.time(), " - Finished resampling with ",
+  cat(paste0(Sys.time(), " - Finished resampling with ",
                  format(job_details$actual_n_permutations,
                         big.mark=",",scientific=FALSE), " permutations in",
                  (proc.time() - timer)[3], "s\n\n"))
@@ -201,7 +201,7 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
                           missing_cutoff = 0.15,
                           ...){
 
-  message(paste(Sys.time(), "- Making null model with",
+  cat(paste(Sys.time(), "- Making null model with",
                 n_permutations, "permutations..."))
 
   null_model <- SKAT::SKAT_Null_Model(
@@ -209,7 +209,7 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
     n.Resampling = n_permutations,
     type.Resampling = "bootstrap")
 
-  message(paste(Sys.time(), "- Complete\n"))
+  cat(paste(Sys.time(), "- Complete\n"))
 
   pre_allocated_SNP_windows <- chunk_windows(
     pre_allocated_SNP_windows = pre_allocated_SNP_windows,
@@ -229,7 +229,7 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
     chunk = TRUE,
     missing_cutoff = missing_cutoff)
 
-  message(paste("Finished parallel run in",
+  cat(paste("Finished parallel run in",
                 (proc.time() - time_to_run_mapping)[3],
                 "seconds\n"))
 

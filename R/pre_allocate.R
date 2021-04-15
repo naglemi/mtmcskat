@@ -45,7 +45,7 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
     window_size, "bp_win.rds")
 
   if(file.exists(pre_allocated_path)){
-    message(paste0("Data structure already exists. Read in from: ",
+    cat(paste0("Data structure already exists. Read in from: ",
                    pre_allocated_path,
                    "\n"))
     pos_and_SNP_list <- readRDS(pre_allocated_path)
@@ -55,7 +55,7 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
                                            fill = TRUE,
                                   tmpdir = pre_allocated_dir)
 
-    message(paste("Read genotype data for raw file", raw_file_path,
+    cat(paste("Read genotype data for raw file", raw_file_path,
                   "with", dim(genodata)[1], "SNPs and",
                    dim(genodata)[2] - 6, "genotypes"))
     genodata$POS <- as.numeric(as.character(genodata$POS))
@@ -76,7 +76,7 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
                        max_window,
                        by=window_shift)
 
-    message("Allocating data structure")
+    cat("Allocating data structure")
     ptm <- proc.time()
 
     pos_and_SNP_list <- lapply(window_list,
@@ -89,12 +89,12 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
                                  missing_cutoff = missing_cutoff))
 
     time <- proc.time() - ptm
-    message(paste("Took", time[3],
+    cat(paste("Took", time[3],
                   "seconds to allocate pos, SNP data structure"))
 
     saveRDS(pos_and_SNP_list, pre_allocated_path)
 
-    message(paste("Pre-allocated SNP data saved to",
+    cat(paste("Pre-allocated SNP data saved to",
                   pre_allocated_path,
                   "\n"))
   }
@@ -102,9 +102,9 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
   genodata <- NULL # Will this prevent it from being exported on slurm?
   gc()
 
-  print(paste("Pre-allocated SNP window data takes up",
-              utils::object.size(pos_and_SNP_list)/1e6,
-              "MB\n"))
+  cat(paste("Pre-allocated SNP window data takes up",
+            utils::object.size(pos_and_SNP_list)/1e6,
+            "MB\n"))
 
   pos_and_SNP_list
 }

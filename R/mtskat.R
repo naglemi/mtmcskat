@@ -44,7 +44,7 @@ mtskat <- function(this_phenotype,
   null_model_noresample <- SKAT::SKAT_Null_Model(
     this_phenotype ~ 1 + as.matrix(covariates), out_type="C")
 
-  # message(paste(
+  # cat(paste(
   #   "Memory taken up by pre-allocated SNP windows before chunking is",
   #   object.size(pre_allocated_SNP_windows)/1e6,
   #   "MB"))
@@ -53,7 +53,7 @@ mtskat <- function(this_phenotype,
     pre_allocated_SNP_windows = pre_allocated_SNP_windows,
     n_thread = n_thread)
 
-  # message(paste(
+  # cat(paste(
   #   "Memory taken up by pre-allocated SNP windows AFTER chunking is",
   #   object.size(pre_allocated_SNP_windows)/1e6,
   #   "MB"))
@@ -74,7 +74,7 @@ mtskat <- function(this_phenotype,
                                                n_permutations = NA,
                                                chunk = TRUE,
                                                missing_cutoff = missing_cutoff)
-  message(paste0("Finished parallel run in ",
+  cat(paste0("Finished parallel run in ",
                  (proc.time() - time_to_run_mapping)[3],
                  "s"))
 
