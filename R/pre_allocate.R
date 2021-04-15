@@ -57,7 +57,7 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
 
     cat(paste("Read genotype data for raw file", raw_file_path,
                   "with", dim(genodata)[1], "SNPs and",
-                   dim(genodata)[2] - 6, "genotypes"))
+                   dim(genodata)[2] - 6, "genotypes\n"))
     genodata$POS <- as.numeric(as.character(genodata$POS))
 
     max_window <- max(genodata$POS)
@@ -76,7 +76,7 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
                        max_window,
                        by=window_shift)
 
-    cat("Allocating data structure")
+    cat("Allocating data structure\n")
     ptm <- proc.time()
 
     pos_and_SNP_list <- lapply(window_list,
@@ -90,7 +90,7 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
 
     time <- proc.time() - ptm
     cat(paste("Took", time[3],
-                  "seconds to allocate pos, SNP data structure"))
+                  "seconds to allocate pos, SNP data structure\n"))
 
     saveRDS(pos_and_SNP_list, pre_allocated_path)
 

@@ -83,7 +83,9 @@ extract_window <- function(this_position, window_size, genodata,
     }
 
 
-
+    if(is.vector(Z)){ # Patch for cases when only 1 SNP in window
+      Z <- as.matrix(Z)
+    }
     if(ncol(Z) > 0) {
 
       if(remove_novar_SNPs == TRUE){
@@ -102,6 +104,9 @@ extract_window <- function(this_position, window_size, genodata,
 
       }
 
+      if(is.vector(Z)){ # Patch for cases when only 1 SNP in window
+        Z <- as.matrix(Z)
+      }
       if(ncol(Z) > 0){ # if STILL > 0 SNPs after removing those w no variance ^
         if(impute_to_mean==TRUE){
           for(i in 1:ncol(Z)){
@@ -121,7 +126,7 @@ extract_window <- function(this_position, window_size, genodata,
 
   if(length(indices_to_pull) == 0) {
     cat(paste0("No SNPs within ",window_size/1000,"kb window with center",
-               " of ", this_position))
+               " of ", this_position, "\n"))
     out_list <- list(NA, NA, NA)
   }
 
