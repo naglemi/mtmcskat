@@ -10,6 +10,7 @@
 #' @param impute_to_mean If `TRUE`, NA values for each SNP are replaced with
 #'   the mean alternative allele count for the given SNP
 #' @param remove_novar_SNPs If `TRUE`, SNPs with no variation will be removed
+#' @param Chr Integer indicating the chromosome SNPs are being extracted from
 #' @param missing_cutoff A numeric threshold representing the minimum desired
 #'   missing rate; missing rate is defined for each SNP as the proportion
 #'   of genotypes missing data for the given SNP. Imputation to mean is
@@ -29,9 +30,10 @@
 #'
 #' extract_window(this_position = 145e5,
 #'   window_size = 3000,
-#'   genodata = small_genodata)
+#'   genodata = small_genodata,
+#'   Chr = 10)
 #'
-extract_window <- function(this_position, window_size, genodata,
+extract_window <- function(this_position, window_size, genodata, Chr,
                            impute_to_mean = TRUE,
                            remove_novar_SNPs = TRUE,
                            missing_cutoff = 0.15){
@@ -53,16 +55,6 @@ extract_window <- function(this_position, window_size, genodata,
   if(length(indices_to_pull) >= 1){
     genodata_thiswindow <-
       genodata[indices_to_pull[1]:indices_to_pull[length(indices_to_pull)], ]
-
-    Chr <- unique(genodata_thiswindow[, 1])
-    if(length(Chr) < 1) {
-      stop("Where is chromosome data?")
-    }
-    if(length(Chr) > 1) {
-      stop(paste(Sys.time(),
-                 " - extract_window should be provided with no more than a",
-                 "single scaffold, but appears to have multiple."))
-    }
 
     Z <- convert_to_Z(genodata_thiswindow = genodata_thiswindow)
 

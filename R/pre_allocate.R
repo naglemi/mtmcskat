@@ -79,6 +79,21 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
     cat("Allocating data structure\n")
     ptm <- proc.time()
 
+    # This is not so elegant; code can be rewritten more efficiently to avoid
+    # this Chr variable altogether
+    Chr <- unique(stats::na.omit(genodata[, 1]))
+    if(length(Chr) < 1) {
+      stop("Where is chromosome data?")
+    }
+    if(length(Chr) > 1) {
+      stop(paste(Sys.time(),
+                 " - extract_window should be provided with no more than a",
+                 "single scaffold, but appears to have multiple."))
+    }
+
+    Chr <- unlist(Chr)
+    names(Chr) <- NULL
+
     pos_and_SNP_list <- lapply(window_list,
                                function(x) extract_window(
                                  this_position = x,
@@ -86,7 +101,8 @@ pre_allocate <- function(raw_file_path, window_size, window_shift,
                                  genodata = genodata,
                                  impute_to_mean = impute_to_mean,
                                  remove_novar_SNPs = remove_novar_SNPs,
-                                 missing_cutoff = missing_cutoff))
+                                 missing_cutoff = missing_cutoff,
+                                 Chr = Chr))
 
     time <- proc.time() - ptm
     cat(paste("Took", time[3],

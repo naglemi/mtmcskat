@@ -8,6 +8,7 @@ extract_window(
   this_position,
   window_size,
   genodata,
+  Chr,
   impute_to_mean = TRUE,
   remove_novar_SNPs = TRUE,
   missing_cutoff = 0.15
@@ -23,6 +24,8 @@ base pairs)}
 \item{genodata}{A matrix obtained by reading data from `.traw` format (see
 (see \url{https://www.cog-genomics.org/plink2/formats}{PLINK
 documentation})) into R}
+
+\item{Chr}{Integer indicating the chromosome SNPs are being extracted from}
 
 \item{impute_to_mean}{If `TRUE`, NA values for each SNP are replaced with
 the mean alternative allele count for the given SNP}
@@ -51,6 +54,7 @@ small_genodata <- data.table::fread(small_genodata_path)
 
 extract_window(this_position = 145e5,
   window_size = 3000,
-  genodata = small_genodata)
+  genodata = small_genodata,
+  Chr = 10)
 
 }

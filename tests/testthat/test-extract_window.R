@@ -11,6 +11,9 @@ raw_file_path <- system.file("extdata",
 
 temp <- paste0(tempdir(), "/mtmcskat_", stringi::stri_rand_strings(1, 5))
 
+Chr <- unlist(unique(na.omit(small_genodata[, 1])))
+names(Chr) <- NULL
+
 # Tests with unfiltered/unimputed SNP data --------------------------------
 data("sample_SNP_window")
 
@@ -21,7 +24,8 @@ test_that("SNP window (unfiltered) is centered around desired position", {
                    genodata = small_genodata,
                    impute_to_mean = FALSE,
                    remove_novar_SNPs = FALSE,
-                   missing_cutoff = 0)$Position,
+                   missing_cutoff = 0,
+                   Chr = Chr)$Position,
     145e5)
   }
 )
@@ -33,7 +37,8 @@ test_that("SNP window (unfiltered) is labeled with chromosome of origin", {
                    genodata = small_genodata,
                    impute_to_mean = FALSE,
                    remove_novar_SNPs = FALSE,
-                   missing_cutoff = 0)$Chr,
+                   missing_cutoff = 0,
+                   Chr = Chr)$Chr,
     10)
   }
 )
@@ -45,7 +50,8 @@ test_that("Extracted SNP window (unfiltered) is exactly the same as expected", {
                    genodata = small_genodata,
                    impute_to_mean = FALSE,
                    remove_novar_SNPs = FALSE,
-                   missing_cutoff = 0)$Z,
+                   missing_cutoff = 0,
+                   Chr = Chr)$Z,
     sample_SNP_window$Z)
   }
 )
@@ -59,7 +65,8 @@ test_that(paste("Extracted SNP window  (unfiltered) and metadata is",
                    genodata = small_genodata,
                    impute_to_mean = FALSE,
                    remove_novar_SNPs = FALSE,
-                   missing_cutoff = 0),
+                   missing_cutoff = 0,
+                   Chr = Chr),
     sample_SNP_window)
   }
 )
@@ -108,7 +115,8 @@ test_that("SNP window (filtered) is centered around desired position", {
                    genodata = small_genodata,
                    impute_to_mean = TRUE,
                    remove_novar_SNPs = TRUE,
-                   missing_cutoff = 0.15)$Position,
+                   missing_cutoff = 0.15,
+                   Chr = Chr)$Position,
     145e5)
 }
 )
@@ -120,7 +128,8 @@ test_that("SNP window (filtered) is labeled with chromosome of origin", {
                    genodata = small_genodata,
                    impute_to_mean = TRUE,
                    remove_novar_SNPs = TRUE,
-                   missing_cutoff = 0.15)$Chr,
+                   missing_cutoff = 0.15,
+                   Chr = Chr)$Chr,
     10)
 }
 )
@@ -132,7 +141,8 @@ test_that("Extracted SNP window (filtered) is exactly the same as expected", {
                    genodata = small_genodata,
                    impute_to_mean = TRUE,
                    remove_novar_SNPs = TRUE,
-                   missing_cutoff = 0.15)$Z,
+                   missing_cutoff = 0.15,
+                   Chr = Chr)$Z,
     sample_SNP_window_processed$Z)
 }
 )
@@ -146,7 +156,8 @@ test_that(paste("Extracted SNP window  (filtered) and metadata is",
                                    genodata = small_genodata,
                                    impute_to_mean = TRUE,
                                    remove_novar_SNPs = TRUE,
-                                   missing_cutoff = 0.15),
+                                   missing_cutoff = 0.15,
+                                   Chr = Chr),
                     sample_SNP_window_processed)
                 }
 )
