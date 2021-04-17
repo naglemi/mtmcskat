@@ -116,18 +116,18 @@ extract_window <- function(this_position, window_size, genodata,
 
         out_list <- list(this_position, Z, Chr)
       } else {
-        out_list <- list(NA, NA, NA)
+        out_list <- list(NA, NA, Chr)
       }
 
     } else{
-      out_list <- list(NA, NA, NA)
+      out_list <- list(NA, NA, Chr)
     }
   }
 
   if(length(indices_to_pull) == 0) {
     cat(paste0("No SNPs within ",window_size/1000,"kb window with center",
                " of ", this_position, "\n"))
-    out_list <- list(NA, NA, NA)
+    out_list <- list(NA, NA, Chr)
   }
 
 
