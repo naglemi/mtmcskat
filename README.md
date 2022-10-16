@@ -59,10 +59,7 @@ tested and the shift in position between windows, and the limit for
 accuracy (recommended to be set beyond the FDR or Bonferroni correction
 threshold) given as 10^-x.
 
-This function is also accesible from the command line, thus providing a
-one-liner that can be easily submitted as a job to any batch query
-system. Jobs are submitted for each scaffold or sub-scaffold to be
-analyzed.
+This function is also accesible from the command line, as below.
 
 ``` r
 Rscript MTMCSKAT_workflow.R --phenodata="poplar_shoot_sample.csv" \
@@ -77,7 +74,7 @@ Rscript MTMCSKAT_workflow.R --phenodata="poplar_shoot_sample.csv" \
 --sig_figs=2
 ```
 
-# Running over an array of scaffolds using SLURMS
+# Running over an array of scaffolds using HPC
 
 The following command can be used to submit a job to a batch scheduler such as SGE or SLURMS. [This notebook](https://github.com/naglemi/mtmcskat/blob/master/wrappers/SLURMcall_c1_Transf_Deploy_Resid_Approach.ipynb) shows an example of how we use this command to produce an array of jobs and submit them on a high-performance cluster.
 
