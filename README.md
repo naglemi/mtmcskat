@@ -59,20 +59,7 @@ tested and the shift in position between windows, and the limit for
 accuracy (recommended to be set beyond the FDR or Bonferroni correction
 threshold) given as 10^-x.
 
-This function is also accesible from the command line, as below.
-
-``` r
-Rscript MTMCSKAT_workflow.R --phenodata="poplar_shoot_sample.csv" \
---covariates="poplar_PCs_covariates.csv" \
---raw_file_path="poplar_Chr10_portion.traw" \
---window_size=3000 \
---window_shift=1000 \
---output_dir="Results/" \
---job_id="my_sample_analysis" \
---ncore="AllCores" \
---max_accuracy=5 \
---sig_figs=2
-```
+Information for additional, option parameters can be found by typing `?MTMCSKAT_workflow` in R after installing and loading the package.
 
 # Running over an array of scaffolds using HPC
 
