@@ -79,26 +79,31 @@ Rscript MTMCSKAT_workflow.R --phenodata="poplar_shoot_sample.csv" \
 
 # Running over an array of scaffolds using SLURMS
 
-The following bash command can be used to generate a bash script to
-submit an array of jobs (each for a given scaffold or sub-scaffold) to
-be submitted to to the SGE or SLURMS batch query system…
+The following command can be used to submit a job to a batch scheduler such as SGE or SLURMS. [This notebook](https://github.com/naglemi/mtmcskat/blob/master/wrappers/SLURMcall_c1_Transf_Deploy_Resid_Approach.ipynb) shows an example of how we use this command to produce an array of jobs and submit them on a high-performance cluster.
 
 ``` r
-prepare_SLURMS_batch.sh \
--d inputs/wholeChr \ # Folder containing scaffolds in `.traw` format
--p poplar_shoot_sample.csv \ # Phenotype file
--c poplar_PCs_covariates.csv \ # Covariate file
--i 3000 \ # Window size
--h 1000 \ # Window shift
--o Results/ \ # Directory to save results in
--j my_sample_analysis \ # Prefix to name jobs with
--n AllCores \ # Maximum number of threads (use string `AllCores` for maximum threads)
--m 5 \ # Maximum accuracy for empirical p-values
--s 2 \ # Desired number of significant figures
--t 01:00:00 # Maximum runtime after which a job will terminate
+Rscript wrappers/mtmcskat_wrapper.R \
+--phenodata <my_phenotype_file> \
+--covariates <my_covariate_file> \
+--raw_file_path <my_scaffold> \
+--window_size 3000 \ # Window size of 3kb suggested for P. trichocarpa
+--window_shift 1000 \ # Windows will overlap by 1kb
+--output_dir <my_output_dir> \
+--pre_allocated_dir <pre_allocated_dir> \ # path to save pre-processed scaffolds, saving time in future
+--job_id <my_job_id> \
+--desired_sig_figs 2 \
+--min_accuracy 4 \ # Perform permutations sufficient for no fewer than 4 decimal places
+--max_accuracy 5 \ # Perform permutations for no more than 5 decimal places
+--plot 0 \ # Do not make plots while running on cluster
+--RAM 64000000000 \
+--n_thread <my_n_thread_one_job>
+--top_N 2 # Perform permutation validation for two top associations on scaffold
+--missing_cutoff 0.15 # Exclude SNPs missing from >15% of samples
 ```
 
-…
+# Acknowledgements
+
+# References
 
 Wu, M.C., Lee, S., Cai, T., Li, Y., Boehnke, M. and Lin, X., 2011.
 Rare-variant association testing for sequencing data with the sequence
