@@ -65,7 +65,7 @@ Information for additional, option parameters can be found by typing `?MTMCSKAT_
 
 The following command can be used to submit a job to a batch scheduler such as SGE or SLURMS. [This notebook](https://github.com/naglemi/mtmcskat/blob/master/wrappers/SLURMcall_c1_Transf_Deploy_Resid_Approach.ipynb) shows an example of how we use this command to produce an array of jobs and submit them on a high-performance cluster.
 
-``` r
+``` bash
 Rscript wrappers/mtmcskat_wrapper.R \
 --phenodata <my_phenotype_file> \
 --covariates <my_covariate_file> \
