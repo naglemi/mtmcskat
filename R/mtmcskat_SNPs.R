@@ -83,6 +83,8 @@ mtmcskat_NullModels <- function(n_thread,
                                 covariates,
                                 pre_allocated_SNP_windows,
                                 scaffold_ID,
+                                output_dir = NA,
+                                output_basename = NA,
                                 missing_cutoff = 0.15){
 
   arrange_jobs_NullModel_multithreading <-
@@ -170,6 +172,8 @@ mtmcskat_NullModels <- function(n_thread,
     pos_and_SNP_list = pre_allocated_SNP_windows,
     scaffold_ID = pre_allocated_SNP_windows[[1]][[3]],
     n_permutations = job_details$n_permutations_per_job,
+    output_dir = output_dir,
+    output_basename = output_basename,
     resampling=TRUE,
     missing_cutoff = missing_cutoff)
 
@@ -198,6 +202,8 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
                           covariates,
                           scaffold_ID,
                           n_thread,
+                          output_dir = NA,
+                          output_basename = NA,
                           missing_cutoff = 0.15,
                           ...){
 
@@ -227,7 +233,9 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
     resampling = TRUE,
     n_permutations = n_permutations,
     chunk = TRUE,
-    missing_cutoff = missing_cutoff)
+    missing_cutoff = missing_cutoff,
+    output_dir = output_dir,
+    output_basename = output_basename)
 
   cat(paste("Finished parallel run in",
                 (proc.time() - time_to_run_mapping)[3],

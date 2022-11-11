@@ -41,14 +41,20 @@ SKAT_one_window <- function(this_position,
                             resampling=FALSE,
                             return_all_p_vals=FALSE,
                             missing_cutoff=0.15,
+                            output_dir = NA,
+                            output_basename = NA,
                             ...){
+
+  # if(resampling == TRUE){
+  #   browser()
+  # }
+
   # Only run SKAT over a SNP window if the window actually contains SNPs
   if(is.matrix(Z)==TRUE){
 
     # (Before calculating empirical p-val, if applicable,)
     # ...calculate p-value for this SNP window's effect given model assumptions
-    this_SKAT_out <- SKAT::SKAT(Z, null_model, missing_cutoff = missing_cutoff,
-                                ...)
+    this_SKAT_out <- SKAT::SKAT(Z, null_model, missing_cutoff = missing_cutoff)
 
     # resampling is performed for mtmcskat but not mtskat
     if(resampling==TRUE){
@@ -63,6 +69,10 @@ SKAT_one_window <- function(this_position,
           n_permutations = n_permutations,
           null_model = null_model,
           missing_cutoff = missing_cutoff,
+          output_dir = output_dir,
+          output_basename = output_basename,
+          this_position = this_position,
+          scaffold_ID = scaffold_ID,
           ...)
 
         to_append <- c(scaffold_ID,
@@ -82,6 +92,10 @@ SKAT_one_window <- function(this_position,
                                              null_model = null_model,
                                              return_all_p_vals = TRUE,
                                              missing_cutoff = missing_cutoff,
+                                             output_dir = output_dir,
+                                             output_basename = output_basename,
+                                             this_position = this_position,
+                                             scaffold_ID = scaffold_ID,
                                              ...)
 
         to_append <- as.numeric(

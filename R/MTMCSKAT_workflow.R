@@ -160,6 +160,8 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
 
   }
 
+  #browser()
+
   this_phenotype <- unlist(utils::read.csv(phenodata,
                                            sep = "\t",
                                            colClasses = c("character",
@@ -305,7 +307,9 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
           pre_allocated_SNP_windows = new_pre_allocated_SNP_windows,
           scaffold_ID = pre_allocated_SNP_windows[[1]][[3]],
           n_thread = n_thread,
-          missing_cutoff = missing_cutoff)
+          missing_cutoff = missing_cutoff,
+          output_dir = output_dir,
+          output_basename = output_basename)
     }
 
     if(!null_models_fit_in_RAM_per_thread | more_threads_than_windows){
@@ -320,7 +324,9 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
           max_permutations_per_job = max_permutations_per_job,
           pre_allocated_SNP_windows = new_pre_allocated_SNP_windows,
           scaffold_ID = pre_allocated_SNP_windows[[1]][[3]],
-          missing_cutoff = missing_cutoff)
+          missing_cutoff = missing_cutoff,
+          output_dir = output_dir,
+          output_basename = output_basename)
 
     }
 

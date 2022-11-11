@@ -42,6 +42,8 @@ mappable_SKAT <- function(pos_and_SNPs,
                           return_all_p_vals=FALSE,
                           chunk = TRUE,
                           missing_cutoff = 0.15,
+                          output_dir = NA,
+                          output_basename = NA,
                           ...){
 
   if ( chunk == TRUE ) {
@@ -57,6 +59,8 @@ mappable_SKAT <- function(pos_and_SNPs,
                                    null_model = null_model,
                                    n_permutations = n_permutations,
                                    missing_cutoff = missing_cutoff,
+                                   output_dir = output_dir,
+                                   output_basename = output_basename,
                                    ...)
 
       result_df <- rbind(result_df, to_append)
@@ -73,6 +77,8 @@ mappable_SKAT <- function(pos_and_SNPs,
                                  null_model = null_model,
                                  n_permutations = n_permutations,
                                  missing_cutoff = missing_cutoff,
+                                 output_dir = output_dir,
+                                 output_basename = output_basename,
                                  ...)
 
     #pos_and_SNPs <-NULL

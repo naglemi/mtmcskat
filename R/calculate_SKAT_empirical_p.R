@@ -38,8 +38,14 @@
 #'   return_all_p = TRUE)
 
 calculate_SKAT_empirical_p <- function(Z, n_permutations, null_model,
+                                       output_prefix,
                                        missing_cutoff = 0.15,
-                                       return_all_p_vals = FALSE, ...){
+                                       return_all_p_vals = FALSE,
+                                       plot_p_null = TRUE,
+                                       scaffold_ID = NA,
+                                       this_position = NA,
+                                       output_basename = NA,
+                                       output_dir = "plot_p_null"){
 
   if(null_model$n.Resampling != n_permutations){
     stop(
@@ -53,14 +59,35 @@ calculate_SKAT_empirical_p <- function(Z, n_permutations, null_model,
 
   this_SKAT_out <- SKAT::SKAT(Z,
                               null_model,
-                              missing_cutoff = 0.15,
+                              missing_cutoff = 0.15
                               # This is the default argument, need not be
                               # explicitly declared
                               #kernel = "linear.weighted",
                               # We wish to allow the user flexibility in
                               #selecting kernel and other options, so pass
                               # arguments with `...`
-                              ...)
+                              )
+
+  if(plot_p_null == TRUE){
+    if(is.na(output_basename)){
+      output_basename <- "Untitled_
+      job"
+    }
+    if(is.na(output_dir)){
+      output_dir <- "plot_p_null"
+    }
+    if(!dir.exists(output_dir)) dir.create(output_dir)
+    file_dest <- paste0(output_dir, "/", output_basename, "_pnulltoplot_",
+                        scaffold_ID, "_", this_position, ".csv")
+    #browser()
+    if(!file.exists(file_dest)){
+      p_to_write <- sample(this_SKAT_out$p.value.resampling,
+                           min(length(this_SKAT_out$p.value.resampling), 10000))
+      data.table::fwrite(as.data.frame(p_to_write),
+                         file_dest, col.names = FALSE)
+    }
+  }
+
   if(return_all_p_vals == FALSE){
     # p_resampled_SKAT <- ((length(
     #   subset(
