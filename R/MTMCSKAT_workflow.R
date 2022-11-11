@@ -62,6 +62,7 @@ MTMCSKAT_workflow <- function(phenodata, covariates, raw_file_path, window_size,
                               missing_cutoff = 0.15,
                               top_N = Inf){ # get rid of switchpoint parameter once making function determine_switch_point?
 
+  browser()
   set_accuracy <- function(master_output,
                            max_accuracy){
 

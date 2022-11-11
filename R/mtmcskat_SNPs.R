@@ -83,6 +83,7 @@ mtmcskat_NullModels <- function(n_thread,
                                 covariates,
                                 pre_allocated_SNP_windows,
                                 scaffold_ID,
+                                plot_p_null = TRUE,
                                 output_dir = NA,
                                 output_basename = NA,
                                 missing_cutoff = 0.15){
@@ -154,6 +155,26 @@ mtmcskat_NullModels <- function(n_thread,
     max_permutations_per_job = max_permutations_per_job
   )
 
+  if(plot_p_null == TRUE){
+
+    for ( i in 1:length(pre_allocated_SNP_windows)){
+
+      null_model <- SKAT::SKAT_Null_Model(
+        this_phenotype ~ 1 + as.matrix(covariates), out_type="C",
+        n.Resampling=10000,
+        type.Resampling="bootstrap")
+
+      plot_p_null(this_position = pre_allocated_SNP_windows[[i]][[1]],
+                  Z = pre_allocated_SNP_windows[[i]][[2]],
+                  null_model = null_model,
+                  missing_cutoff = missing_cutoff,
+                  output_basename = output_basename,
+                  output_dir = output_dir,
+                  scaffold_ID = scaffold_ID)
+
+    }
+  }
+
   cat(paste0("To run ", job_details$n_jobs, "jobs, each with ",
                  format(job_details$n_permutations_per_job,
                         big.mark=",",scientific=FALSE), " permutations ",
@@ -202,6 +223,7 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
                           covariates,
                           scaffold_ID,
                           n_thread,
+                          plot_p_null = TRUE,
                           output_dir = NA,
                           output_basename = NA,
                           missing_cutoff = 0.15,
@@ -217,9 +239,27 @@ mtmcskat_SNPs <- function(pre_allocated_SNP_windows,
 
   cat(paste(Sys.time(), "- Complete\n"))
 
+  #browser()
+
   pre_allocated_SNP_windows <- chunk_windows(
     pre_allocated_SNP_windows = pre_allocated_SNP_windows,
     n_thread = n_thread)
+
+  # if(plot_p_null == TRUE){
+  #
+  #   for ( i in 1:length(pre_allocated_SNP_windows)){
+  #
+  #     browser()
+  #
+  #     plot_p_null(this_position = pre_allocated_SNP_windows[[i]][[1]],
+  #                 Z = pre_allocated_SNP_windows[[i]][[2]],
+  #                 null_model = null_model,
+  #                 missing_cutoff = missing_cutoff,
+  #                 output_basename = output_basename,
+  #                 output_dir = output_dir,
+  #                 scaffold_ID = scaffold_ID)
+  #   }
+  # }
 
   time_to_run_mapping <- proc.time()
 
