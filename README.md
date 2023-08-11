@@ -87,6 +87,10 @@ Rscript wrappers/mtmcskat_wrapper.R \
 
 # Acknowledgements
 
+We thank the National Science Foundation Plant Genome Research Program for support (IOS #1546900, Analysis of genes affecting plant regeneration and transformation in poplar), and members of GREAT TREES Research Cooperative at OSU for its support of the Strauss laboratory.
+
+This work used EXPANSE at the San Diego Supercomputer Center at the University of California, San Diego. An EXPANSE allocation was provided first via allocation MCB200174 from the Extreme Science and Engineering Discovery Environment (XSEDE), which was supported by National Science Foundation grant number #1548562. This allocation was then transitioned to the Advanced Cyberinfrastructure Coordination Ecosystem: Services & Support (ACCESS) program, which is supported by National Science Foundation grants #2138259, #2138286, #2138307, #2137603, and #2138296.
+
 # References
 
 Wu, M.C., Lee, S., Cai, T., Li, Y., Boehnke, M. and Lin, X., 2011.
