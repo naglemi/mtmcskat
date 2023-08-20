@@ -8,7 +8,7 @@ Overview of MTMC-SKAT
 <!-- badges: start -->
 
 <!-- badges: end -->
-
+ 
 Multi-Threaded Monte Carlo Sequence Kernel Association Test (MTMC-SKAT)
 provides high-level R and command line interfaces for
 [SKAT](https://github.com/leeshawn/SKAT) (Wu et al., 2011; Lee et al.,
